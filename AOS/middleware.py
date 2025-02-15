@@ -1,4 +1,4 @@
-# pyxfluff 2024 - 2025
+# pyxfluff 2024-2025 - 2025
 
 from http import HTTPStatus
 from il import request as log_req

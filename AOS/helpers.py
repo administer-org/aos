@@ -1,4 +1,4 @@
-# pyxfluff 2024
+# pyxfluff 2024-2025
 from .database import db
 
 def request_app(app_id):
