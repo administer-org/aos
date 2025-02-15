@@ -66,4 +66,4 @@ We welcome contributions as long as they are meaningful. Please ensure you are f
 
 All of Administer and your usage of it is governed under the GNU AGPL 3.0 license.
 
-<small>Administer Team 2024-2025</small>
+<small>Administer Team 2024-2025-2025</small>
