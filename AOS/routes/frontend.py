@@ -6,7 +6,7 @@ from AOS.database import db
 from ..frontend import *
 
 if not globals.is_dev:
-    from AOS.reporting.report import daily_report
+    from AOS.reports.report import daily_report
 else:
     def daily_report(db):
         print("[x] Request to spawn daily report ignored due to missing modules")
