@@ -51,16 +51,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             return JSONResponse({"code": 401, "message": "Bad authorization."}, 401)
 
         if globals.security["use_roblox_lock"]:
-            if (
-                request.url
-                in [
-                    "http://administer.notpyx.me/",
-                    "https://administer.notpyx.me/",
-                    "https://adm_unstable.notpyx.me/" "http://127.0.0.1:8000/",
-                ]
-                or str(request.url).split("/")[3]
-                in globals.state["unchecked_endpoints"]
-            ):
+            if str(request.url).split("/")[3] in globals.state["unchecked_endpoints"]:
                 return await call_next(request)
 
             if (

@@ -79,6 +79,7 @@ class AOSVars:
                 "download-count",
                 ".administer",
                 "to",
+                "/"
             ],
         }
 
