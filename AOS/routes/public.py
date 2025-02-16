@@ -38,7 +38,7 @@ class PublicAPI():
                     "engine": version,
                     "system": sys_string,
                     "api_version": globals.version,
-                    "target_administer_versions": accepted_versions,
+                    "target_administer_versions": globals.state["permitted_versions"],
                     "is_dev": globals.is_dev,
                     "has_secrets": len(db.get_all(db.SECRETS)) not in [0, None],
                     "total_apps": len(db.get_all(db.APPS)),
