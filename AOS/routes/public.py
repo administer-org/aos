@@ -28,7 +28,7 @@ class PublicAPI():
             return "OK"
 
         @self.router.get("/.administer")
-        async def verify_administer_server():
+        async def administer_metadata():
             return JSONResponse(
                 {
                     "status": "OK",

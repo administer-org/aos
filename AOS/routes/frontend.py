@@ -1,4 +1,4 @@
-# pyxfluff 2024-2025-2025
+# pyxfluff 2024-2025
 
 from AOS import globals
 from AOS.database import db
@@ -21,7 +21,6 @@ from fastapi.responses import FileResponse, RedirectResponse
 
 root = Path(__file__).parents[1]
 day = 0
-
 
 class Frontend():
     def __init__(self, app):
