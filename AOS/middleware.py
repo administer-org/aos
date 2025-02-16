@@ -27,6 +27,7 @@ forbidden_ips = db.get("BLOCKED_IPS", db.ABUSE_LOGS) or []
 
 auth_key = db.get("__ENV_AUTH__", db.SECRETS)
 
+
 class AuthMiddleware(BaseHTTPMiddleware):
     async def dispatch(self, request: Request, call_next: FunctionType) -> Response:
         if request.headers.get("CF-Connecting-IP") in forbidden_ips:
@@ -55,10 +56,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 in [
                     "http://administer.notpyx.me/",
                     "https://administer.notpyx.me/",
-                    "https://adm_unstable.notpyx.me/"
-                    "http://127.0.0.1:8000/",
+                    "https://adm_unstable.notpyx.me/" "http://127.0.0.1:8000/",
                 ]
-                or str(request.url).split("/")[3] in globals.state["unchecked_endpoints"]
+                or str(request.url).split("/")[3]
+                in globals.state["unchecked_endpoints"]
             ):
                 return await call_next(request)
 
@@ -116,7 +117,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
             else:
                 known_good_ips.append(request.headers.get("CF-Connecting-IP"))
 
-        if globals.security["use_api_keys"] and not request.headers.get("X-Administer-Key"):
+        if globals.security["use_api_keys"] and not request.headers.get(
+            "X-Administer-Key"
+        ):
             return JSONResponse(
                 {"code": 400, "message": "A valid API key must be used."},
                 status_code=401,
@@ -146,7 +149,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
                     status_code=400,
                 )
 
-        if globals.security["use_sessions"] and not request.headers.get("X-Administer-Session"):
+        if globals.security["use_sessions"] and not request.headers.get(
+            "X-Administer-Session"
+        ):
             return JSONResponse(
                 {"code": 400, "message": "A valid session token is required."},
                 status_code=400,
@@ -174,10 +179,11 @@ class RateLimiter(BaseHTTPMiddleware):
         limited_ips[cf_ip] = [
             timestamp
             for timestamp in limited_ips[cf_ip]
-            if timestamp > time.time() - rate_limit_reset
+            if timestamp
+            > time.time() - globals.security["ratelimiting"]["reset_timeframe"]
         ]
 
-        if len(limited_ips[cf_ip]) >= rate_limit_reqs:
+        if len(limited_ips[cf_ip]) >= globals.security["ratelimiting"]["max_reqs"]:
             return Response(
                 status_code=429,
                 content="You're interacting with the API too quick and have triggered pre-defined limits by the owner of this sevrer. Try again later.",
@@ -203,13 +209,14 @@ class Logger(BaseHTTPMiddleware):
             f"Code {res.status_code} ({HTTPStatus(res.status_code).phrase})",
             str(res.status_code).startswith("2") and 32 or 31,
             time.time() - t,
-            f"PlaceID: {req.headers.get("Roblox-Id") or "Not a Roblox place"}",
+            f"PlaceID: {req.headers.get("Roblox-Id") or "Not a Roblox place"}\n\nRetelimiting data: {limited_ips[cf_ip]}/{globals.security["ratelimiting"]["max_reqs"]} used",
             req.method,
         )
 
         return res
 
-class Middleware():
+
+class Middleware:
     def __init__(self, app):
         app.add_middleware(AuthMiddleware)
         app.add_middleware(RateLimiter)
