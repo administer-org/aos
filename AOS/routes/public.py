@@ -2,9 +2,8 @@
 
 from AOS import globals
 
-from fastapi.responses import JSONResponse, RedirectResponse
+from fastapi.responses import JSONResponse
 
-import re
 import time
 import platform
 
@@ -15,13 +14,14 @@ from AOS.database import db
 
 sys_string = f"{platform.system()} {platform.release()} ({platform.version()})"
 
+
 class PublicAPI():
     def __init__(self, app):
         self.app = app
         self.t = time.time()
-        
+
         self.router = APIRouter()
-    
+
     def initialize_routes(self):
         @self.router.get("/ping")
         def test():
@@ -48,14 +48,12 @@ class PublicAPI():
                 status_code=200,
             )
 
-
         @self.router.get("/logs/{logid}")
         def get_log(logid: str):
             log = db.get(logid, db.LOGS)
             if log is None:
                 return JSONResponse({"error": "This logfile does not exist."}, status_code=404)
             return log
-
 
         @self.router.get("/versions")
         def administer_versions(req: Request):

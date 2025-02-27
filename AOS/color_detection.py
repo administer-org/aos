@@ -1,5 +1,6 @@
 from PIL import Image
 
+
 def get_color(path):
     r, g, b, total_pixels = 0, 0, 0, 0
     pixels = list(Image.open(path).getdata())

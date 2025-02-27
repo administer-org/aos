@@ -1,13 +1,10 @@
 # pyxfluff 2024-2025 - 2025
 
 import il
-import asyncio
 import logging
-import platform
 
 from sys import argv
 from pathlib import Path
-from fastapi import FastAPI
 
 from AOS import AOSError, globals as var
 
@@ -21,7 +18,7 @@ def serve_web_server():
 
     from AOS import load_fastapi_app
 
-    app = load_fastapi_app()
+    load_fastapi_app()
 
 
 def help_command():
@@ -72,7 +69,7 @@ def help_command():
     )
 
 
-il.box(85, f"Administer AOS (marketplace server)", f"v{var.version}")
+il.box(85, "Administer AOS (marketplace server)", f"v{var.version}")
 
 if __name__ != "__main__":
     # il.cprint("AOS is running as a module, disregarding.", 31)
@@ -100,7 +97,9 @@ match argv[1]:
 
     case "usage":
         try:
-            from AOS.reports.GraphReporter import *
+            from .reports.GraphReporter import load
+
+            load()
         except ImportError:
             il.cprint(
                 "\n[x]: This command may only be used by staff",
