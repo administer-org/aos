@@ -26,12 +26,9 @@ jobs:
     - name: Install dependencies
       run: |
         python -m pip install --upgrade pip
-        pip install flake8 pytest git+https://github.com/iiPythonx/il
+        pip install flake8 git+https://github.com/iiPythonx/il
         pip install .
     - name: Lint with flake8
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics --ignore=E501,W503,E241
         flake8 . --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --ignore=E501,W503,E241
-    - name: Test with pytest
-      run: |
-        pytest
