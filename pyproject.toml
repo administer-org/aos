@@ -1,27 +1,32 @@
 [project]
-name = "administer-app-server"
-description = "Administer's primary App Server."
-version = "3.1"
-requires-python = ">=3.12"
+name = "administer-aos"
+description = "Administer's AOS service for distributing apps."
+version = "3.2"
+requires-python = ">=3.13"
 authors = [{ name = "pyxfluff", email = "business@notpyx.me" }]
 dependencies = [
-    "colorthief",  # TODO: do we need this anymore?
+    # HTTP
+    "uvicorn",
     "fastapi",
     "httpx",
+
+    # Utilities
     "Levenshtein",
+    "colorthief",
+    "pymongo",
+    "pathlib",
     "nanoid",
     "orjson",
-    "pathlib",
-    "pymongo",
-    "uvicorn",
+
+    # Discord
+    "audioop-lts",
     "py-cord",
 
     # Git packages
     "indigo-logger @ git+https://github.com/iiPythonx/il",
 
     # Development
-    "matplotlib",
-    "audioop-lts"
+    "matplotlib"
 ]
 
 urls.PrimaryServer = "https://administer.notpyx.me"
