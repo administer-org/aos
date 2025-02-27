@@ -1,6 +1,5 @@
 # pyxfluff 2024-2025 - 2025
 
-from AOS import globals
 from ..color_detection import get_color
 from ..helpers import request_app
 
@@ -14,7 +13,6 @@ import httpx
 import platform
 
 from io import BytesIO
-from sys import version
 from Levenshtein import ratio
 
 from AOS.database import db
@@ -38,7 +36,7 @@ class BackendAPI:
         @self.router.get("/ping")
         async def ping():
             return "OK"
-        
+
         @self.router.get("/get_download_count")
         async def download_stats():
             return JSONResponse(
@@ -150,7 +148,7 @@ class BackendAPI:
 
         @self.router.get("/misc/get_prominent_color")
         async def get_prominent_color(image_url: str):
-            if not is_dev:
+            if not vars.is_dev:
                 return get_color(BytesIO(httpx.get(image_url).content))
             else:
                 # prevent vm IP leakage
@@ -168,7 +166,7 @@ class BackendAPI:
             key = db.get(round(time.time() / 86400), db.REPORTED_VERSIONS)
             branch = str(json["branch"]).lower()
 
-            if not json["version"] in accepted_versions:
+            if not json["version"] in vars.state.permitted_versions:
                 return JSONResponse(
                     {
                         "code": 400,
@@ -200,10 +198,10 @@ class BackendAPI:
         @self.router.post("/app-config/upload")
         async def app_config(req: Request):
             config: {} = await req.json()
-            id = config.get("Metadata", {}).get(
-                "AdministerID", len(db.get_all(db.APPS))
-            )
-            existing = db.get(id, db.APPS) or default_app
+            # id = config.get("Metadata", {}).get(
+            #    "AdministerID", len(db.get_all(db.APPS))
+            # )
+            # existing = db.get(id, db.APPS) or default_app
 
             print(config)
 
@@ -217,7 +215,7 @@ class BackendAPI:
             try:
                 app = request_app(appid)
 
-                if app == None:
+                if app is None:
                     raise FileNotFoundError
 
                 return JSONResponse(app, status_code=200)
@@ -353,7 +351,7 @@ class BackendAPI:
             db.set(asset_id, app, db.APPS)
             db.set(req.headers.get("Roblox-Id"), place, db.PLACES)
 
-            src.downloads_today += 1
+            vars.state.downloads_today += 1
 
             return JSONResponse(
                 {"code": 200, "message": "success", "user_facing_message": "Success!"},

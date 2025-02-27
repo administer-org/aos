@@ -28,7 +28,7 @@ class Database(object):
             serverSelectionTimeoutMS=globals.dbattrs["timeout_ms"],
         )
 
-        self.db = client [
+        self.db = client[
             globals.is_dev and not globals.dbattrs["use_dev_db"] and "administer_dev" or "administer"
         ]
 

@@ -3,7 +3,6 @@
 from AOS import globals
 from AOS.database import db
 
-from ..frontend import *
 
 if not globals.is_dev:
     from AOS.reports.report import daily_report
@@ -22,11 +21,12 @@ from fastapi.responses import FileResponse, RedirectResponse
 root = Path(__file__).parents[1]
 day = 0
 
+
 class Frontend():
     def __init__(self, app):
         self.app = app
         self.t = time()
-    
+
     def initialize_frontend(self):
         @self.app.get("/")
         async def index(req: Request):
@@ -40,11 +40,9 @@ class Frontend():
 
             return FileResponse(root / "frontend" / "index.html")
 
-
         @self.app.get("/app/{app:str}")
         def app_frontend(req: Request, app: str):
             pass
-
 
         @self.app.get("/to/{fpath:path}")
         def social_to(fpath: str):
@@ -59,7 +57,6 @@ class Frontend():
                     return RedirectResponse(path)
 
             return {"error": "That path isn't a valid shortlink."}
-
 
         for mount in [
             ("/", StaticFiles(directory=root / "frontend")),

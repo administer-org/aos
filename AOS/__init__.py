@@ -4,11 +4,9 @@ import il
 import sys
 import logging
 import asyncio
-import platform
 
 from sys import argv
 from subprocess import Popen
-from builtins import BaseException
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -26,9 +24,14 @@ async def lifespan(app: FastAPI):
     finally:
         il.cprint("[✗] Goodbye, shutting things off...", 31)
 
-        if input("Would you like to rebuild and restart the app? [[y]es/[n]o/^C] ").lower() in ["y", "yes"]:
+        if input(
+            "Would you like to rebuild and restart the app? [[y]es/[n]o/^C] "
+        ).lower() in ["y", "yes"]:
             il.cprint("[-] Respawning process after an upgrade, see you soon..", 32)
-            Popen(f"uv pip install -e . --force-reinstall && aos serve {argv[2]} {argv[3]}", shell = True)
+            Popen(
+                f"uv pip install -e . --force-reinstall && aos serve {argv[2]} {argv[3]}",
+                shell=True,
+            )
 
 
 class AOSVars:
@@ -40,9 +43,7 @@ class AOSVars:
         self.dbattrs = {
             "use_dev_db": True,
             "use_mock_db": False,
-            "address": self.is_dev
-            and "mongodb://mail.iipython.dev:27017"
-            or "mongodb://127.0.0.1:27017",
+            "address": self.is_dev and "mongodb://mail.iipython.dev:27017" or "mongodb://127.0.0.1:27017",
             "timeout_ms": 15000,
         }
 
@@ -79,7 +80,7 @@ class AOSVars:
                 "download-count",
                 ".administer",
                 "to",
-                "/"
+                "/",
             ],
         }
 
@@ -130,6 +131,7 @@ def load_fastapi_app():
     frontend.initialize_frontend()
 
     middleware = Middleware(app)
+    middleware.init()
 
     from .release_bot import bot, token
 

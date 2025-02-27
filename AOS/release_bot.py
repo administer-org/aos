@@ -30,11 +30,12 @@ async def on_connect():
     await bot.change_presence(
         activity=discord.Activity(
             type=discord.ActivityType.watching,
-            name=f"for new administer versions"
-        ), status = discord.Status.idle
+            name="for new administer versions"
+        ), status=discord.Status.idle
     )
 
     il.cprint("[✓] Versioning bot connected!", 32)
+
 
 @bot.event
 async def on_error(loc):

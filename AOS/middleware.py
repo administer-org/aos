@@ -8,7 +8,6 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 import time
 import httpx
-import platform
 
 from types import FunctionType
 from collections import defaultdict
@@ -209,6 +208,9 @@ class Logger(BaseHTTPMiddleware):
 
 class Middleware:
     def __init__(self, app):
-        app.add_middleware(AuthMiddleware)
-        app.add_middleware(RateLimiter)
-        app.add_middleware(Logger)
+        self.app = app
+
+    def init(self):
+        self.app.add_middleware(AuthMiddleware)
+        self.app.add_middleware(RateLimiter)
+        self.app.add_middleware(Logger)
