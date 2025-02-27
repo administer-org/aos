@@ -17,7 +17,7 @@ dependencies = [
     "py-cord",
 
     # Git packages
-    #"git+https://github.com/iiPythonx/il"
+    "indigo-logger @ git+https://github.com/iiPythonx/il",
 
     # Development
     "matplotlib",
