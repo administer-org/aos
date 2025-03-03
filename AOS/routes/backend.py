@@ -2,6 +2,7 @@
 
 from ..color_detection import get_color
 from ..helpers import request_app
+from AOS import globals as vars
 
 from fastapi import Request
 from fastapi.responses import JSONResponse
@@ -166,7 +167,7 @@ class BackendAPI:
             key = db.get(round(time.time() / 86400), db.REPORTED_VERSIONS)
             branch = str(json["branch"]).lower()
 
-            if not json["version"] in vars.state.permitted_versions:
+            if not json["version"] in vars.state["permitted_versions"]:
                 return JSONResponse(
                     {
                         "code": 400,

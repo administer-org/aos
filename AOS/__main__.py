@@ -1,4 +1,4 @@
-# pyxfluff 2024-2025 - 2025
+# pyxfluff 2024 - 2025
 
 import il
 import logging
@@ -30,9 +30,9 @@ def help_command():
         34,
     )
     il.cprint(
-        """        [HOST]: The HTTP IP to host on.
-        [PORT]: The port to serve uvicorn on.
-    """,
+        """         [HOST]: The HTTP IP to host on.
+         [PORT]: The port to serve uvicorn on.
+""",
         32,
     )
 
@@ -56,7 +56,7 @@ def help_command():
         34,
     )
     il.cprint(
-        """        [TOKEN] (optional): The token the bot uses. Defaults to SECRETS.DISCORD_BOT.
+        """          [TOKEN] (optional): The token the bot uses. Defaults to SECRETS.DISCORD_BOT.
     """,
         32,
     )
