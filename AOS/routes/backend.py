@@ -55,28 +55,36 @@ class BackendAPI:
             final = []
             _t = time.time()
 
-            for app in apps:
-                app = app["data"]
+            def serialize(data):
+                rating = 0
+                try:
+                    rating = (
+                        (data["Votes"]["Likes"] + data["Votes"]["Dislikes"]) == 0
+                        and 0
+                        or data["Votes"]["Likes"]
+                        / (data["Votes"]["Likes"] + data["Votes"]["Dislikes"])
+                    )
+                except ZeroDivisionError:
+                        rating = 0 # ideally we can remove this in some months
 
                 final.append(
                     {
-                        "name": app["name"],
-                        "short_desc": app["short_desc"],
-                        "downloads": app["downloads"],
-                        "AppRating": (
-                            (app["votes"]["likes"] + app["votes"]["dislikes"]) == 0
-                            and "--.--%"
-                            or app["votes"]["likes"]
-                            / (app["votes"]["likes"] + app["votes"]["Dislikes"])
-                        ),
-                        "developer": {
-                            "id": app.get("AppDeveloperID", 0),
-                        },
-                        "last_update": app["AppUpdatedUnix"],
-                        "id": app["administer_metadata"]["id"],
-                        "object_type": app["type"],
+                        "name": data["Name"],
+                        "short_desc": data["ShortDescription"],
+                        "downloads": data["Downloads"],
+                        "rating": rating,
+                        "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9)) + Data["Votes"]["Favorites"],
+                        "developer": data["Developer"],
+                        "last_update": data["Metadata"]["UpdatedAt"],
+                        "id": data["Metadata"]["AdministerID"],
+                        "object_type": data["Metadata"]["AssetType"],
                     }
                 )
+
+            for app in apps:
+                app = app["data"]
+
+                serialize(app)
 
             if final == []:
                 final = [
@@ -84,6 +92,14 @@ class BackendAPI:
                         "object_type": "message",
                         "text": "This marketplace server does not have any objects with the requested type.",
                     }
+                ]
+
+            if asset_type == "FEATURED":
+                print(final)
+                # Render four top apps and one header, the game selects at random
+                # TODO: Top app, need to develop daily installs first
+                final = sorted(final, key=lambda x: x["weighted_score"], reverse=True)[
+                    :4
                 ]
 
             final.append({"processed_in": time.time() - _t})
@@ -199,12 +215,24 @@ class BackendAPI:
         @self.router.post("/app-config/upload")
         async def app_config(req: Request):
             config: {} = await req.json()
+            new_app_id = len(db.get_all(db.APPS)) + 1
             # id = config.get("Metadata", {}).get(
             #    "AdministerID", len(db.get_all(db.APPS))
             # )
             # existing = db.get(id, db.APPS) or default_app
 
             print(config)
+            try:
+                new_app_id = config["Metadata"]["AdministerID"]
+            except KeyError as _:
+                config["Metadata"]["GeneratedAt"] = time.time()
+                config["Metadata"]["AdministerID"] = new_app_id
+                config["Votes"] = {"Likes": 0, "Dislikes": 0, "Favorites": 0}
+                config["Downloads"] = 0
+
+            config["Metadata"]["UpdatedAt"] = time.time()
+
+            db.set(new_app_id, config, db.APPS)
 
     def initialize_content_routes(self):
         @self.asset_router.get("/ping")

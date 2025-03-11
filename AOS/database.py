@@ -29,7 +29,7 @@ class Database(object):
         )
 
         self.db = client[
-            globals.is_dev and not globals.dbattrs["use_dev_db"] and "administer_dev" or "administer"
+            globals.dbattrs["use_prod_db"] and "administer" or "administer_dev"
         ]
 
         try:

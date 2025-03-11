@@ -24,14 +24,14 @@ async def lifespan(app: FastAPI):
     finally:
         il.cprint("[✗] Goodbye, shutting things off...", 31)
 
-        if input(
-            "Would you like to rebuild and restart the app? [[y]es/[n]o/^C] "
-        ).lower() in ["y", "yes"]:
-            il.cprint("[-] Respawning process after an upgrade, see you soon..", 32)
-            Popen(
-                f"uv pip install -e . --force-reinstall && aos serve {argv[2]} {argv[3]}",
-                shell=True,
-            )
+        #if input(
+        #    "Would you like to rebuild and restart the app? [[y]es/[n]o/^C] "
+        #).lower() in ["y", "yes"]:
+        #    il.cprint("[-] Respawning process after an upgrade, see you soon..", 32)
+        #    Popen(
+        #        f"uv pip install -e . --force-reinstall && aos serve {argv[2]} {argv[3]}",
+        #        shell=True,
+        #    )
 
 
 class AOSVars:
@@ -41,7 +41,7 @@ class AOSVars:
         self.enable_bot_execution: True
 
         self.dbattrs = {
-            "use_dev_db": True,
+            "use_prod_db": False,
             "use_mock_db": False,
             "address": self.is_dev and "mongodb://mail.iipython.dev:27017" or "mongodb://127.0.0.1:27017",
             "timeout_ms": 15000,
