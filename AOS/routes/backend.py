@@ -73,7 +73,7 @@ class BackendAPI:
                         "short_desc": data["ShortDescription"],
                         "downloads": data["Downloads"],
                         "rating": rating,
-                        "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9)) + Data["Votes"]["Favorites"],
+                        "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9)) + data["Votes"]["Favorites"],
                         "developer": data["Developer"],
                         "last_update": data["Metadata"]["UpdatedAt"],
                         "id": data["Metadata"]["AdministerID"],
