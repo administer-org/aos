@@ -38,18 +38,21 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 status_code=400,
             )
 
-        print(str(request.url).split("/")[4])
+        print(str(request.url).split("/"))
 
-        if (
-            str(request.url).split("/")[4] == "app-config"
-            and request.headers.get("X-Adm-Auth", "") == auth_key
-        ):
-            return await call_next(request)
-        elif (
-            str(request.url).split("/")[4] == "app-config"
-            and request.headers.get("X-Adm-Auth", "") != auth_key
-        ):
-            return JSONResponse({"code": 401, "message": "Bad authorization."}, 401)
+        try:
+            if (
+                str(request.url).split("/")[4] == "app-config"
+                and request.headers.get("X-Adm-Auth", "") == auth_key
+            ):
+                return await call_next(request)
+            elif (
+                str(request.url).split("/")[4] == "app-config"
+                and request.headers.get("X-Adm-Auth", "") != auth_key
+            ):
+                return JSONResponse({"code": 401, "message": "Bad authorization."}, 401)
+        except IndexError:
+            pass
 
         if globals.security["use_roblox_lock"]:
             if str(request.url).split("/")[4] in globals.state["unchecked_endpoints"]:

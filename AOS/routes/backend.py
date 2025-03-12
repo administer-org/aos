@@ -1,4 +1,4 @@
-# pyxfluff 2024-2025 - 2025
+# pyxfluff 2024 - 2025
 
 from ..color_detection import get_color
 from ..helpers import request_app
