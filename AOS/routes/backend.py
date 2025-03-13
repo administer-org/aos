@@ -244,6 +244,8 @@ class BackendAPI:
             try:
                 app = request_app(appid)
 
+                app["Metadata"]["AppAPIPreferredVersion"] = app["Metadata"]["AppAPIPreverredVersion"] # i made a typo and do not want to wipe the dev db
+
                 if app is None:
                     raise FileNotFoundError
 
@@ -272,28 +274,29 @@ class BackendAPI:
                 )
 
             place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
+            place = { "Ratings": {} }
             rating = payload.vote == 1
             is_overwrite = False
 
-            if not place:
-                return JSONResponse(
-                    {
-                        "code": 400,
-                        "message": "bad-request",
-                        "user_facing_message": "We can't find your game.",
-                    },
-                    status_code=400,
-                )
+            # if not place:
+            #     return JSONResponse(
+            #         {
+            #             "code": 400,
+            #             "message": "bad-request",
+            #             "user_facing_message": "We can't find your game.",
+            #         },
+            #         status_code=400,
+            #     )
 
-            if asset_id not in place["apps"]:
-                return JSONResponse(
-                    {
-                        "code": 400,
-                        "message": "bad-request",
-                        "user_facing_message": "You have to install this app before you can rate it.",
-                    },
-                    status_code=400,
-                )
+            # if asset_id not in place["apps"]:
+            #     return JSONResponse(
+            #         {
+            #             "code": 400,
+            #             "message": "bad-request",
+            #             "user_facing_message": "You have to install this app before you can rate it.",
+            #         },
+            #         status_code=400,
+            #     )
 
             app = request_app(asset_id)
             if not app:
@@ -306,22 +309,22 @@ class BackendAPI:
                     status_code=404,
                 )
 
-            if asset_id in place["ratings"]:
+            if asset_id in place["Ratings"]:
                 print("Overwriting rating.")
                 is_overwrite = True
 
-                app["ratings"][
-                    place["ratings"][asset_id]["rating"] == 1 and "likes" or "dislikes"
+                app["Ratings"][
+                    place["Ratings"][asset_id]["Rating"] == 1 and "Likes" or "Dislikes"
                 ] -= 1
-                place["ratings"][asset_id] = None
+                place["Ratings"][asset_id] = None
 
-            place["ratings"][asset_id] = {
+            place["Ratings"][asset_id] = {
                 "rating": rating,
                 "owned": True,
                 "timestamp": time.time(),
             }
 
-            app["ratings"][rating and "likes" or "dislikes"] += 1
+            app["Votes"][rating and "Likes" or "Dislikes"] += 1
 
             db.set(asset_id, app, db.APPS)
             db.set(req.headers.get("Roblox-Id"), place, db.PLACES)
