@@ -278,25 +278,25 @@ class BackendAPI:
             rating = payload.vote == 1
             is_overwrite = False
 
-            # if not place:
-            #     return JSONResponse(
-            #         {
-            #             "code": 400,
-            #             "message": "bad-request",
-            #             "user_facing_message": "We can't find your game.",
-            #         },
-            #         status_code=400,
-            #     )
+            if not place:
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "bad-request",
+                        "user_facing_message": "We can't find your game.",
+                    },
+                    status_code=400,
+                )
 
-            # if asset_id not in place["apps"]:
-            #     return JSONResponse(
-            #         {
-            #             "code": 400,
-            #             "message": "bad-request",
-            #             "user_facing_message": "You have to install this app before you can rate it.",
-            #         },
-            #         status_code=400,
-            #     )
+            if asset_id not in place["apps"]:
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "bad-request",
+                        "user_facing_message": "You have to install this app before you can rate it.",
+                    },
+                    status_code=400,
+                )
 
             app = request_app(asset_id)
             if not app:
