@@ -208,7 +208,7 @@ class Logger(BaseHTTPMiddleware):
             req.method,
         )
 
-        res.headers["timing"] = str(time.time() - t)
+        res.headers["Server-Timing"] = str(time.time() - t)
         res.headers["X-Powered-By"] = f"AdministerAppServer; AOS/{globals.version}"
 
         return res
