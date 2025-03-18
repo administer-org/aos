@@ -214,7 +214,7 @@ class BackendAPI:
 
         @self.router.post("/app-config/upload")
         async def app_config(req: Request):
-            config: {} = await req.json()
+            config: dict = await req.json()
             new_app_id = len(db.get_all(db.APPS)) + 1
             # id = config.get("Metadata", {}).get(
             #    "AdministerID", len(db.get_all(db.APPS))
@@ -262,19 +262,18 @@ class BackendAPI:
                 )
 
         @self.asset_router.put("/{asset_id}/vote")
-        async def rate_app(req: Request, asset_id: str, payload: RatingPayload):
-            if "RobloxStudio" in req.headers.get("user-agent"):
-                return JSONResponse(
-                    {
-                        "code": 400,
-                        "message": "studio-restricted",
-                        "user_facing_message": "Sorry, but this API endpoint may not be used in Roblox Studio. Please try it in a live game!",
-                    },
-                    status_code=400,
-                )
+        async def rate_app(asset_id: str, payload: RatingPayload, req: Request):
+            # if "RobloxStudio" in req.headers.get("user-agent"):
+            #     return JSONResponse(
+            #         {
+            #             "code": 400,
+            #             "message": "studio-restricted",
+            #             "user_facing_message": "Sorry, but this API endpoint may not be used in Roblox Studio. Please try it in a live game!",
+            #         },
+            #         status_code=400,
+            #     )
 
             place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
-            place = { "Ratings": {} }
             rating = payload.vote == 1
             is_overwrite = False
 
@@ -288,7 +287,7 @@ class BackendAPI:
                     status_code=400,
                 )
 
-            if asset_id not in place["apps"]:
+            if asset_id not in place["Apps"]:
                 return JSONResponse(
                     {
                         "code": 400,
@@ -313,8 +312,10 @@ class BackendAPI:
                 print("Overwriting rating.")
                 is_overwrite = True
 
-                app["Ratings"][
-                    place["Ratings"][asset_id]["Rating"] == 1 and "Likes" or "Dislikes"
+                print(place["Ratings"][asset_id])
+
+                app["Votes"][
+                    place["Ratings"][asset_id]["rating"] and "Likes" or "Dislikes"
                 ] -= 1
                 place["Ratings"][asset_id] = None
 
@@ -324,7 +325,12 @@ class BackendAPI:
                 "timestamp": time.time(),
             }
 
+            print(app["Votes"])
+
             app["Votes"][rating and "Likes" or "Dislikes"] += 1
+            vars.state["votes_today"] += 1
+
+            print(app["Votes"])
 
             db.set(asset_id, app, db.APPS)
             db.set(req.headers.get("Roblox-Id"), place, db.PLACES)
@@ -339,15 +345,15 @@ class BackendAPI:
             )
 
         @self.asset_router.post("/{asset_id}/install")
-        async def install_app(req: Request, asset_id: str):
+        async def install(req: Request, asset_id: str):
             place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
 
             if not place:
                 place = {
-                    "apps": [],
-                    "ratings": {},
-                    "start_ts": time.time(),  # make it easier to catch abusers
-                    "start_source": (
+                    "Apps": [],
+                    "Ratings": {},
+                    "StartTimestamp": time.time(),  # make it easier to catch abusers
+                    "StartSource": (
                         "RobloxStudio" in req.headers.get("user-agent")
                         and "STUDIO"
                         or "RobloxApp" in req.headers.get("user-agent")
@@ -367,7 +373,7 @@ class BackendAPI:
                     status_code=404,
                 )
 
-            if asset_id in place["apps"]:
+            if asset_id in place["Apps"]:
                 return JSONResponse(
                     {
                         "code": 400,
@@ -377,13 +383,13 @@ class BackendAPI:
                     status_code=400,
                 )
 
-            place["apps"].append(asset_id)
-            app["downloads"] += 1
+            place["Apps"].append(asset_id)
+            app["Downloads"] += 1
 
             db.set(asset_id, app, db.APPS)
             db.set(req.headers.get("Roblox-Id"), place, db.PLACES)
 
-            vars.state.downloads_today += 1
+            vars.state["downloads_today"] += 1
 
             return JSONResponse(
                 {"code": 200, "message": "success", "user_facing_message": "Success!"},
