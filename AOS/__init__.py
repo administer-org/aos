@@ -36,7 +36,7 @@ async def lifespan(app: FastAPI):
 
 class AOSVars:
     def __init__(self):
-        self.version = "4.1.0"
+        self.version = "4.2.0"
         self.is_dev = True
         self.enable_bot_execution: True
 
