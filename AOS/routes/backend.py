@@ -187,7 +187,7 @@ class BackendAPI:
                 return JSONResponse(
                     {
                         "code": 400,
-                        "message": "Unsupported version, please update Administer.",
+                        "message": "Administer is too out of date to report its version. Please update Administer.",
                     },
                     status_code=400,
                 )

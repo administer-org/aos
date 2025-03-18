@@ -71,7 +71,7 @@ class AOSVars:
             "votes_today": 0,
             "default_app": {},
             "downloads_today": 0,
-            "permitted_versions": ["2.0"],
+            "permitted_versions": ["2.0.0", "1.1.1", "1.2", "1.2.1", "1.2.2", "1.2.3"],
             
             "unchecked_endpoints": [
                 "logs",
