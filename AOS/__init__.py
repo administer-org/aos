@@ -68,9 +68,11 @@ class AOSVars:
 
         self.state = {
             "requests": 0,
+            "votes_today": 0,
             "default_app": {},
             "downloads_today": 0,
             "permitted_versions": ["2.0"],
+            
             "unchecked_endpoints": [
                 "logs",
                 "css",
