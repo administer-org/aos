@@ -204,9 +204,12 @@ class Logger(BaseHTTPMiddleware):
             f"Code {res.status_code} ({HTTPStatus(res.status_code).phrase})",
             str(res.status_code).startswith("2") and 32 or 31,
             time.time() - t,
-            f"PlaceID: {req.headers.get("Roblox-Id") or "Not a Roblox place"}\n\nRetelimiting data: {len(limited_ips[cf_ip])}/{globals.security["ratelimiting"]["max_reqs"]} used",
+            f"PlaceID: {req.headers.get("Roblox-Id") or "Not a Roblox place"}\n\nRatelimiting data: {len(limited_ips[cf_ip])}/{globals.security["ratelimiting"]["max_reqs"]} used",
             req.method,
         )
+
+        res.headers["timing"] = str(time.time() - t)
+        res.headers["X-Powered-By"] = f"AdministerAppServer; AOS/{globals.version}"
 
         return res
 
