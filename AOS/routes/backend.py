@@ -312,8 +312,6 @@ class BackendAPI:
                 print("Overwriting rating.")
                 is_overwrite = True
 
-                print(place["Ratings"][asset_id])
-
                 app["Votes"][
                     place["Ratings"][asset_id]["rating"] and "Likes" or "Dislikes"
                 ] -= 1
