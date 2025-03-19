@@ -1,7 +1,7 @@
 [project]
 name = "administer-aos"
 description = "Administer's AOS service for distributing apps."
-version = "3.2"
+version = "3.4.0"
 requires-python = ">=3.11"
 authors = [{ name = "pyxfluff", email = "business@notpyx.me" }]
 dependencies = [
