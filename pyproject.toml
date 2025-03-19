@@ -19,8 +19,8 @@ dependencies = [
     "orjson",
 
     # Discord
-    "audioop-lts",
-    "py-cord",
+    #"audioop-lts",
+    #"py-cord",
 
     # Git packages
     "indigo-logger @ git+https://github.com/iiPythonx/il",
