@@ -123,7 +123,7 @@ def load_fastapi_app():
             31,
         )
         raise AOSError("database connection failed!")
-    finally:
+    else:
         il.cprint("[✓] Database OK", 32)
 
     from .routes.backend import BackendAPI
