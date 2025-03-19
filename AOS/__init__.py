@@ -24,9 +24,9 @@ async def lifespan(app: FastAPI):
     finally:
         il.cprint("[✗] Goodbye, shutting things off...", 31)
 
-        #if input(
+        # if input(
         #    "Would you like to rebuild and restart the app? [[y]es/[n]o/^C] "
-        #).lower() in ["y", "yes"]:
+        # ).lower() in ["y", "yes"]:
         #    il.cprint("[-] Respawning process after an upgrade, see you soon..", 32)
         #    Popen(
         #        f"uv pip install -e . --force-reinstall && aos serve {argv[2]} {argv[3]}",
@@ -43,7 +43,9 @@ class AOSVars:
         self.dbattrs = {
             "use_prod_db": False,
             "use_mock_db": False,
-            "address": self.is_dev and "mongodb://mail.iipython.dev:27017" or "mongodb://127.0.0.1:27017",
+            "address": self.is_dev
+            and "mongodb://mail.iipython.dev:27017"
+            or "mongodb://127.0.0.1:27017",
             "timeout_ms": 15000,
         }
 
@@ -72,7 +74,6 @@ class AOSVars:
             "default_app": {},
             "downloads_today": 0,
             "permitted_versions": ["2.0.0", "1.1.1", "1.2", "1.2.1", "1.2.2", "1.2.3"],
-            
             "unchecked_endpoints": [
                 "logs",
                 "css",
@@ -112,6 +113,18 @@ def load_fastapi_app():
 
     il.cprint("[✓] Uvicorn loaded", 32)
     il.cprint("[-] Importing modules...", 32)
+
+    il.cprint("[-] Loading database...", 32)
+    try:
+        from .database import db
+    except Exception:
+        il.cprint(
+            "\n[x]: failed to connect to pymongo! please ensure your database URL is correct and you are able to connect to it.",
+            31,
+        )
+        raise AOSError("database connection failed!")
+    finally:
+        il.cprint("[✓] Database OK", 32)
 
     from .routes.backend import BackendAPI
     from .routes.public import PublicAPI
