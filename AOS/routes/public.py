@@ -30,7 +30,6 @@ class PublicAPI():
         @self.router.get("/.administer")
         async def administer_metadata():
             return JSONResponse({
-                    "supported_versions": globals.state["permitted_versions"],
                     "instance_name": globals.instance_name,
                     "server": "AdministerAppServer",
                     "api_version": globals.version,
@@ -38,13 +37,15 @@ class PublicAPI():
 
                     "engine": version,
                     "system": sys_string,
+                    "workers": globals.workers,
 
                     "has_secrets": len(db.get_all(db.SECRETS)) not in [0, None],
                     "total_apps": len(db.get_all(db.APPS)),
                     "is_dev": globals.is_dev,
 
-                    "banner": db.get("banner_text", db.APPS),
-                    "banner_color": "#fffff",
+                    "banner": globals.banner,
+
+                    "supported_versions": globals.state["permitted_versions"]
                 },
                 status_code=200,
             )
