@@ -1,7 +1,9 @@
 # pyxfluff 2024-2025 - 2025
 
 import il
+import os
 import sys
+import orjson
 import logging
 import asyncio
 
@@ -36,56 +38,29 @@ async def lifespan(app: FastAPI):
 
 class AOSVars:
     def __init__(self):
-        self.instance_name = "AOS Canary"
-        self.version = "4.2.0"
-        self.is_dev = True
-        self.enable_bot_execution: True
+        with open(os.path.join(os.path.dirname(__file__), "../config.json"), "r") as file:
+            config = orjson.loads(file.read())
+            file.close()
 
-        self.dbattrs = {
-            "use_prod_db": False,
-            "use_mock_db": False,
-            "address": self.is_dev and "mongodb://mail.iipython.dev:27017"
-                or "mongodb://127.0.0.1:27017",
-            "timeout_ms": 15000,
-        }
+        self.instance_name = config.instance_name
+        self.version = config.version
+        self.is_dev = config.is_dev
+        self.enable_bot_execution = config.enable_bot_execution
 
-        self.security = {
-            "use_roblox_lock": False,
-            "use_api_keys": False,
-            "use_sessions": False,
-            "ratelimiting": {
-                "max_reqs": 30,
-                "reset_timeframe": 150,
-                "max_incidents_before_block": 5,
-            },
-        }
+        self.dbattrs = config.get("dbattrs", {})
+        self.security = config.get("security", {})
+        self.flags = config.get("flags", {})
+        self.state = config.get("state", {})
 
-        self.flags = {
-            "v1x_cutoff": True,
-            "beta_cli": True,
-            "use_app_state": True,
-            "is_v4_endpoints": True,
-            "use_v4_jsons": True,
-        }
+        # Load AOS config
+        with open(os.path.join(os.path.dirname(__file__), "../__aos__.json"), "r") as file:
+            aos_config = orjson.loads(file.read())
+            file.close()
 
-        self.state = {
-            "requests": 0,
-            "votes_today": 0,
-            "default_app": {},
-            "downloads_today": 0,
-            "permitted_versions": ["2.0.0", "1.1.1", "1.2", "1.2.1", "1.2.2", "1.2.3"],
-            "unchecked_endpoints": [
-                "logs",
-                "css",
-                "scss",
-                "js",
-                "img",
-                "download-count",
-                ".administer",
-                "to",
-                "/",
-            ],
-        }
+        self.version = aos_config.version
+
+        self.def_host = aos_config.default_host
+        self.def_port = aos_config.default_port
 
 
 class AOSError(Exception):
@@ -107,7 +82,11 @@ def load_fastapi_app():
         lifespan=lifespan,
     )
 
-    config = Config(app=app, host=argv[2], port=int(argv[3]), workers=8)
+    try:
+        config = Config(app=app, host=argv[2], port=int(argv[3]), workers=globals.workers)
+    except IndexError:
+        config = Config(app=app, host=globals.def_host, port=globals.def_port, workers=globals.workers)
+
     logging.getLogger("uvicorn").disabled = True
     logging.getLogger("uvicorn.access").disabled = True
 
