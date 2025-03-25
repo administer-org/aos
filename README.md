@@ -1,5 +1,5 @@
 <div align = "center">
-<img src="https://github.com/administer-org/app-server/blob/main/assets/adm.png?raw=true" width="128">
+<img src="https://github.com/administer-org/administer/raw/main/.readme/Administer-Text.png?raw=true" width="128">
 
 # App Server
 
