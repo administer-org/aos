@@ -52,7 +52,6 @@ class AOSVars:
             file.close()
 
         self.instance_name = config["instance_name"]
-        self.version = config["version"]
         self.is_dev = config["is_dev"]
         self.enable_bot_execution = config["enable_bot_execution"]
         self.banner = config["banner"]
