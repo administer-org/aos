@@ -36,6 +36,7 @@ async def lifespan(app: FastAPI):
 
 class AOSVars:
     def __init__(self):
+        self.instance_name = "AOS Canary"
         self.version = "4.2.0"
         self.is_dev = True
         self.enable_bot_execution: True
@@ -43,9 +44,8 @@ class AOSVars:
         self.dbattrs = {
             "use_prod_db": False,
             "use_mock_db": False,
-            "address": self.is_dev
-            and "mongodb://mail.iipython.dev:27017"
-            or "mongodb://127.0.0.1:27017",
+            "address": self.is_dev and "mongodb://mail.iipython.dev:27017"
+                or "mongodb://127.0.0.1:27017",
             "timeout_ms": 15000,
         }
 
