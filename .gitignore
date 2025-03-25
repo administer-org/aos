@@ -5,10 +5,11 @@ __pycache__/
 EXAMPLE_APP_JSON.json
 upload_apps.py
 
-aos/reports
+AOS/reports
 
 build/
-aos/administer_app_server.egg-info/
+
+AOS/administer_app_server.egg-info/
 administer_app_server.egg-info/
 
 uv.lock
