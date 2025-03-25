@@ -8,6 +8,9 @@ upload_apps.py
 aos/reports
 
 build/
-src/administer_app_server.egg-info/
+aos/administer_app_server.egg-info/
+administer_app_server.egg-info/
 
-AOS/
+uv.lock
+
+config.json
