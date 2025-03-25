@@ -17,10 +17,17 @@ from uvicorn import Config, Server
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    il.cprint(
-        f"[✓] Done! Serving {len(app.routes)} routes on http://{argv[2]}:{argv[3]}.",
-        32,
-    )
+    try:
+        il.cprint(
+            f"[✓] Done! Serving {len(app.routes)} routes on http://{argv[2]}:{argv[3]}.",
+            32,
+        )
+    except IndexError:
+        il.cprint(
+            f"[✓] Done! Serving {len(app.routes)} routes on http://{globals.def_host}:{globals.def_port}.",
+            32,
+        )
+
     try:
         yield
     finally:
@@ -38,14 +45,17 @@ async def lifespan(app: FastAPI):
 
 class AOSVars:
     def __init__(self):
-        with open(os.path.join(os.path.dirname(__file__), "../config.json"), "r") as file:
+        with open(
+            os.path.join(os.path.dirname(__file__), "../config.json"), "r"
+        ) as file:
             config = orjson.loads(file.read())
             file.close()
 
-        self.instance_name = config.instance_name
-        self.version = config.version
-        self.is_dev = config.is_dev
-        self.enable_bot_execution = config.enable_bot_execution
+        self.instance_name = config["instance_name"]
+        self.version = config["version"]
+        self.is_dev = config["is_dev"]
+        self.enable_bot_execution = config["enable_bot_execution"]
+        self.banner = config["banner"]
 
         self.dbattrs = config.get("dbattrs", {})
         self.security = config.get("security", {})
@@ -53,14 +63,17 @@ class AOSVars:
         self.state = config.get("state", {})
 
         # Load AOS config
-        with open(os.path.join(os.path.dirname(__file__), "../__aos__.json"), "r") as file:
+        with open(
+            os.path.join(os.path.dirname(__file__), "../__aos__.json"), "r"
+        ) as file:
             aos_config = orjson.loads(file.read())
             file.close()
 
-        self.version = aos_config.version
+        self.version = aos_config["version"]
+        self.workers = aos_config["workers"]
 
-        self.def_host = aos_config.default_host
-        self.def_port = aos_config.default_port
+        self.def_host = aos_config["default_host"]
+        self.def_port = aos_config["default_port"]
 
 
 class AOSError(Exception):
@@ -83,9 +96,16 @@ def load_fastapi_app():
     )
 
     try:
-        config = Config(app=app, host=argv[2], port=int(argv[3]), workers=globals.workers)
+        config = Config(
+            app=app, host=argv[2], port=int(argv[3]), workers=globals.workers
+        )
     except IndexError:
-        config = Config(app=app, host=globals.def_host, port=globals.def_port, workers=globals.workers)
+        config = Config(
+            app=app,
+            host=globals.def_host,
+            port=globals.def_port,
+            workers=globals.workers,
+        )
 
     logging.getLogger("uvicorn").disabled = True
     logging.getLogger("uvicorn.access").disabled = True
@@ -129,7 +149,8 @@ def load_fastapi_app():
 
     from .release_bot import bot, token
 
-    asyncio.gather(bot.start(token))
+    if globals.enable_bot_execution:
+        asyncio.gather(bot.start(token))
 
     try:
         Server(config).run()

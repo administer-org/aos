@@ -1,8 +1,12 @@
 {
     "instance_name": "AOS Canary",
-    "version": "4.2.0",
     "is_dev": true,
     "enable_bot_execution": true,
+
+    "banner": {
+        "color": "#fff",
+        "text": "Testing server for canary and Public RC builds."
+    },
 
     "dbattrs": {
         "use_prod_db": false,
@@ -23,13 +27,7 @@
         }
     },
 
-    "flags": {
-        "v1x_cutoff": true,
-        "beta_cli": true,
-        "use_app_state": true,
-        "is_v4_endpoints": true,
-        "use_v4_jsons": true
-    },
+    "flags": { },
 
     "state": {
         "requests": 0,
