@@ -17,6 +17,7 @@ dependencies = [
     "pathlib",
     "nanoid",
     "orjson",
+    "psutil>=7.0.0",
 
     # Discord
     #"audioop-lts",
@@ -29,7 +30,7 @@ dependencies = [
     "matplotlib"
 ]
 
-urls.PrimaryServer = "https://administer.notpyx.me"
+urls.PrimaryServer = "https://admsoftware.org"
 
 [project.scripts]
 aos = "AOS.__main__:main"

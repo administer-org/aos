@@ -1,0 +1,53 @@
+{
+    "instance_name": "",
+    "is_dev": true,
+    "enable_bot_execution": true,
+
+    "dbattrs": {
+        "use_prod_db": true,
+        "address": "mongodb://localhost:27017",
+        "timeout_ms": 4500
+    },
+
+    "security": {
+        "use_roblox_lock": false,
+        "use_api_keys": false,
+        "use_sessions": false,
+
+        "ratelimiting": {
+            "max_reqs": 30,
+            "reset_timeframe": 150,
+            "max_incidents_before_block": 5
+        }
+    },
+
+    "flags": { },
+
+    "state": {
+        "requests": 0,
+        "votes_today": 0,
+        "default_app": {},
+        "downloads_today": 0,
+
+        "permitted_versions": [
+            "2.0.0",
+            "1.1.1",
+            "1.2",
+            "1.2.1",
+            "1.2.2",
+            "1.2.3"
+        ],
+
+        "unchecked_endpoints": [
+            "logs",
+            "css",
+            "scss",
+            "js",
+            "img",
+            "download-count",
+            ".administer",
+            "to",
+            "/"
+        ]
+    }
+}
