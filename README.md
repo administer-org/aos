@@ -10,23 +10,51 @@
 </div>
 
 
-### What is it?
+# What is it?
 
 The App Server is a FastAPI/MongoDB program which stores apps for use in Administer and a website later on, there is no backend panel or anything. What you see is what you get.
 
-### Installing a dev app server
+## Installation Prerequisites
 
-We are working on improvements to this system (installation script, central config, ...) for a later date but this should hold you over for now.
+Install python3 3.13 and pip.
 
-- Install MongoDB, uv, and Python 3.13.
-- Clone the repository and edit the `globals` section of `AOS/__init__.py` to fit your specific needs. You'll also need to generate a security key and set it in the SECRETS db.
-- Run `uv venv`, enter the newly created enviornment with `source .venv/bin/activate`, and run `uv pip install -e . --force-reinstall`. 
+In addition to that, make sure you have a MongoDB instance which **runs locally ONLY** without a password. Because it will not have a password, exposing it to the internet is a bad idea.
 
-... and you're done! You can now run `aos` to access the Marketplace Server CLI. To create new assets in the DB, use the `/app-config/upload` endpoint. For more information, read [the documentation]() 
+# Installation
 
-## Central Server Privacy
+## Standard installation (recommended)
 
-*Last Modified: 1/18/25*
+Just clone the repo and run the installer:
+```sh
+git clone https://github.com/administer-org/app-server
+
+cd app-server
+
+chmod +x Install_AOS.sh
+./Install-AOS.sh
+```
+
+AOS and a systemd unit will be installed automatically.
+
+## Development installation
+
+Run the following (assuming you already have python3 and pip):
+```sh
+pip install uv
+
+uv venv
+
+# Enter the venv.. it varies from OS to OS so if this doesn't work just run the command it tells you to
+source .venv/bin/activate
+
+uv pip install .
+```
+
+And you're done! Make sure to edit your `__aos__.json` and `config.json` files, then run `aos`. 
+
+## Privacy
+
+*Last Modified: 3/25/25*
 
 Administer is designed with privacy as a top priority. We only collect the data necessary to operate this service, and this data is never accessed by anyone other than the system itself. All information is securely stored in an internal MongoDB instance and is never read, shared, or sold by Administer staff. Specifically, we only collect your **Roblox Place ID** and the apps you install to ensure safety for the rating system.
 
@@ -37,7 +65,7 @@ To ensure platform safety, we may log requests if you attempt to misuse our API;
 - Attempted Roblox ID
 - User-Agent string
 
-**Important:** This data is only collected if abusive behavior is detected. For legitimate usage, such as within Roblox game servers, no IP information is collected. Abusing the service will result in permanent blockage, and such decisions are typically final unless there is compelling evidence of error.
+**Important:** This data is only collected if abusive behavior is detected. For legitimate usage, such as within Roblox game servers, no IP information is sent to permanent storage. Abusing the service will result in permanent blockage, and such decisions are typically final unless there is compelling evidence of error.
 
 If you believe you were wrongly flagged and recieved a "This incidient will be reported" message in error, please [contact us](mailto:administer-team@notpyx.me) to resolve the issue and remove your information from our logs.
 
@@ -55,7 +83,16 @@ We do **not collect**:
 - Your game's admin/rank structure
 - Any other information from your game or Administer
 
-If we change this policy (for example opt-in detailed analytics, comments on apps, ...), you will be notified via the Discord server, panel (if it's significant), and other appropriate channels.
+**Indivudually**, we collect:
+
+- your roblox place ID
+- the timestamp that you sent your first request
+- the apps you have installed (in order to provide voting)
+- your votes and favorites
+
+If we change this policy (for example opt-in detailed analytics, comments on apps, ...), you will be notified via the Discord server, core panel (if it's significant), and other appropriate channels.
+
+When a request is made, we log the IP, Roblox place ID (if any), timestamp, request method, status code, server processing time, and any other request-speicifc logs. This is for debugging. The logs are purged weekly at midnight and are generally not read unless there is a service disruption caused by the backend code.
 
 ## Contributions
 
