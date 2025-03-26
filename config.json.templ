@@ -1,12 +1,17 @@
 {
-    "instance_name": "",
+    "instance_name": "My AOS Server",
     "is_dev": true,
     "enable_bot_execution": true,
+
+    "banner": {
+        "color": "#fff",
+        "text": "Testing AOS instance"
+    },
 
     "dbattrs": {
         "use_prod_db": true,
         "address": "mongodb://localhost:27017",
-        "timeout_ms": 4500
+        "timeout_ms": 7500
     },
 
     "security": {
@@ -23,31 +28,5 @@
 
     "flags": { },
 
-    "state": {
-        "requests": 0,
-        "votes_today": 0,
-        "default_app": {},
-        "downloads_today": 0,
-
-        "permitted_versions": [
-            "2.0.0",
-            "1.1.1",
-            "1.2",
-            "1.2.1",
-            "1.2.2",
-            "1.2.3"
-        ],
-
-        "unchecked_endpoints": [
-            "logs",
-            "css",
-            "scss",
-            "js",
-            "img",
-            "download-count",
-            ".administer",
-            "to",
-            "/"
-        ]
-    }
+    "report_webhook_url": "https://discord.com/api/webhooks/..."
 }

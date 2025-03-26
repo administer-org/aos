@@ -3,20 +3,19 @@
 from AOS import globals
 from AOS.database import db
 
-
-if not globals.is_dev:
-    from AOS.reports.report import daily_report
-else:
-    def daily_report(db):
-        print("[x] Request to spawn daily report ignored due to missing modules")
-
-
 from time import time
 from pathlib import Path
 
 from fastapi import Request
 from fastapi.staticfiles import StaticFiles
 from fastapi.responses import FileResponse, RedirectResponse
+
+if globals.is_dev:
+    from AOS.reports.report import daily_report
+else:
+    def daily_report(db):
+        print("[x] Request to spawn daily report ignored due to missing modules")
+
 
 root = Path(__file__).parents[1]
 day = 0
@@ -30,6 +29,7 @@ class Frontend():
     def initialize_frontend(self):
         @self.app.get("/")
         async def index(req: Request):
+            daily_report(db)
             global day
 
             if day != round(time() / 86400):

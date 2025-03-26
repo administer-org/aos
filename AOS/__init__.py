@@ -59,7 +59,6 @@ class AOSVars:
         self.dbattrs = config.get("dbattrs", {})
         self.security = config.get("security", {})
         self.flags = config.get("flags", {})
-        self.state = config.get("state", {})
 
         # Load AOS config
         with open(
@@ -73,6 +72,8 @@ class AOSVars:
 
         self.def_host = aos_config["default_host"]
         self.def_port = aos_config["default_port"]
+
+        self.state = aos_config.get("state", {})
 
 
 class AOSError(Exception):

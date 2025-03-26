@@ -5,8 +5,6 @@ __pycache__/
 EXAMPLE_APP_JSON.json
 upload_apps.py
 
-AOS/reports
-
 build/
 
 AOS/administer_app_server.egg-info/
