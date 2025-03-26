@@ -1,0 +1,16 @@
+[Unit]
+Description=An Administer AOS instance.
+Requires=network.target
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=$WD
+ExecStart=$ES
+StandardOutput=append:/etc/adm/log
+StandardError=append:/etc/adm/log
+Restart=on-failure
+StartLimitIntervalSec=30
+
+[Install]
+WantedBy=multi-user.target

@@ -8,7 +8,7 @@ upload_apps.py
 build/
 
 AOS/administer_app_server.egg-info/
-administer_app_server.egg-info/
+administer_aos.egg-info/
 
 uv.lock
 

@@ -147,9 +147,10 @@ def load_fastapi_app():
     middleware = Middleware(app)
     middleware.init()
 
-    from .release_bot import bot, token
 
     if globals.enable_bot_execution:
+        from .release_bot import bot, token
+        
         asyncio.gather(bot.start(token))
 
     try:
