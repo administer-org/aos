@@ -29,7 +29,6 @@ class Frontend():
     def initialize_frontend(self):
         @self.app.get("/")
         async def index(req: Request):
-            daily_report(db)
             global day
 
             if day != round(time() / 86400):
