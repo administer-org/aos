@@ -8,7 +8,7 @@ from pathlib import Path
 
 from fastapi import Request
 from fastapi.staticfiles import StaticFiles
-from fastapi.responses import FileResponse, RedirectResponse
+from fastapi.responses import PlainTextResponse, RedirectResponse
 
 if globals.is_dev:
     from AOS.reports.report import daily_report
@@ -38,27 +38,8 @@ class Frontend():
                     "Ignoring reporting request, this will go through on prod"
                 ) or daily_report(db)
 
-            return FileResponse(root / "frontend" / "index.html")
+            return PlainTextResponse("This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#")
 
         @self.app.get("/app/{app:str}")
         def app_frontend(req: Request, app: str):
             pass
-
-        @self.app.get("/to/{fpath:path}")
-        def social_to(fpath: str):
-            for route, path in {
-                "discord":     "https://discord.gg/3Q8xkcBT3M",
-                "git":        f"https://github.com/administer-org/{fpath.removeprefix("git/")}",
-                "discourse":   "https://devforum.roblox.com/t/3179989",
-                "roblox":      "https://create.roblox.com/store/asset/127698208806211/Administer",
-                "docs":        "https://docs.administer.notpyx.me"
-            }.items():
-                if route in fpath:
-                    return RedirectResponse(path)
-
-            return {"error": "That path isn't a valid shortlink."}
-
-        for mount in [
-            ("/", StaticFiles(directory=root / "frontend")),
-        ]:
-            self.app.mount(*mount)
