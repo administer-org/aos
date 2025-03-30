@@ -8,7 +8,6 @@ import logging
 import asyncio
 
 from sys import argv
-from subprocess import Popen
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -46,7 +45,10 @@ async def lifespan(app: FastAPI):
 class AOSVars:
     def __init__(self):
         files = ["../._config.json", "../._aos.json", "../._version_data.json"]
-        config, aos_config, version_data = (orjson.loads(open(os.path.join(os.path.dirname(__file__), f), "r").read()) for f in files)
+        config, aos_config, version_data = (
+            orjson.loads(open(os.path.join(os.path.dirname(__file__), f), "r").read())
+            for f in files
+        )
 
         self.instance_name = config["instance_name"]
         self.is_dev = config["is_dev"]
@@ -139,10 +141,9 @@ def load_fastapi_app():
     middleware = Middleware(app)
     middleware.init()
 
-
     if globals.enable_bot_execution:
         from .release_bot import bot, token
-        
+
         asyncio.gather(bot.start(token))
 
     try:

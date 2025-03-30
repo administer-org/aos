@@ -7,8 +7,7 @@ from time import time
 from pathlib import Path
 
 from fastapi import Request
-from fastapi.staticfiles import StaticFiles
-from fastapi.responses import PlainTextResponse, RedirectResponse
+from fastapi.responses import PlainTextResponse
 
 if globals.is_dev:
     from AOS.reports.report import daily_report

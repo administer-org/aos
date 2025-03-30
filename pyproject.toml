@@ -9,7 +9,6 @@ dependencies = [
     "uvicorn",
     "fastapi",
     "httpx",
-
     # Utilities
     "Levenshtein",
     "colorthief",
@@ -18,16 +17,14 @@ dependencies = [
     "nanoid",
     "orjson",
     "psutil>=7.0.0",
-
     # Discord
     #"audioop-lts",
     #"py-cord",
-
     # Git packages
     "indigo-logger @ git+https://github.com/iiPythonx/il",
-
     # Development
-    "matplotlib"
+    "matplotlib",
+    "flake8>=7.2.0",
 ]
 
 urls.PrimaryServer = "https://admsoftware.org"

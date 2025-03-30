@@ -65,7 +65,7 @@ class BackendAPI:
                         / (data["Votes"]["Likes"] + data["Votes"]["Dislikes"])
                     )
                 except ZeroDivisionError:
-                        rating = 0 # ideally we can remove this in some months
+                    rating = 0  # ideally we can remove this in some months
 
                 final.append(
                     {
@@ -224,7 +224,7 @@ class BackendAPI:
             print(config)
             try:
                 new_app_id = config["Metadata"]["AdministerID"]
-            except KeyError as _:
+            except KeyError:
                 config["Metadata"]["GeneratedAt"] = time.time()
                 config["Metadata"]["AdministerID"] = new_app_id
                 config["Votes"] = {"Likes": 0, "Dislikes": 0, "Favorites": 0}
@@ -244,7 +244,7 @@ class BackendAPI:
             try:
                 app = request_app(appid)
 
-                app["Metadata"]["AppAPIPreferredVersion"] = app["Metadata"]["AppAPIPreverredVersion"] # i made a typo and do not want to wipe the dev db
+                app["Metadata"]["AppAPIPreferredVersion"] = app["Metadata"]["AppAPIPreverredVersion"]  # i made a typo and do not want to wipe the dev db
 
                 if app is None:
                     raise FileNotFoundError

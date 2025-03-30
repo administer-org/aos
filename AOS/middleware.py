@@ -38,8 +38,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 status_code=400,
             )
 
-        print(str(request.url).split("/"))
-
         try:
             if (
                 str(request.url).split("/")[4] == "app-config"
@@ -210,7 +208,6 @@ class Logger(BaseHTTPMiddleware):
 
         res.headers["X-Powered-By"] = f"AdministerAppServer; AOS/{globals.version}"
         res.headers["Server-Timing"] = f"{res.headers.get('Server-Timing', '')}full_process;dur={str((time.time() - t) * 1000)}"
-
 
         return res
 

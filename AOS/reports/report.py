@@ -1,6 +1,4 @@
-# pyxfluff 2024
-
-# NOT FOR PUBLIC RELEASE
+# pyxfluff 2024 - 2025
 
 import AOS
 
@@ -11,7 +9,7 @@ from datetime import datetime
 
 
 def posneg_str(value, value2) -> str:
-    return f"{(int(value) > int(value2)) and "+" or ""}{int(value)-int(value2)}"
+    return f"{(int(value) > int(value2)) and "+" or ""}{int(value) - int(value2)}"
 
 
 def daily_report(
@@ -42,7 +40,7 @@ def daily_report(
         "ip_blocks": 0
     }
 
-    if database.get(day, database.REPORTED_VERSIONS) == None:
+    if database.get(day, database.REPORTED_VERSIONS) is None:
         database.set(
             day,
             {"internal": {}, "qa": {}, "canary": {}, "beta": {}, "live": {}},
@@ -53,8 +51,14 @@ def daily_report(
         f"day-{round(time() / 86400)}", todays_report, database.REPORTED_VERSIONS
     )
 
-    if database.get(day - 1, database.REPORTED_VERSIONS) is None or database.get(day - 1, database.REPORTED_VERSIONS) == {"ERROR_CAUGHT": True}:
-        database.set(day - 1, {"ERROR_CAUGHT": True, "live": {"ERROR_CAUGHT": True}}, database.REPORTED_VERSIONS)
+    if database.get(day - 1, database.REPORTED_VERSIONS) is None or database.get(
+        day - 1, database.REPORTED_VERSIONS
+    ) == {"ERROR_CAUGHT": True}:
+        database.set(
+            day - 1,
+            {"ERROR_CAUGHT": True, "live": {"ERROR_CAUGHT": True}},
+            database.REPORTED_VERSIONS,
+        )
 
     post(
         url="https://discord.com/api/webhooks/1299120437984497695/IYGS0-Dsh2Rkw24K5w6XnofIzroIEmp_pndhdGGz0EfsdHvBr5xydt2tnMNJYjz_eRNw",
