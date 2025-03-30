@@ -12,4 +12,4 @@ administer_aos.egg-info/
 
 uv.lock
 
-config.json
+._config.json
