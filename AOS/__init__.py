@@ -45,11 +45,8 @@ async def lifespan(app: FastAPI):
 
 class AOSVars:
     def __init__(self):
-        with open(
-            os.path.join(os.path.dirname(__file__), "../config.json"), "r"
-        ) as file:
-            config = orjson.loads(file.read())
-            file.close()
+        files = ["../._config.json", "../._aos.json", "../._version_data.json"]
+        config, aos_config, version_data = (orjson.loads(open(os.path.join(os.path.dirname(__file__), f), "r").read()) for f in files)
 
         self.instance_name = config["instance_name"]
         self.is_dev = config["is_dev"]
@@ -60,13 +57,6 @@ class AOSVars:
         self.security = config.get("security", {})
         self.flags = config.get("flags", {})
 
-        # Load AOS config
-        with open(
-            os.path.join(os.path.dirname(__file__), "../__aos__.json"), "r"
-        ) as file:
-            aos_config = orjson.loads(file.read())
-            file.close()
-
         self.version = aos_config["version"]
         self.workers = aos_config["workers"]
 
@@ -74,6 +64,8 @@ class AOSVars:
         self.def_port = aos_config["default_port"]
 
         self.state = aos_config.get("state", {})
+
+        self.versions = version_data
 
 
 class AOSError(Exception):

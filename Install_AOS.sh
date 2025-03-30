@@ -20,8 +20,8 @@ This tool will fully install and set up an Administer AOS instance. It will also
 echo "Now we'll start by having you edit your configuration with nano. You will need a MongoDB instance ready. Press enter to continue."
 read 
 
-cp config.json.templ config.json
-nano config.json
+cp config.json.templ ._config.json
+nano ._config.json
 
 echo -n "
 Would you like to edit the AOS environment file (__aos__.json)? This is where you edit the port and host that AOS will serve on. 
@@ -33,10 +33,10 @@ Please note that modifying [state] will harm AOS's functionality. We have prefil
 read edit_env
 
 THREADS="\"workers\": $(nproc --all)"
-sed -i "s|\"workers\": 8|$THREADS|g" __aos__.json
+sed -i "s|\"workers\": 8|$THREADS|g" ._aos.json
 
 if [[ "$edit_env" == "y" || "$edit_env" == "yes" ]]; then
-    nano __aos__.json
+    nano ._aos.json
 fi
 
 
