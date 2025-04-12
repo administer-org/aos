@@ -44,7 +44,7 @@ class BackendAPI:
                 {
                     "schemaVersion": 1,
                     "label": "Administer Downloads",
-                    "message": str(request_app(1)["downloads"]),
+                    "message": str(request_app("org.admsoftware.PlayerManagement")["downloads"]),
                     "color": "orange",
                 }
             )
@@ -101,8 +101,6 @@ class BackendAPI:
                 final = sorted(final, key=lambda x: x["weighted_score"], reverse=True)[
                     :4
                 ]
-
-            final.append({"processed_in": time.time() - _t})
 
             return JSONResponse(final, status_code=200)
 
@@ -187,7 +185,7 @@ class BackendAPI:
                 return JSONResponse(
                     {
                         "code": 400,
-                        "message": "Administer is too out of date to report its version. Please update Administer.",
+                        "message": "Administer is too old to report its version. Please update Administer.",
                     },
                     status_code=400,
                 )
@@ -337,7 +335,7 @@ class BackendAPI:
                 {
                     "code": 200,
                     "message": f"success{is_overwrite and "_re-recorded" or ""}",
-                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and "We removed your previous rating for this asset."}",
+                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and " We removed your previous rating for this asset."}",
                 },
                 status_code=200,
             )

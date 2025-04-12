@@ -9,8 +9,11 @@ from pathlib import Path
 from AOS import AOSError, globals as var
 
 if not var.is_dev:
-    il.set_log_file(Path("/etc/adm/log"))
-    logging.getLogger("uvicorn.error").disabled = True
+    try:
+        il.set_log_file(Path("/etc/adm/log"))
+        logging.getLogger("uvicorn.error").disabled = True
+    except Exception:
+        il.cprint("Failed to write to the logfile! Please make sure you have properly initialized AOS.", 24)
 
 
 def serve_web_server():
