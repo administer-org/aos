@@ -47,6 +47,7 @@ python3 -m uv venv
 
 sudo mkdir /etc/adm
 sudo touch /etc/adm/log
+sudo chmod 7777 /etc/adm /etc/adm/log
 
 source .venv/bin/activate
 
@@ -65,8 +66,7 @@ sudo systemctl daemon-reload
 sudo systemctl enable adm
 sudo systemctl start adm
 
-echo "
-All done! Administer is now running at whatever URL you defined in your __aos__.json file.
+echo "All done! Administer is now running at whatever URL you defined in your __aos__.json file.
 
 The service was installed to /etc/systemd/system/aos.service incase you need to modify it.
 "

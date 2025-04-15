@@ -1,11 +1,10 @@
 {
-    "version": "4.3.1",
+    "version": "4.4.0",
 
     "default_port": 8020,
     "default_host": "0.0.0.0",
 
     "workers": 8,
-
 
     "state": {
         "requests": 0,

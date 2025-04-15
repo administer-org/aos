@@ -5,7 +5,7 @@ import re
 import discord
 from discord.ext import commands
 
-from .database import db
+from ..database import db
 
 bot = commands.Bot(intents=discord.Intents.all())
 token = db.get("VERSION_BOT", db.SECRETS)

@@ -7,10 +7,18 @@ from sys import argv
 from pathlib import Path
 
 from AOS import AOSError, globals as var
+from AOS.utils import logging
+
+if var.logging_location is None:
+    var.logging_location = "/etc/adm/log"
+    il.cprint("config.logging_location is unset, defaulting to `/etc/adm/log`", 33)
+
+if not Path(var.logging_location).is_file:
+    il.cprint("Your logfile (._config.json\\logging_location) is not a file! Please ensure it exists and is not a directory.", 24)
 
 if not var.is_dev:
     try:
-        il.set_log_file(Path("/etc/adm/log"))
+        il.set_log_file(Path(var.logging_location))
         logging.getLogger("uvicorn.error").disabled = True
     except Exception:
         il.cprint("Failed to write to the logfile! Please make sure you have properly initialized AOS.", 24)
@@ -71,6 +79,20 @@ def help_command():
         34,
     )
 
+    il.cprint(
+        """* aos logs read
+        Reads the logfile with less.
+    """,
+        34,
+    )
+
+    il.cprint(
+        """* aos logs clear
+        Forces logs to clear.
+    """,
+        34,
+    )
+
 
 il.box(85, "Administer AOS (marketplace server)", f"v{var.version}")
 
@@ -100,14 +122,17 @@ match argv[1]:
 
     case "usage":
         try:
-            from .reports.GraphReporter import load
+            from .utils.usage_graph import load
 
             load()
         except ImportError:
             il.cprint(
-                "\n[x]: This command may only be used by staff",
+                "\n[x]: This command has been disabled by your server maintainer",
                 31,
             )
+
+    case "logs":
+        logging.process_command(argv[2])
 
     case _:
         il.cprint("\n[x]: command not found, showing help", 31)

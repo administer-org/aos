@@ -1,7 +1,7 @@
 [project]
 name = "administer-aos"
 description = "Administer's AOS service for distributing apps."
-version = "4.2.0"
+version = "4.4.0"
 requires-python = ">=3.11"
 authors = [{ name = "pyxfluff", email = "business@notpyx.me" }]
 dependencies = [
@@ -31,7 +31,7 @@ dependencies = [
     "flake8>=7.2.0",
 ]
 
-urls.PrimaryServer = "https://admsoftware.org"
+urls.homepage = "https://admsoftware.org"
 
 [project.scripts]
 aos = "AOS.__main__:main"

@@ -53,6 +53,8 @@ class AOSVars:
         self.instance_name = config["instance_name"]
         self.is_dev = config["is_dev"]
         self.enable_bot_execution = config["enable_bot_execution"]
+
+        self.logging_location = config["logging_location"]
         self.banner = config["banner"]
 
         self.dbattrs = config.get("dbattrs", {})
@@ -142,7 +144,7 @@ def load_fastapi_app():
     middleware.init()
 
     if globals.enable_bot_execution:
-        from .release_bot import bot, token
+        from .utils.release_bot import bot, token
 
         asyncio.gather(bot.start(token))
 

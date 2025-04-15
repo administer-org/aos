@@ -6,7 +6,7 @@
 import matplotlib.pyplot as plt
 from AOS.database import db
 
-start = 20019
+#start = 20019
 x, y, fy = [], [], []
 
 data = db.get_all(db.REPORTED_VERSIONS)
@@ -20,7 +20,7 @@ def daily_usage_graph():
         except KeyError:
             continue
 
-        x.append(int(day["administer_id"]) - start)
+        x.append(int(day["administer_id"]))
         y.append(day["data"]["live"])
 
     y2 = [item.get('1.2', 0) for item in y]
@@ -50,7 +50,7 @@ def overall_places():
     for day in data:
         db_key: str = day["administer_id"]
         if db_key.startswith("day-"):
-            day_number = int(db_key.split("-")[1]) - start
+            day_number = int(db_key.split("-")[1])
             places_len = day["data"].get("places_len", 0)
 
             x.append(day_number)
@@ -71,14 +71,17 @@ def combined():
         except KeyError:
             continue
 
-        x.append(int(day["administer_id"]) - start)
-        y.append(day["data"]["live"])
+        x.append(int(day["administer_id"]))
+        try:
+            y.append(dict(day["data"]["live"], **day["data"]["beta"]))
+        except Exception:
+            x.remove(int(day["administer_id"]))
 
     y2 = [item.get('1.2', 0) for item in y]
     y3 = [item.get('1.2.1', 0) for item in y]
     y4 = [item.get('1.2.2', 0) for item in y]
     y5 = [item.get('1.2.3', 0) for item in y]
-    y6 = [item.get('2.0', 0) for item in y]
+    y6 = [item.get('2.0.0', 0) for item in y]
     y = [item.get('1.1.1', 0) for item in y]
 
     plt.plot(x, y, marker='o', label="1.1.1")
@@ -86,14 +89,14 @@ def combined():
     plt.plot(x, y3, marker='o', label="1.2.1")
     plt.plot(x, y4, marker='o', label="1.2.2")
     plt.plot(x, y5, marker='o', label="1.2.3")
-    plt.plot(x, y6, marker='o', label="2.0")
+    plt.plot(x, y6, marker='o', label="2.0.0")
 
     x, y = [], []
 
     for day in data:
         db_key: str = day["administer_id"]
         if db_key.startswith("day-"):
-            day_number = int(db_key.split("-")[1]) - start
+            day_number = int(db_key.split("-")[1])
             places_len = day["data"].get("places_len", 0)
 
             x.append(day_number)
@@ -113,3 +116,6 @@ plt.tight_layout()
 plt.savefig("/home/Pyx/adm/Log")
 
 plt.show()
+
+def load():
+    print("Done!")
