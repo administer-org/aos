@@ -1,13 +1,13 @@
 # pyxfluff 2024-2025 - 2025
 
 import AOS.deps.il as il
-import os
 import sys
 import orjson
 import logging
 import asyncio
 
 from sys import argv
+from pathlib import Path
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
@@ -46,7 +46,7 @@ class AOSVars:
     def __init__(self):
         files = ["../._config.json", "../._aos.json", "../._version_data.json"]
         config, aos_config, version_data = (
-            orjson.loads(open(os.path.join(os.path.dirname(__file__), f), "r").read())
+            orjson.loads((Path(__file__).parent / f).read_text())
             for f in files
         )
 

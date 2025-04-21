@@ -1,6 +1,6 @@
 __pycache__/
-
 .venv/
+dist/
 
 EXAMPLE_APP_JSON.json
 upload_apps.py
