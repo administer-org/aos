@@ -1,6 +1,6 @@
 # pyxfluff 2024 - 2025
 
-import il
+import AOS.deps.il as il
 import logging
 
 from sys import argv

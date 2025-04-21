@@ -1,6 +1,6 @@
 # pyxfluff 2025
 
-import il
+import AOS.deps.il as il
 import re
 import discord
 from discord.ext import commands

@@ -1,6 +1,6 @@
 # pyxfluff 2024-2025 - 2025
 
-import il
+import AOS.deps.il as il
 import os
 import sys
 import orjson

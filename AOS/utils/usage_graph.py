@@ -108,6 +108,8 @@ def combined():
 
     plt.legend()
 
+    print(plt)
+
 #daily_usage_graph()
 #overall_places()
 combined()
