@@ -134,6 +134,12 @@ match argv[1]:
     case "logs":
         logging.process_command(argv[2])
 
+    case "setup":
+        il.cprint(
+                "\n[x]: This command is not ready yet! Please clone `config.json.templ` to `config.json` and edit it.",
+                31,
+            )
+
     case _:
         il.cprint("\n[x]: command not found, showing help", 31)
         help_command()

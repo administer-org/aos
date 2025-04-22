@@ -44,11 +44,21 @@ async def lifespan(app: FastAPI):
 
 class AOSVars:
     def __init__(self):
-        files = ["../._config.json", "../._aos.json", "../._version_data.json"]
-        config, aos_config, version_data = (
-            orjson.loads((Path(__file__).parent / f).read_text())
-            for f in files
-        )
+        try:
+            files = ["../._config.json", "../._aos.json", "../._version_data.json"]
+            config, aos_config, version_data = (
+                orjson.loads((Path(__file__).parent / f).read_text())
+                for f in files
+            )
+        except Exception as e:
+            il.cprint("[!] Welcome to AOS!", 34) 
+            il.cprint("    > It seems like your enviornment has not been setup.", 32)
+            il.cprint("       > If you are installed via PyPI or on Windows, run the following:", 32)
+            il.cprint("         > aos setup", 33)
+            il.cprint("       > If you are running on a unix-like system then please run", 32)
+            il.cprint("         > ./Install_AOS", 33)
+            raise AOSError(f"exiting: {e}")
+
 
         self.instance_name = config["instance_name"]
         self.is_dev = config["is_dev"]
