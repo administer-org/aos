@@ -131,9 +131,9 @@ def load_fastapi_app():
     else:
         il.cprint("[✓] Database OK", 32)
 
-    from .routes.backend import BackendAPI
-    from .routes.public import PublicAPI
-    from .routes.frontend import Frontend
+    from .plugins.backend import BackendAPI
+    from .plugins.public import PublicAPI
+    from .plugins.frontend import Frontend
     from .middleware import Middleware
 
     backend_api = BackendAPI(app)
