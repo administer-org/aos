@@ -1,0 +1,10 @@
+{
+    "name": "Reporting",
+    "description": "Use this tool to see what versions of Administer connect to your AOS instance.",
+    "commands": {
+        "editor": {
+            "directory": ".reporter",
+            "help": "Load the usage graph."
+        }
+    }
+}

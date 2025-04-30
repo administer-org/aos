@@ -4,12 +4,13 @@
 # I know it's ugly and `start` is wrong so I am working to fix it
 
 import matplotlib.pyplot as plt
-from AOS.database import db
+from AOS.plugins.database import db
 
-#start = 20019
+# start = 20019
 x, y, fy = [], [], []
 
 data = db.get_all(db.REPORTED_VERSIONS)
+
 
 def daily_usage_graph():
     x, y = [], []
@@ -43,6 +44,7 @@ def daily_usage_graph():
     plt.title("Administer usage over the LIVE branch")
     plt.legend(["1.1.1", "1.2", "1.2.1", "1.2.2", "1.2.3", "2.0"])
 
+
 def overall_places():
     x = []
     y = []
@@ -62,6 +64,7 @@ def overall_places():
     plt.xlabel("Day")
     plt.title("Number of Administer-powered games over time")
     plt.legend()
+
 
 def combined():
     x, y = [], []
@@ -110,14 +113,16 @@ def combined():
 
     print(plt)
 
-#daily_usage_graph()
-#overall_places()
+
+# daily_usage_graph()
+# overall_places()
 combined()
 
 plt.tight_layout()
 plt.savefig("/home/Pyx/adm/Log")
 
 plt.show()
+
 
 def load():
     print("Done!")

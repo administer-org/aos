@@ -1,0 +1,7 @@
+{
+    "name": "Middleware",
+    "description": "AOS Security middleware.",
+    "requires_fastapi": true,
+    "init": true,
+    "commands": {}
+}

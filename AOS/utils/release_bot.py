@@ -5,7 +5,7 @@ import re
 import discord
 from discord.ext import commands
 
-from ..database import db
+from ..plugins.database import db
 
 bot = commands.Bot(intents=discord.Intents.all())
 token = db.get("VERSION_BOT", db.SECRETS)
@@ -14,7 +14,8 @@ token = db.get("VERSION_BOT", db.SECRETS)
 
 
 @bot.slash_command(name="create-release", description="Creates a new release.")
-async def new_release(ctx, name: str, latest: bool, distributed_with: str, changelogs: str):
+async def new_release(ctx, name: str, latest: bool,
+                      distributed_with: str, changelogs: str):
     # Tests
     if not re.search(r"^\d+\.\d+\.\d+(-rc\d+|-beta\d+|-git)?$", name):
         await ctx.respond(":x: The provided version is invalid (does not follow x.x.x-x(git, rc, beta) format)")

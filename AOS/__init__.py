@@ -1,6 +1,9 @@
 # pyxfluff 2024-2025 - 2025
 
 import AOS.deps.il as il
+
+import AOS
+
 import sys
 import orjson
 import logging
@@ -45,20 +48,24 @@ async def lifespan(app: FastAPI):
 class AOSVars:
     def __init__(self):
         try:
-            files = ["../._config.json", "../._aos.json", "../._version_data.json"]
+            files = [
+                "../._config.json",
+                "../._aos.json",
+                "../._version_data.json"]
             config, aos_config, version_data = (
                 orjson.loads((Path(__file__).parent / f).read_text())
-                for f in files
-            )
+                for f in files)
         except Exception as e:
-            il.cprint("[!] Welcome to AOS!", 34) 
-            il.cprint("    > It seems like your enviornment has not been setup.", 32)
-            il.cprint("       > If you are installed via PyPI or on Windows, run the following:", 32)
+            il.cprint("[!] Welcome to AOS!", 34)
+            il.cprint(
+                "    > It seems like your enviornment has not been setup.", 32)
+            il.cprint(
+                "       > If you are installed via PyPI or on Windows, run the following:", 32)
             il.cprint("         > aos setup", 33)
-            il.cprint("       > If you are running on a unix-like system then please run", 32)
+            il.cprint(
+                "       > If you are running on a unix-like system then please run", 32)
             il.cprint("         > ./Install_AOS", 33)
             raise AOSError(f"exiting: {e}")
-
 
         self.instance_name = config["instance_name"]
         self.is_dev = config["is_dev"]
@@ -70,6 +77,8 @@ class AOSVars:
         self.dbattrs = config.get("dbattrs", {})
         self.security = config.get("security", {})
         self.flags = config.get("flags", {})
+
+        self.plugin_load_order = aos_config.get("plugin_load_order", {})
 
         self.version = aos_config["version"]
         self.workers = aos_config["workers"]
@@ -89,17 +98,21 @@ class AOSError(Exception):
 
 
 globals = AOSVars()
+app = None
 
 
 def load_fastapi_app():
-    app = FastAPI(
+    il.cprint("[-] Loading Uvicorn..", 33)
+    AOS.app = FastAPI(
         debug=globals.is_dev,
-        title=f"Administer App Server {globals.version}",
+        title=f"Administer App Server {
+            globals.version}",
         description="An Administer app server instance for distributing Administer applications.",
         version=globals.version,
         openapi_url="/openapi",
-        lifespan=lifespan,
-    )
+        lifespan=lifespan)
+
+    app = AOS.app
 
     try:
         config = Config(
@@ -110,57 +123,24 @@ def load_fastapi_app():
             app=app,
             host=globals.def_host,
             port=globals.def_port,
-            workers=globals.workers,
+            workers=globals.workers
         )
 
     logging.getLogger("uvicorn").disabled = True
     logging.getLogger("uvicorn.access").disabled = True
 
     il.cprint("[✓] Uvicorn loaded", 32)
-    il.cprint("[-] Importing modules...", 32)
-
-    il.cprint("[-] Loading database...", 32)
-    try:
-        from .database import db
-    except Exception:
-        il.cprint(
-            "\n[x]: failed to connect to pymongo! please ensure your database URL is correct and you are able to connect to it.",
-            31,
-        )
-        raise AOSError("database connection failed!")
-    else:
-        il.cprint("[✓] Database OK", 32)
-
-    from .plugins.backend import BackendAPI
-    from .plugins.public import PublicAPI
-    from .plugins.frontend import Frontend
-    from .middleware import Middleware
-
-    backend_api = BackendAPI(app)
-    public_api = PublicAPI(app)
-
-    backend_api.initialize_api_routes()
-    backend_api.initialize_content_routes()
-    public_api.initialize_routes()
-
-    app.include_router(backend_api.router, prefix="/api")
-    app.include_router(backend_api.asset_router, prefix="/api")
-    app.include_router(public_api.router, prefix="/pub")
-
-    frontend = Frontend(app)
-    frontend.initialize_frontend()
-
-    middleware = Middleware(app)
-    middleware.init()
-
     if globals.enable_bot_execution:
         from .utils.release_bot import bot, token
 
         asyncio.gather(bot.start(token))
 
-    try:
-        Server(config).run()
-    except KeyboardInterrupt:
-        il.cprint("[✓] Cleanup job OK", 31)
+    def run():
+        try:
+            Server(config).run()
+        except KeyboardInterrupt:
+            il.cprint("[✓] Cleanup job OK", 31)
 
-    return app
+    AOS.run_server = run
+
+    return True

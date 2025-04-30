@@ -26,4 +26,5 @@ def process_command(command):
             run(["less", globals.logging_location])
 
         case _:
-            raise AOSError("Command not found! Please use `aos help` for more information.")
+            raise AOSError(
+                "Command not found! Please use `aos help` for more information.")

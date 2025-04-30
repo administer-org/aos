@@ -10,7 +10,7 @@ import platform
 from sys import version
 from fastapi import Request, APIRouter
 
-from AOS.database import db
+from AOS.plugins.database import db
 
 sys_string = f"{platform.system()} {platform.release()} ({platform.version()})"
 
@@ -61,7 +61,8 @@ class PublicAPI:
             current_vers = req.headers.get("X-Adm-Version")
 
             try:
-                globals.versions["versions"][current_vers]["_retrieved_at"] = time.time()
+                globals.versions["versions"][current_vers]["_retrieved_at"] = time.time(
+                )
             except KeyError:
                 return JSONResponse({
                     "message": "That is not a valid version."
@@ -78,6 +79,6 @@ class PublicAPI:
                         "is_outdated": globals.versions["versions"][current_vers]["is_outdated"],
                     },
 
-                    "versions":  globals.versions["versions"]
+                    "versions": globals.versions["versions"]
                 }
             )

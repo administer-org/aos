@@ -1,6 +1,6 @@
 # pyxfluff 2024-2025
 
-from .database import db
+from AOS.plugins.database import db
 
 
 def request_app(app_id):
