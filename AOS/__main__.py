@@ -50,7 +50,7 @@ def help_command():
 
     for config in plugins.values():
         il.box(
-            30,
+            50,
             config["name"],
             f"{len(config["commands"])} command{len(config["commands"]) > 1 and "s" or ""}"
         )
