@@ -36,19 +36,28 @@ if not var.is_dev:
 
 def help_command():
     plugins = Plugin.get_plugins(False)
+    plugins_autoload = Plugin.get_plugins(True)
+    commandless_plugins = 0
     il.cprint("Commands", 32)
-    il.cprint(f"└→ You have {len(plugins)} plugins installed!", 34)
 
-    il.box(30, "Built-in", "1 command")
+    for config in plugins.values():
+        if len(config.get("commands", {}).items()) == 0: 
+            commandless_plugins += 1
+
+    il.cprint(f"│  \033[1m{len(plugins)}\033[0m\033[32m plugins are installed", 32)
+    il.cprint(f"│  \033[1m{commandless_plugins}\033[0m\033[32m of which have no commands (not displayed)", 32)
+    il.cprint(f"└→ and \033[1m{len(plugins_autoload)}\033[0m\033[32m load automatically!", 32)
+
+    il.box(50, "Built-in", "1 command")
 
     il.cprint(
         """* aos help
-        Displays this command.
-    """,
-        34,
+        Lists plugin help commands.""",
+        34
     )
 
     for config in plugins.values():
+        if len(config.get("commands", {}).items()) == 0: return
         il.box(
             50,
             config["name"],
@@ -65,11 +74,6 @@ def help_command():
 if "--nobox" not in argv:
     il.box(85, "Administer AOS", f"v{var.version}")
 
-if __name__ != "__main__":
-    # il.cprint("AOS is running as a module, disregarding.", 31)
-    # return
-    pass
-
 try:
     _ = argv[1]
 except IndexError:
@@ -80,6 +84,8 @@ match argv[1]:
     # Built-ins:
     case "help":
         help_command()
+
+        raise AOSError("")
     case _:
         pass
 
