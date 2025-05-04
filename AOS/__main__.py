@@ -46,7 +46,7 @@ def help_command():
 
     il.cprint(f"│  \033[1m{len(plugins)}\033[0m\033[32m plugins are installed", 32)
     il.cprint(f"│  \033[1m{commandless_plugins}\033[0m\033[32m of which have no commands (not displayed)", 32)
-    il.cprint(f"└→ and \033[1m{len(plugins_autoload)}\033[0m\033[32m load automatically!", 32)
+    il.cprint(f"└> and \033[1m{len(plugins_autoload)}\033[0m\033[32m load automatically!", 32)
 
     il.box(50, "Built-in", "1 command")
 
