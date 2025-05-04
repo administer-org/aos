@@ -1,5 +1,5 @@
 {
-    "name": "V2 Assistant",
+    "name": "V2 Feedback Assistant",
     "description": "Collection agent for the Administer \"V2 Feedback Reporter\" app.",
     "requires_fastapi": true,
     "init": true,

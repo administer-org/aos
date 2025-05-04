@@ -26,7 +26,7 @@ async def lifespan(app: FastAPI):
         )
     except IndexError:
         il.cprint(
-            f"[✓] Done! Serving {len(app.routes)} routes on http://{globals.def_host}:{globals.def_port}.",
+            f"[✓] Done! Serving {len(app.routes)} routes on http://{globals.def_host}:{globals.def_port} (using default host/port).",
             32,
         )
 
