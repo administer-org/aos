@@ -1,5 +1,5 @@
 [Unit]
-Description=An Administer AOS instance.
+Description=Administer AOS.
 Requires=network.target
 After=network.target
 
