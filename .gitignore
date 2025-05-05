@@ -1,15 +1,14 @@
-__pycache__/
-.venv/
-dist/
-
-EXAMPLE_APP_JSON.json
-upload_apps.py
-
-build/
-
+# Python
 AOS/administer_app_server.egg-info/
 administer_aos.egg-info/
-
+__pycache__/
 uv.lock
+.venv/
+build/
+dist/
 
+# Administer Config
 ._config.json
+
+# Plugin config files
+AOS/plugins/FeedbackAssistant/config/FeedbackAssistant.json

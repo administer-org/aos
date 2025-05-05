@@ -16,16 +16,17 @@ class Database(object):
             "logs",
             "places",
             "secrets",
+            "v2_logs",
             "api_keys",
             "abuse_logs",
             "error_refs",
-            "reported_versions",
+            "reported_versions"
         ]:
             setattr(self, db_item.upper(), db_item)
 
         client = MongoClient(
             globals.dbattrs["address"],
-            serverSelectionTimeoutMS=globals.dbattrs["timeout_ms"],
+            serverSelectionTimeoutMS=globals.dbattrs["timeout_ms"]
         )
 
         self.db = client[

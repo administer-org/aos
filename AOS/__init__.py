@@ -70,6 +70,7 @@ class AOSVars:
         self.instance_name = config["instance_name"]
         self.is_dev = config["is_dev"]
         self.enable_bot_execution = config["enable_bot_execution"]
+        self.reporting_url = config["report_webhook_url"]
 
         self.logging_location = config["logging_location"]
         self.banner = config["banner"]
