@@ -28,13 +28,13 @@ async def submit_feedback(req: Request):
         return JSONResponse({
             "title": "Blocked", 
             "body": "Sorry, but your game has been blocked from using the feedback reporter on this instance due to abuse.",
-            }, status_code=401)
+        }, status_code=401)
 
     if (await req.body()) == b'':
         return JSONResponse({
             "title": "Bad input", 
             "body": "Incomplete or bad data, please ensure all fields are filled correctly.",
-            }, status_code=400)
+        }, status_code=400)
 
     json = await req.json()
     db_key = nanoid.generate()
@@ -55,12 +55,12 @@ async def submit_feedback(req: Request):
             return JSONResponse({
                 "title": "Bad input", 
                 "body": "Illegitimate data was recieved that the server cannot process.",
-                }, status_code=400)
+            }, status_code=400)
     except KeyError:
         return JSONResponse({
             "title": "Bad input", 
             "body": "Incomplete or bad data, please ensure all fields are filled correctly.",
-            }, status_code=400)
+        }, status_code=400)
 
     httpx.post(
         url=webhook_url,
@@ -87,6 +87,9 @@ async def submit_feedback(req: Request):
         }
     )
 
-    return "OK"
+    return JSONResponse({
+            "title": "Report submitted", 
+            "body": f"Thank you for helping Administer! We have recorded your feedback. If you have any further questions, let our support staff know with your unique ticket ID: `{db_key}`",
+        }, status_code=200)
 
 app.include_router(plugin_router)
