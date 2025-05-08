@@ -22,6 +22,7 @@ def set_log_file(file: Path) -> None:
     globals()["LOG_FILE"] = file.open("a")
     atexit.register(cleanup_log_file)
 
+
 # Print, but with file support
 
 
@@ -30,6 +31,7 @@ def create_log(line: str) -> None:
     if LOG_FILE is not None:
         LOG_FILE.write(line + "\n")
         LOG_FILE.flush()
+
 
 # Begin methods
 
@@ -43,7 +45,8 @@ def cprint(text: str, color: int) -> None:
 @staticmethod
 def box(size: int, left: str, right: str, color: int = 34) -> None:
     """Generate a box (header) of the given size, text, and color.
-    Ensure you include the sides (2 characters) in your size, as they will be subtracted."""
+    Ensure you include the sides (2 characters) in your size, as they will be subtracted.
+    """
     size -= 2  # Account for sides
     create_log(f"\033[{color}m┌{'─' * size}┐")
     create_log(f"│ {left}{' ' * (size - 2 - len(left) - len(right))}{right} │")
@@ -77,9 +80,10 @@ def request(
     # This should have 2 subtracted, but for now it's tab aligned
     spacing = " " * (len(path) - len(summary))
 
-    create_log(f"\033[33m\u26A1 {verb} {path}\t[{remote_ip}]")
+    create_log(f"\033[33m\u26a1 {verb} {path}\t[{remote_ip}]")
     if detail_text is not None:
         create_log(f"\033[90m   │   \033[{summary_color}m{detail_text}")
 
     create_log(
-        f"\033[90m   └→  \033[{summary_color}m{summary}{spacing}\t\033[33m[{total_time:.1f}ms]\033[0m")
+        f"\033[90m   └→  \033[{summary_color}m{summary}{spacing}\t\033[33m[{total_time:.1f}ms]\033[0m"
+    )
