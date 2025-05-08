@@ -5,7 +5,7 @@ from AOS import globals, AOSError
 
 import AOS
 
-import il
+import AOS.deps.il as il
 import orjson
 import importlib
 
