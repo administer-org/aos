@@ -324,8 +324,8 @@ class BackendAPI:
             return JSONResponse(
                 {
                     "code": 200,
-                    "message": f"success{is_overwrite and "_re-recorded" or ""}",
-                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and " We removed your previous rating for this asset."}",
+                    "message": f"success{is_overwrite and '_re-recorded' or ''}",
+                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and ' We removed your previous rating for this asset.'}",
                 },
                 status_code=200,
             )
@@ -358,10 +358,13 @@ class BackendAPI:
 
             if asset_id in place["Apps"]:
                 return JSONResponse(
-                    {"code": 400, "message": "resource-limited",
-                     "user_facing_message":
-                     "You may only install an asset once.", },
-                    status_code=400,)
+                    {
+                        "code": 400, 
+                        "message": "resource-limited",
+                        "user_facing_message": "You may only install an asset once."
+                    },
+                    status_code=400
+                )
 
             place["Apps"].append(asset_id)
             app["Downloads"] += 1
@@ -372,9 +375,13 @@ class BackendAPI:
             vars.state["downloads_today"] += 1
 
             return JSONResponse(
-                {"code": 200, "message": "success",
-                 "user_facing_message": "Success!"},
-                status_code=200,)
+                {
+                    "code": 200, 
+                    "message": "success",
+                    "user_facing_message": "Success!"
+                 },
+                status_code=200
+            )
 
 
 # @router.get("/logs/{logid:str}")
