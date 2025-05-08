@@ -61,7 +61,7 @@ def help_command():
         il.box(
             50,
             config["name"],
-            f"{len(config['commands'])} command{len(config['commands']) > 1 and "s" or ""}"
+            f"{len(config['commands'])} command{len(config['commands']) > 1 and 's' or ''}"
         )
 
         for name, command in config.get("commands", {}).items():
