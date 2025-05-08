@@ -77,7 +77,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
             elif (
                 not httpx.get(
-                    f"http://ip-api.com/json/{request.headers.get("CF-Connecting-IP")}?fields=status,isp"
+                    f"http://ip-api.com/json/{request.headers.get('CF-Connecting-IP')}?fields=status,isp"
                 ).json()["isp"]
                 == "Roblox"
             ):
@@ -87,7 +87,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
                     {
                         "timestamp": time.time(),
                         "ip-api_full_result": httpx.get(
-                            f"http://ip-api.com/json/{request.headers.get("CF-Connecting-IP")}?fields=status,message,country,regionName,isp,org,mobile,proxy,hosting,query"
+                            f"http://ip-api.com/json/{request.headers.get('CF-Connecting-IP')}?fields=status,message,country,regionName,isp,org,mobile,proxy,hosting,query"
                         ).json(),
                         "roblox-id": request.headers.get("Roblox-Id"),
                         "user-agent": request.headers.get("user-agent", "unknown"),
