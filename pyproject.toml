@@ -4,7 +4,7 @@ description = "Administer's AOS service for distributing apps."
 readme = "README.md"
 
 version = "5.1"
-requires-python = ">=3.11"
+requires-python = ">=3.12"
 
 authors = [{ name = "pyxfluff", email = "business@notpyx.me" }]
 dependencies = [
