@@ -42,7 +42,7 @@ def load_plugin(plugin, command):
         raise AOSError(
             f"Plugin AOS/plugins/{plugin} does not have a valid meta.json file.")
 
-    il.cprint(f"[-] Loading plugin {plugin} ({config["name"]})", 33)
+    il.cprint(f"[-] Loading plugin {plugin} ({config['name']})", 33)
 
     if config["requires_fastapi"]:
         if AOS.app is None:
@@ -54,7 +54,7 @@ def load_plugin(plugin, command):
     try:
         importlib.import_module(
             f".plugins.{plugin}.{
-                config.get("commands", {})[command]["directory"]}",
+                config.get('commands', {})[command]['directory']}",
             package="AOS")
     except KeyError:
         if command is None or command == "":
