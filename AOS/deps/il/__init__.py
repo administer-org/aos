@@ -82,5 +82,4 @@ def request(
         create_log(f"\033[90m   │   \033[{summary_color}m{detail_text}")
 
     create_log(
-        f"\033[90m   └→  \033[{summary_color}m{summary}{spacing}\t\033[33m[{
-            total_time:.1f}ms]\033[0m")
+        f"\033[90m   └→  \033[{summary_color}m{summary}{spacing}\t\033[33m[{total_time:.1f}ms]\033[0m")
