@@ -53,8 +53,7 @@ def load_plugin(plugin, command):
 
     try:
         importlib.import_module(
-            f".plugins.{plugin}.{
-                config.get('commands', {})[command]['directory']}",
+            f".plugins.{plugin}.{config.get('commands', {})[command]['directory']}",
             package="AOS")
     except KeyError:
         if command is None or command == "":
