@@ -1,4 +1,4 @@
-# pyxfluff 2024-2025 - 2025
+# pyxfluff 2024 - 2025
 
 import AOS.deps.il as il
 
@@ -64,7 +64,6 @@ class AOSVars:
         self.instance_name = config["instance_name"]
         self.reporting_url = config["report_webhook_url"]
         self.enable_bot_execution = config["enable_bot_execution"]
-        
 
         self.banner = config["banner"]
         self.logging_location = config["logging_location"]
@@ -104,7 +103,8 @@ def load_fastapi_app():
         description="An Administer app server instance for distributing Administer applications.",
         version=globals.version,
         openapi_url="/openapi",
-        lifespan=lifespan)
+        lifespan=lifespan
+    )
 
     app = AOS.app
 
