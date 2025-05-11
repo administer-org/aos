@@ -86,9 +86,10 @@ class BackendAPI:
                 serialize(app)
 
             if final == []:
-                final = [
-                    {"object_type": "message",
-                     "text": "This marketplace server does not have any objects with the requested type." }]
+                final = [{
+                    "object_type": "message",
+                    "text": "This marketplace server does not have any objects with the requested type."
+                }]
 
             if asset_type == "FEATURED":
                 print(final)
@@ -97,8 +98,8 @@ class BackendAPI:
                 final = sorted(
                     final,
                     key=lambda x: x["weighted_score"],
-                    reverse=True)[
-                    :4]
+                    reverse=True
+                )[:4]
 
             return JSONResponse(final, status_code=200)
 
@@ -111,7 +112,8 @@ class BackendAPI:
             if search in [None, "", " "]:
                 return JSONResponse(
                     {"index": "invalid_query", "search_api_v": "3.0"},
-                    status_code=200)
+                    status_code=200
+                )
 
             for app in apps:
                 app = app["data"]
@@ -152,12 +154,44 @@ class BackendAPI:
             if final == []:
                 return JSONResponse(
                     {"index": "no_results", "search_api_v": "3.0"},
-                    status_code=200)
+                    status_code=200
+                )
 
             return JSONResponse(
                 {"index": final, "ratio_info": ratio_info, "search_api_v": "3.0"},
-                status_code=200,
+                status_code=200
             )
+        
+        @self.router.post("/register-home-node")
+        async def home_node(req: Request):
+            placeid = req.headers.get("Roblox-Id", 0)
+            place = db.get(placeid, db.PLACES)
+
+            if place is None:
+                if req.headers.get("Roblox-Id", 0) == 0:
+                    return JSONResponse({
+                        "code": 400,
+                        "message": "This API endpoint cannot be used outside of a Roblox game."
+                    })
+
+                place = {
+                    "Apps": [],
+                    "Ratings": {},
+                    "StartTimestamp": time.time(),
+                    "StartSource": (
+                        "RobloxStudio" in req.headers.get("user-agent")
+                            and "STUDIO"
+                            or "RobloxApp" in req.headers.get("user-agent")
+                            and "CLIENT"
+                            or "UNKNOWN"
+                    ),
+                    "HomeNode": globals.nodeid
+                }
+
+            else:
+                place["HomeNode"] = globals.nodeid
+
+            db.set()
 
         @self.router.get("/misc/get_prominent_color")
         async def get_prominent_color(image_url: str):
@@ -203,7 +237,8 @@ class BackendAPI:
 
             return JSONResponse(
                 {"code": 200, "message": "Version has been recorded"},
-                status_code=200)
+                status_code=200
+            )
 
         @self.router.post("/app-config/upload")
         async def app_config(req: Request):
@@ -343,27 +378,22 @@ class BackendAPI:
         async def install(req: Request, asset_id: str):
             place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
 
-            if not place:
-                place = {
-                    "Apps": [],
-                    "Ratings": {},
-                    "StartTimestamp": time.time(),  # make it easier to catch abusers
-                    "StartSource": (
-                        "RobloxStudio" in req.headers.get("user-agent")
-                        and "STUDIO"
-                        or "RobloxApp" in req.headers.get("user-agent")
-                        and "CLIENT"
-                        or "UNKNOWN"
-                    ),
-                }
+            if place is None:
+                return JSONResponse({
+                    "code": 400,
+                    "message": "This database node doesn't know who you are!"
+                }, status_code=400)
 
             app = request_app(asset_id)
             if not app:
                 return JSONResponse(
-                    {"code": 404, "message": "not-found",
-                     "user_facing_message":
-                     "That isn't a valid asset. Did it get removed?" },
-                    status_code=404,)
+                    {
+                        "code": 404, 
+                        "message": "not-found",
+                        "user_facing_message": "That isn't a valid asset. Did it get removed?" 
+                    },
+                    status_code=404
+                )
 
             if asset_id in place["Apps"]:
                 return JSONResponse(

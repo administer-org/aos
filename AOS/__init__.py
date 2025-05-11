@@ -1,8 +1,11 @@
 # pyxfluff 2024 - 2025
 
+import AOS
 import AOS.deps.il as il
 
-import AOS
+from AOS.models.AOSConfig import AOSConfig
+from AOS.models.CoreConfig import CoreConfig
+
 
 import sys
 import orjson
@@ -11,10 +14,9 @@ import asyncio
 
 from sys import argv
 from pathlib import Path
-from contextlib import asynccontextmanager
-
 from fastapi import FastAPI
 from uvicorn import Config, Server
+from contextlib import asynccontextmanager
 
 
 @asynccontextmanager
@@ -40,47 +42,32 @@ async def lifespan(app: FastAPI):
 class AOSVars:
     def __init__(self):
         try:
-            files = [
-                "../._config.json",
-                "../._aos.json",
-                "../._version_data.json"]
             config, aos_config, version_data = (
                 orjson.loads((Path(__file__).parent / f).read_text())
-                for f in files)
+                    for f in [
+                        "../._config.json",
+                        "../._aos.json",
+                        "../._version_data.json"
+                    ]
+            )
         except Exception as e:
             il.cprint("[!] Welcome to AOS!", 34)
             il.cprint(
                 "    > It seems like your enviornment has not been setup.", 32)
             il.cprint(
                 "       > If you are installed via PyPI or on Windows, run the following:", 32)
-            il.cprint("         > aos setup", 33)
+            il.cprint("         > aos setup run", 33)
             il.cprint(
                 "       > If you are running on a unix-like system then please run", 32)
             il.cprint("         > ./Install_AOS", 33)
             raise AOSError(f"exiting: {e}")
-
-        self.nodeid = config["node"]
-        self.is_dev = config["is_dev"]
-        self.instance_name = config["instance_name"]
-        self.reporting_url = config["report_webhook_url"]
-        self.enable_bot_execution = config["enable_bot_execution"]
-
-        self.banner = config["banner"]
-        self.logging_location = config["logging_location"]
-
-        self.flags = config.get("flags", {})
-        self.dbattrs = config.get("dbattrs", {})
-        self.security = config.get("security", {})
-
-        self.plugin_load_order = aos_config.get("plugin_load_order", {})
-
-        self.version = aos_config["version"]
-        self.workers = aos_config["workers"]
-
-        self.def_host = aos_config["default_host"]
-        self.def_port = aos_config["default_port"]
-
-        self.state = aos_config.get("state", {})
+        
+        for config in [
+            CoreConfig(**config).model_dump().items(), 
+            AOSConfig(**aos_config).model_dump().items()
+        ]:
+            for k, v in config:
+                setattr(self, k, v)
 
         self.versions = version_data
 
