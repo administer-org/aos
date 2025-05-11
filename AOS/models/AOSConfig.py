@@ -15,8 +15,8 @@ class State(BaseModel):
 class AOSConfig(BaseModel):
     version: str
 
-    default_port: int
-    default_host: str
+    def_port: int
+    def_host: str
 
     workers: int
 

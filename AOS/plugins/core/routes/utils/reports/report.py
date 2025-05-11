@@ -61,7 +61,7 @@ def daily_report(
         )
 
     post(
-        url=globals.reporting_url,
+        url=globals.report_webhook_url,
         json={
             "content": f"Here is your report for **day {day}**",
             "embeds": [
