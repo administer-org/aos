@@ -10,7 +10,7 @@ from fastapi import Request
 from fastapi.responses import PlainTextResponse
 
 if globals.is_dev:
-    from .utils.reports.report import daily_report
+    from .utils.report import daily_report
 else:
     def daily_report(db):
         print("[x] Request to spawn daily report ignored due to missing modules")
