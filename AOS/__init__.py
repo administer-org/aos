@@ -22,27 +22,19 @@ async def lifespan(app: FastAPI):
     try:
         il.cprint(
             f"[✓] Done! Serving {len(app.routes)} routes on http://{argv[2]}:{argv[3]}.",
-            32,
+            32
         )
     except IndexError:
         il.cprint(
             f"[✓] Done! Serving {len(app.routes)} routes on http://{globals.def_host}:{globals.def_port} (using default host/port).",
-            32,
+            32
         )
 
     try:
         yield
     finally:
-        il.cprint("[✗] Goodbye, shutting things off...", 31)
-
-        # if input(
-        #    "Would you like to rebuild and restart the app? [[y]es/[n]o/^C] "
-        # ).lower() in ["y", "yes"]:
-        #    il.cprint("[-] Respawning process after an upgrade, see you soon..", 32)
-        #    Popen(
-        #        f"uv pip install -e . --force-reinstall && aos serve {argv[2]} {argv[3]}",
-        #        shell=True,
-        #    )
+        il.cprint("[✗] Goodbye, Exiting AOS...", 31)
+        # shutdown data upload TODO
 
 
 class AOSVars:
@@ -67,17 +59,19 @@ class AOSVars:
             il.cprint("         > ./Install_AOS", 33)
             raise AOSError(f"exiting: {e}")
 
-        self.instance_name = config["instance_name"]
+        self.nodeid = config["node"]
         self.is_dev = config["is_dev"]
-        self.enable_bot_execution = config["enable_bot_execution"]
+        self.instance_name = config["instance_name"]
         self.reporting_url = config["report_webhook_url"]
+        self.enable_bot_execution = config["enable_bot_execution"]
+        
 
-        self.logging_location = config["logging_location"]
         self.banner = config["banner"]
+        self.logging_location = config["logging_location"]
 
+        self.flags = config.get("flags", {})
         self.dbattrs = config.get("dbattrs", {})
         self.security = config.get("security", {})
-        self.flags = config.get("flags", {})
 
         self.plugin_load_order = aos_config.get("plugin_load_order", {})
 
