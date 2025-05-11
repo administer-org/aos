@@ -1,4 +1,4 @@
-# pyxfluff 2024-2025 - 2025
+# pyxfluff 2024 - 2025
 
 from AOS.deps import il
 from http import HTTPStatus
@@ -15,9 +15,9 @@ from collections import defaultdict
 from AOS import globals, app
 from AOS.plugins.database import db
 
-known_good_ips = []
-limited_ips = defaultdict(list)
-mem_incidents = defaultdict(list)
+known_good_ips  = []
+limited_ips     = defaultdict(list)
+mem_incidents   = defaultdict(list)
 mem_blocked_ips = defaultdict(list)
 
 blocked_users = db.get("__BLOCKED_USERS__", db.API_KEYS)
@@ -32,10 +32,12 @@ class AuthMiddleware(BaseHTTPMiddleware):
                        call_next: FunctionType) -> Response:
         if request.headers.get("CF-Connecting-IP") in forbidden_ips:
             return JSONResponse(
-                {"code": 400,
-                 "message":
-                 "Sorry, but your IP has been blocked due to suspected abuse. Please reach out if this was a mistake.", },
-                status_code=400,)
+                    {
+                        "code": 400,
+                        "message": "Sorry, but your IP has been blocked due to suspected abuse. Please reach out if this was a mistake." 
+                    },
+                    status_code=400
+                )
 
         try:
             if (
@@ -62,10 +64,12 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 and not request.url == "http://administer.notpyx.me/"
             ):
                 return JSONResponse(
-                    {"code": 400,
-                     "message":
-                     "This App Server is only accepting requests from Roblox game servers.", },
-                    status_code=400,)
+                        {
+                            "code": 400,
+                            "message": "This App Server is only accepting requests from Roblox game servers."
+                        },
+                        status_code=400
+                    )
 
             if request.headers.get("CF-Connecting-IP") in known_good_ips:
                 # all is well
@@ -101,9 +105,9 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 return JSONResponse(
                     {
                         "code": 400,
-                        "message": "Your IP has been blocked due to suspected API abuse.",
+                        "message": "Your IP has been blocked due to suspected API abuse."
                     },
-                    status_code=401,
+                    status_code=401
                 )
 
             else:
@@ -114,7 +118,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         ):
             return JSONResponse(
                 {"code": 400, "message": "A valid API key must be used."},
-                status_code=401,
+                status_code=401
             )
 
         elif globals.security["use_api_keys"] and not db.get(
@@ -122,7 +126,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
         ):
             return JSONResponse(
                 {"code": 400, "message": "Please provide a valid API key."},
-                status_code=401,
+                status_code=401
             )
 
         elif globals.security["use_api_keys"]:
@@ -135,17 +139,21 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 or api_key_data.registered_game in blocked_games
             ):
                 return JSONResponse(
-                    {"code": 400,
-                     "message":
-                     "Your API key has been disabled due to possible abuse. To reach out to the API team please join the discord and make a ticket (/discord).", },
-                    status_code=400,)
+                        {
+                            "code": 400,
+                            "message":
+                            "Your API key has been disabled due to possible abuse. To reach out to the API team please join the discord and make a ticket (/discord).", 
+                        },
+
+                        status_code=400
+                    )
 
         if globals.security["use_sessions"] and not request.headers.get(
             "X-Administer-Session"
         ):
             return JSONResponse(
                 {"code": 400, "message": "A valid session token is required."},
-                status_code=400,
+                status_code=400
             )
 
         return await call_next(request)
@@ -158,9 +166,9 @@ class RateLimiter(BaseHTTPMiddleware):
 
         if cf_ip in mem_blocked_ips:
             print("This IP is blocked in memory.")
-            return Response(
-                status_code=400,
-                content="Sorry, you have been blocked. If you believe this is in error please reach out.",
+            return JSONResponse(
+                {"code": 400, "message": "Sorry, you have been blocked."},
+                status_code=400
             )
 
         if not cf_ip:
@@ -177,9 +185,9 @@ class RateLimiter(BaseHTTPMiddleware):
 
         if len(limited_ips[cf_ip]) >= globals.security["ratelimiting"][
                 "max_reqs"]:
-            return Response(
-                status_code=429,
-                content="You're interacting with the API too quick and have triggered pre-defined limits by the owner of this sevrer. Try again later.",
+            return JSONResponse(
+                {"code": 400, "message": "You are being rate limited, please try again later."},
+                status_code=400
             )
 
         limited_ips[cf_ip].append(time.time())

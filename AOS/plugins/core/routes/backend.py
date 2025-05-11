@@ -66,17 +66,19 @@ class BackendAPI:
                     rating = 0  # ideally we can remove this in some months
 
                 final.append(
-                    {"name": data["Name"],
-                     "short_desc": data["ShortDescription"],
-                     "downloads": data["Downloads"],
-                     "rating": rating,
-                     "weighted_score":
-                     (data["Downloads"] * 0.6 + (rating * 0.9)) +
-                     data["Votes"]["Favorites"],
-                     "developer": data["Developer"],
-                     "last_update": data["Metadata"]["UpdatedAt"],
-                     "id": data["Metadata"]["AdministerID"],
-                     "object_type": data["Metadata"]["AssetType"], })
+                    {
+                        "name": data["Name"],
+                        "short_desc": data["ShortDescription"],
+                        "downloads": data["Downloads"],
+                        "rating": rating,
+                        "weighted_score":
+                        (data["Downloads"] * 0.6 + (rating * 0.9)) +
+                        data["Votes"]["Favorites"],
+                        "developer": data["Developer"],
+                        "last_update": data["Metadata"]["UpdatedAt"],
+                        "id": data["Metadata"]["AdministerID"],
+                        "object_type": data["Metadata"]["AssetType"]
+                     })
 
             for app in apps:
                 app = app["data"]
@@ -86,8 +88,7 @@ class BackendAPI:
             if final == []:
                 final = [
                     {"object_type": "message",
-                     "text":
-                     "This marketplace server does not have any objects with the requested type.", }]
+                     "text": "This marketplace server does not have any objects with the requested type." }]
 
             if asset_type == "FEATURED":
                 print(final)
@@ -125,7 +126,7 @@ class BackendAPI:
                     ratio_info = {
                         "is_ratio": True,
                         "keyword": app["name"],
-                        "confidence": ratio(search, app["name"]),
+                        "confidence": ratio(search, app["name"])
                     }
                     final.append(app)
 
@@ -142,7 +143,7 @@ class BackendAPI:
                         ratio_info = {
                             "is_ratio": True,
                             "keyword": tag,
-                            "confidence": ratio(search, tag),
+                            "confidence": ratio(search, tag)
                         }
                         final.append(app)
 
@@ -181,8 +182,7 @@ class BackendAPI:
             if not json["version"] in vars.state["permitted_versions"]:
                 return JSONResponse(
                     {"code": 400,
-                     "message":
-                     "Administer is too old to report its version. Please update Administer.", },
+                     "message": "Administer is too old to report its version. Please update Administer."},
                     status_code=400,)
 
             if not key:
@@ -239,8 +239,7 @@ class BackendAPI:
 
                 print(app)
 
-                app["Metadata"]["AppAPIPreferredVersion"] = app["Metadata"][
-                    "AppAPIPreverredVersion"]  # i made a typo and do not want to wipe the dev db
+                app["Metadata"]["AppAPIPreferredVersion"] = app["Metadata"]["AppAPIPreverredVersion"]  # i made a typo and do not want to wipe the dev db
 
                 if app is None:
                     raise FileNotFoundError
@@ -249,10 +248,14 @@ class BackendAPI:
 
             except (FileNotFoundError, OSError):
                 return JSONResponse(
-                    {"code": 404, "message": "not-found",
-                     "user_facing_message":
-                     "This asset wasn't found. Maybe it was deleted while you were viewing it?", },
-                    status_code=404,)
+                    {
+                        "code": 404, 
+                        "message": "not-found",
+                        "user_facing_message": "This asset wasn't found. Maybe it was deleted while you were viewing it?"
+                    },
+
+                    status_code=404
+                )
 
         @self.asset_router.put("/{asset_id}/vote")
         async def rate_app(
@@ -276,25 +279,31 @@ class BackendAPI:
                     {
                         "code": 400,
                         "message": "bad-request",
-                        "user_facing_message": "We can't find your game.",
+                        "user_facing_message": "We can't find your game."
                     },
                     status_code=400,
                 )
 
             if asset_id not in place["Apps"]:
                 return JSONResponse(
-                    {"code": 400, "message": "bad-request",
-                     "user_facing_message":
-                     "You have to install this app before you can rate it.", },
-                    status_code=400,)
+                    {
+                        "code": 400, 
+                        "message": "bad-request",
+                        "user_facing_message": "You have to install this app before you can rate it."
+                    },
+                    status_code=400
+                )
 
             app = request_app(asset_id)
             if not app:
                 return JSONResponse(
-                    {"code": 404, "message": "not-found",
-                     "user_facing_message":
-                     "Could not find that app. Was it deleted?", },
-                    status_code=404,)
+                    {
+                        "code": 404, 
+                        "message": "not-found",
+                        "user_facing_message": "Could not find that app. Was it deleted?" 
+                    },
+                    status_code=404
+                )
 
             if asset_id in place["Ratings"]:
                 print("Overwriting rating.")
@@ -325,9 +334,9 @@ class BackendAPI:
                 {
                     "code": 200,
                     "message": f"success{is_overwrite and '_re-recorded' or ''}",
-                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and ' We removed your previous rating for this asset.'}",
+                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and ' We removed your previous rating for this asset.'}"
                 },
-                status_code=200,
+                status_code=200
             )
 
         @self.asset_router.post("/{asset_id}/install")
@@ -353,7 +362,7 @@ class BackendAPI:
                 return JSONResponse(
                     {"code": 404, "message": "not-found",
                      "user_facing_message":
-                     "That isn't a valid asset. Did it get removed?", },
+                     "That isn't a valid asset. Did it get removed?" },
                     status_code=404,)
 
             if asset_id in place["Apps"]:
