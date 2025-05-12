@@ -50,6 +50,10 @@ source .venv/bin/activate
 uv pip install .
 ```
 
+### Note: Fedora Installation
+
+Feodra is used for aos-us-3 and we are having a lot of configuration erorrs. If AOS refuses to run, please run `sudo setenforce 0` to allow Python to run.
+
 And you're done! Make sure to edit your `__aos__.json` and `config.json` files, then run `aos`. 
 
 ## Privacy Policy
