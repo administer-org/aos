@@ -30,7 +30,6 @@ class SecurityConfig(BaseModel):
 
 class CoreConfig(BaseModel):
     instance_name: str
-    tech_name: str
 
     is_dev: bool
     logging_location: str
