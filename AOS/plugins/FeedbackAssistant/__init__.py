@@ -1,5 +1,7 @@
 # pyxfluff 2025
 
+import AOS.deps.il as il
+
 from AOS import app
 from AOS.plugins.database import db
 
@@ -14,7 +16,11 @@ from fastapi.routing import APIRouter
 from fastapi.responses import JSONResponse
 
 plugin_router = APIRouter(prefix="/feedback-assistant")
-webhook_url   = orjson.loads((Path(__file__).resolve().parent / "config/FeedbackAssistant.json").read_text())["webhook_url"]
+
+try:
+    webhook_url = orjson.loads((Path(__file__).resolve().parent / "config/FeedbackAssistant.json").read_text())["webhook_url"]
+except FileNotFoundError as e:
+    il.cprint("FeedbackAssistant config not found! Webhook logging will NOT be active.", 34)
 
 @plugin_router.get("/ping")
 async def ping():
