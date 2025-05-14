@@ -11,6 +11,7 @@ from pathlib import Path
 from sys import argv
 
 import orjson
+import logging as Pythonlogging
 import threading
 
 if var.logging_location is None:
@@ -26,7 +27,7 @@ if Path(var.logging_location).is_file() is not True:
 if not var.is_dev:
     try:
         il.set_log_file(Path(var.logging_location))
-        logging.getLogger("uvicorn.error").disabled = True
+        Pythonlogging.getLogger("uvicorn.error").disabled = True
     except Exception as e:
         il.cprint(
             f"Failed to write to the logfile! Please make sure you have properly initialized AOS ({e}).",
