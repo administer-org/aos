@@ -27,9 +27,9 @@ if not var.is_dev:
     try:
         il.set_log_file(Path(var.logging_location))
         logging.getLogger("uvicorn.error").disabled = True
-    except Exception:
+    except Exception as e:
         il.cprint(
-            "Failed to write to the logfile! Please make sure you have properly initialized AOS.",
+            f"Failed to write to the logfile! Please make sure you have properly initialized AOS ({e}).",
             24,
         )
 
