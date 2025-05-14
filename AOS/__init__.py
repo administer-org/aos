@@ -86,10 +86,10 @@ def load_fastapi_app():
     il.cprint("[-] Loading Uvicorn..", 33)
     AOS.app = FastAPI(
         debug=globals.is_dev,
-        title=f"Administer App Server {globals.version}",
-        description="An Administer app server instance for distributing Administer applications.",
+        title=f"AOS ({globals.version})",
+        description="An AOS instance for distributing Administer applications and serving other plugins.\n\nThe documentation here will only show URLs. For actual API refernece, please refer to https://docs.admsoftware.org",
         version=globals.version,
-        openapi_url="/openapi",
+        openapi_url="/_misc/openapi.json",
         lifespan=lifespan
     )
 
