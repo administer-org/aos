@@ -4,7 +4,7 @@
     "requires_fastapi": false,
     "init": true,
     "commands": {
-        "editor": {
+        "show": {
             "directory": ".reporter",
             "help": "Load the usage graph."
         }

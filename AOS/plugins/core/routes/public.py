@@ -44,7 +44,7 @@ class PublicAPI:
                     "banner": globals.banner,
                     "supported_versions": globals.state["permitted_versions"]
                 },
-                status_code=200,
+                status_code=200
             )
 
         @self.router.get("/logs/{logid}")
@@ -76,7 +76,7 @@ class PublicAPI:
                         "version": current_vers,
                         "branch": req.headers.get("X-Adm-Branch"),
                         "featureset": globals.versions["versions"][current_vers]["featureset"],
-                        "is_outdated": globals.versions["versions"][current_vers]["is_outdated"],
+                        "is_outdated": globals.versions["versions"][current_vers]["is_outdated"]
                     },
 
                     "versions": globals.versions["versions"]
