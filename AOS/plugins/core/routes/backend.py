@@ -107,40 +107,48 @@ class BackendAPI:
         async def search(req: Request, search: str):
             apps = db.get_all(db.APPS)
             final = []
-            ratio_info = {"is_ratio": False}
+            ratio_info = { "is_ratio": False }
 
-            if search in [None, "", " "]:
+            search.strip()
+            if search in [None, "", " "] or len(search) >= 50:
                 return JSONResponse(
-                    {"index": "invalid_query", "search_api_v": "3.0"},
+                    {
+                        "meta": { "_aos_search_api": "4.0" },
+                        "index": "invalid_query"
+                    },
                     status_code=200
                 )
 
             for app in apps:
                 app = app["data"]
 
-                if search in app["title"]:
+                print(app["Name"], ratio(search, app["Name"]))
+
+                if search in app["Title"]:
                     app["indexed"] = "name"
                     final.append(app)
 
                     continue
-                elif ratio(search, app["name"]) >= 0.85:
-                    app["indexed"] = "name_ratio"
+
+                elif ratio(search, app["Name"]) >= 0.7:
                     ratio_info = {
                         "is_ratio": True,
-                        "keyword": app["name"],
-                        "confidence": ratio(search, app["name"])
+                        "keyword": app["Name"],
+                        "confidence": ratio(search, app["Name"])
                     }
+
+                    app["ratio"] = ratio_info
                     final.append(app)
 
                     continue
 
-                for tag in app["tags"]:
+                for tag in app["Tags"]:
                     if search in tag:
                         app["indexed"] = "tag"
                         final.append(app)
 
                         continue
-                    elif ratio(search, tag) >= 0.85:
+                    elif ratio(search, tag) >= 0.7:
                         app["indexed"] = "tag_ratio"
                         ratio_info = {
                             "is_ratio": True,
@@ -153,12 +161,23 @@ class BackendAPI:
 
             if final == []:
                 return JSONResponse(
-                    {"index": "no_results", "search_api_v": "3.0"},
+                    {
+                        "meta": { "_aos_search_api": "4.0" },
+                        "index": "no_results"
+                    },
                     status_code=200
                 )
 
             return JSONResponse(
-                {"index": final, "ratio_info": ratio_info, "search_api_v": "3.0"},
+                {
+                    "meta": {
+                        "_aos_search_api": "4.0",
+                        "ratio_info": ratio_info,
+                        "indexed_query": search,
+                        "results": len(final)
+                    },
+                    "index": final
+                },
                 status_code=200
             )
         
