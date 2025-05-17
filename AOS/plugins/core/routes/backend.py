@@ -376,15 +376,11 @@ class BackendAPI:
             place["Ratings"][asset_id] = {
                 "rating": rating,
                 "owned": True,
-                "timestamp": time.time(),
+                "timestamp": time.time()
             }
-
-            print(app["Votes"])
 
             app["Votes"][rating and "Likes" or "Dislikes"] += 1
             vars.state["votes_today"] += 1
-
-            print(app["Votes"])
 
             db.set(asset_id, app, db.APPS)
             db.set(req.headers.get("Roblox-Id"), place, db.PLACES)
@@ -393,7 +389,7 @@ class BackendAPI:
                 {
                     "code": 200,
                     "message": f"success{is_overwrite and '_re-recorded' or ''}",
-                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and ' We removed your previous rating for this asset.'}"
+                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and ' Your previous vote for this asset has been removed.'}"
                 },
                 status_code=200
             )
