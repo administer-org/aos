@@ -337,7 +337,7 @@ class BackendAPI:
                 return JSONResponse(
                     {
                         "code": 400,
-                        "message": "bad-request",
+                        "message": "Bad Request",
                         "user_facing_message": "We can't find your game."
                     },
                     status_code=400,
@@ -347,7 +347,7 @@ class BackendAPI:
                 return JSONResponse(
                     {
                         "code": 400, 
-                        "message": "bad-request",
+                        "message": "Bad request",
                         "user_facing_message": "You have to install this app before you can rate it."
                     },
                     status_code=400
@@ -358,7 +358,7 @@ class BackendAPI:
                 return JSONResponse(
                     {
                         "code": 404, 
-                        "message": "not-found",
+                        "message": "Not Found",
                         "user_facing_message": "Could not find that app. Was it deleted?" 
                     },
                     status_code=404
@@ -388,7 +388,8 @@ class BackendAPI:
             return JSONResponse(
                 {
                     "code": 200,
-                    "message": f"success{is_overwrite and '_re-recorded' or ''}",
+                    "message": f"Success!",
+                    "is_re_record": is_overwrite,
                     "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and ' Your previous vote for this asset has been removed.'}"
                 },
                 status_code=200
