@@ -261,46 +261,51 @@ class BackendAPI:
 
         @self.router.post("/app-config/upload")
         async def app_config(req: Request):
-            config: dict = await req.json()
-            new_app_id = len(db.get_all(db.APPS)) + 1
-            # id = config.get("Metadata", {}).get(
-            #    "AdministerID", len(db.get_all(db.APPS))
-            # )
-            # existing = db.get(id, db.APPS) or default_app
+            config: { any } = await req.json()
 
-            print(config)
             try:
                 new_app_id = config["Metadata"]["AdministerID"]
             except KeyError:
-                config["Metadata"]["GeneratedAt"] = time.time()
-                config["Metadata"]["AdministerID"] = new_app_id
-                config["Votes"] = {"Likes": 0, "Dislikes": 0, "Favorites": 0}
-                config["Downloads"] = 0
+                return JSONResponse({"code": 400, "message": "Metadata.AdministerID must not be None and should be an AOSId2 (RDNSN)"}, status_code=400)
+            
+            existing = db.get(new_app_id, db.APPS)
+
+            if existing is None:
+                config["Metadata"]["CreatedAt"] = time.time()
+                config["Metadata"]["AOSGenerator"] = f"AOS/{vars.version} AOS_NODE.{vars.node.upper()}"
+            else:
+                # stuff that should never be overwritten
+                config["Votes"] = existing["Votes"]
+                config["Downloads"] = existing["Downloads"]
 
             config["Metadata"]["UpdatedAt"] = time.time()
 
             db.set(new_app_id, config, db.APPS)
+
+            return JSONResponse(
+                {
+                    "code": 200, 
+                    "message": "Submitted! Please allow a mintue for indexes to rebuild and databases to sync."
+                }, 
+                status_code=200
+            )
 
     def initialize_content_routes(self):
         @self.asset_router.get("/ping")
         async def ping():
             return "OK"
 
-        @self.asset_router.get("/{appid:int}")
-        async def get_app(appid: int):
+        @self.asset_router.get("/{appid:str}")
+        async def get_app(appid: str):
             try:
                 app = request_app(appid)
-
-                print(app)
-
-                app["Metadata"]["AppAPIPreferredVersion"] = app["Metadata"]["AppAPIPreverredVersion"]  # i made a typo and do not want to wipe the dev db
 
                 if app is None:
                     raise FileNotFoundError
 
                 return JSONResponse(app, status_code=200)
 
-            except (FileNotFoundError, OSError):
+            except Exception:
                 return JSONResponse(
                     {
                         "code": 404, 
