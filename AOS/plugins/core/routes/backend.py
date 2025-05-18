@@ -203,13 +203,14 @@ class BackendAPI:
                             and "CLIENT"
                             or "UNKNOWN"
                     ),
-                    "HomeNode": globals.nodeid
+                    "HomeNode": vars.node
                 }
 
             else:
-                place["HomeNode"] = globals.nodeid
+                place["HomeNode"] = vars.node
 
-            db.set()
+            db.set(placeid, place, db.PLACES)
+            return JSONResponse({"code": 200, "message": "Registered!"}, status_code=200)
 
         @self.router.get("/misc/get_prominent_color")
         async def get_prominent_color(image_url: str):
@@ -337,7 +338,7 @@ class BackendAPI:
                     {
                         "code": 400,
                         "message": "Bad Request",
-                        "user_facing_message": "We can't find your game."
+                        "user_facing_message": "We can't find your game. Please ensure you have registered a Home Node."
                     },
                     status_code=400
                 )
