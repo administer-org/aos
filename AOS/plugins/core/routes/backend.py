@@ -59,9 +59,9 @@ class BackendAPI:
                 rating = 0
                 try:
                     rating = (
-                        (data["Votes"]["Likes"] + data["Votes"]["Dislikes"])
-                        == 0 and 0 or data["Votes"]["Likes"] /
-                        (data["Votes"]["Likes"] + data["Votes"]["Dislikes"]))
+                        (data["Votes"]["Likes"] + data["Votes"]["Dislikes"]) == 0 and 0 
+                        or data["Votes"]["Likes"] / (data["Votes"]["Likes"] + data["Votes"]["Dislikes"])
+                    )
                 except ZeroDivisionError:
                     rating = 0  # ideally we can remove this in some months
 
@@ -71,9 +71,8 @@ class BackendAPI:
                         "short_desc": data["ShortDescription"],
                         "downloads": data["Downloads"],
                         "rating": rating,
-                        "weighted_score":
-                        (data["Downloads"] * 0.6 + (rating * 0.9)) +
-                        data["Votes"]["Favorites"],
+                        "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9)) +
+                            data["Votes"]["Favorites"],
                         "developer": data["Developer"],
                         "last_update": data["Metadata"]["UpdatedAt"],
                         "id": data["Metadata"]["AdministerID"],
@@ -340,7 +339,7 @@ class BackendAPI:
                         "message": "Bad Request",
                         "user_facing_message": "We can't find your game."
                     },
-                    status_code=400,
+                    status_code=400
                 )
 
             if asset_id not in place["Apps"]:

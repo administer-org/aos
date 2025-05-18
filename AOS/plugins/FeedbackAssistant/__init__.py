@@ -60,7 +60,7 @@ async def submit_feedback(req: Request):
         ):
             return JSONResponse({
                 "title": "Bad input", 
-                "body": "Illegitimate data was recieved that the server cannot process.",
+                "body": f"Illegitimate data was recieved that the server cannot process. {len(json["Comment"]) >= 700} {len(json["Administer"]) >= 300} {len(json["What"] + json["Where"] + json["Priority"]) >= 150} {db.get(req.headers["Roblox-Id"], db.PLACES)} {req.headers.get("Roblox-Id")}",
             }, status_code=400)
     except KeyError:
         return JSONResponse({
