@@ -17,6 +17,8 @@
         "default_app": {},
         "downloads_today": 0,
 
+        "loaded_plugins": [],
+
         "permitted_versions": [
             "2.0.0",
             "1.1.1",

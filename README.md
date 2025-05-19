@@ -52,7 +52,7 @@ uv pip install .
 
 ### Note: Fedora Installation
 
-Feodra is used for aos-us-3 and we are having a lot of configuration erorrs. If AOS refuses to run, please run `sudo setenforce 0` to allow Python to run.
+Feodra is used for aos-us-3 and we are having a lot of configuration errors. If AOS refuses to run, please run `sudo setenforce 0` to allow Python to run.
 
 And you're done! Make sure to edit your `__aos__.json` and `config.json` files, then run `aos`. 
 
@@ -62,11 +62,11 @@ See here: https://docs.admsoftware.org/legal/privacy
 
 ## Contributions
 
-We welcome contributions as long as they are meaningful. Please ensure you are familiar with our code standards and libraries before making pull requests. For larger changes, you may want to [discuss a change in our Discord beforehand.](https://administer.notpyx.me/to/discord)
+We welcome contributions as long as they are meaningful. Please ensure you are familiar with our code standards and libraries before making pull requests. For larger changes, you may want to [discuss a change in our Discord beforehand.](https://to.admsoftware.org/discord)
 
 
 ## License
 
 All of Administer and your usage of it is governed under the GNU AGPL 3.0 license.
 
-<small>Administer Team 2024-2025-2025</small>
+<small>Administer Team 2024-2025</small>

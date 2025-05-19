@@ -221,7 +221,7 @@ class BackendAPI:
                 if not re.search(r"^https://tr\.rbxcdn\.com/.+", image_url):
                     return JSONResponse(
                         {"code": 400, "message": "URL must be to Roblox's CDN."},
-                        status_code=400,
+                        status_code=400
                     )
 
                 return get_color(BytesIO(httpx.get(image_url).content))
@@ -234,9 +234,12 @@ class BackendAPI:
 
             if not json["version"] in vars.state["permitted_versions"]:
                 return JSONResponse(
-                    {"code": 400,
-                     "message": "Administer is too old to report its version. Please update Administer."},
-                    status_code=400,)
+                    {
+                        "code": 400,
+                        "message": "Administer is too old to report its version. Please update Administer."
+                    },
+                    status_code=400
+                )
 
             if not key:
                 key = {
@@ -244,7 +247,7 @@ class BackendAPI:
                     "qa": {},
                     "canary": {},
                     "beta": {},
-                    "live": {},
+                    "live": {}
                 }
 
             if not key[branch].get(json["version"]):
@@ -312,7 +315,6 @@ class BackendAPI:
                         "message": "not-found",
                         "user_facing_message": "This asset wasn't found. Maybe it was deleted while you were viewing it?"
                     },
-
                     status_code=404
                 )
 
@@ -348,7 +350,7 @@ class BackendAPI:
                     {
                         "code": 400, 
                         "message": "Bad request",
-                        "user_facing_message": "You have to install this app before you can rate it."
+                        "user_facing_message": "You have to install this asset before you can rate it."
                     },
                     status_code=400
                 )
@@ -359,7 +361,7 @@ class BackendAPI:
                     {
                         "code": 404, 
                         "message": "Not Found",
-                        "user_facing_message": "Could not find that app. Was it deleted?" 
+                        "user_facing_message": "That AssetID is invalid." 
                     },
                     status_code=404
                 )
@@ -369,8 +371,7 @@ class BackendAPI:
                 is_overwrite = True
 
                 app["Votes"][
-                    place["Ratings"][asset_id]["rating"]
-                    and "Likes" or "Dislikes"] -= 1
+                    place["Ratings"][asset_id]["rating"] and "Likes" or "Dislikes"] -= 1
                 place["Ratings"][asset_id] = None
 
             place["Ratings"][asset_id] = {
@@ -390,7 +391,7 @@ class BackendAPI:
                     "code": 200,
                     "message": f"Success!",
                     "is_re_record": is_overwrite,
-                    "user_facing_message": f"Your review has been recoded, thanks for voting!{is_overwrite and ' Your previous vote for this asset has been removed.'}"
+                    "user_facing_message": f"Your review has been recorded, thanks for voting!{is_overwrite and ' Your previous vote for this asset has been removed.'}"
                 },
                 status_code=200
             )

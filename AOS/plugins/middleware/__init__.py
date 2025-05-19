@@ -61,7 +61,6 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
             if (
                 not request.headers.get("Roblox-Id")
-                and not request.url == "http://administer.notpyx.me/"
             ):
                 return JSONResponse(
                         {

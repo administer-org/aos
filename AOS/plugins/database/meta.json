@@ -3,10 +3,5 @@
     "description": "Pymongo wrapper for AOS.",
     "requires_fastapi": false,
     "init": true,
-    "commands": {
-        "editor": {
-            "directory": ".viewer",
-            "help": "Allows you to browse MongoDB."
-        }
-    }
+    "commands": {}
 }
