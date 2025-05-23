@@ -116,6 +116,8 @@ for config in plugin_list.values():
                 # TODO: i want to be able to catch missing commands here but i'm not sure how to do it
                 Plugin.load_plugin(config["name"].lower(), name)
 
+                exit(0)
+
 if AOS.app is not None:
     AOS.run_server()
 
