@@ -21,6 +21,7 @@ dependencies = [
     "nanoid",
     "orjson",
     "psutil>=7.0.0",
+    "rich",
 
     # Discord
     #"audioop-lts",

@@ -104,10 +104,13 @@ with console.status("Loading plugins...") as status:
 # change the list to have unloaded plugins
 plugin_list = Plugin.get_plugins(False)
 
-if len(argv) < 3: raise AOSError("[x] more arguments are required for plugin commands\n└→ run AOS help for commands")
-
 for config in plugin_list.values():
     if argv[1].lower() == config["name"].lower():
+        if config["init"]:
+            Plugin.load_plugin(config["name"].lower(), "")
+
+            exit(0)
+
         for name, command in config.get("commands", {}).items():
             if argv[2].lower() == name:
                 # TODO: i want to be able to catch missing commands here but i'm not sure how to do it
