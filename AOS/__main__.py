@@ -7,12 +7,15 @@ import AOS.plugin_loader as Plugin
 from AOS import AOSError, globals as var
 from AOS.utils import logging as logging
 
-from pathlib import Path
 from sys import argv
+from pathlib import Path
+from rich.console import Console
 
 import orjson
-import logging as Pythonlogging
 import threading
+import logging as Pythonlogging
+
+console = Console()
 
 if var.logging_location is None:
     var.logging_location = "/etc/adm/log"
@@ -92,10 +95,11 @@ match argv[1]:
 
 
 # Plugins, start by loading always-enabled plugins
-plugin_list = Plugin.get_plugins(True)
+with console.status("Loading plugins...") as status:
+    plugin_list = Plugin.get_plugins(True)
 
-for plugin in dict.keys(plugin_list):
-    Plugin.load_plugin(plugin, "")
+    for plugin in dict.keys(plugin_list):
+        Plugin.load_plugin(plugin, "")
 
 # change the list to have unloaded plugins
 plugin_list = Plugin.get_plugins(False)
@@ -106,6 +110,7 @@ for config in plugin_list.values():
     if argv[1].lower() == config["name"].lower():
         for name, command in config.get("commands", {}).items():
             if argv[2].lower() == name:
+                # TODO: i want to be able to catch missing commands here but i'm not sure how to do it
                 Plugin.load_plugin(config["name"].lower(), name)
 
 if AOS.app is not None:

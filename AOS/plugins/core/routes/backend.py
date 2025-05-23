@@ -44,7 +44,7 @@ class BackendAPI:
                 {
                     "schemaVersion": 1,
                     "label": "Administer Downloads",
-                    "message": str(request_app("org.admsoftware.PlayerManagement")["downloads"]),
+                    "message": str(len(db.get_all(db.PLACES))),
                     "color": "orange",
                 }
             )

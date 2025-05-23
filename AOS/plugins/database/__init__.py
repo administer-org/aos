@@ -2,6 +2,8 @@
 
 # Modules
 from AOS import globals
+from AOS.deps import il
+
 from typing import Any, List, Dict
 
 from pymongo import MongoClient
@@ -127,3 +129,6 @@ class Database(object):
 
 # Initialize db
 db = Database()
+
+if globals.dbattrs["use_prod_db"]:
+    il.cprint("[!] Production database is enabled. Proceed with caution!", 35)
