@@ -14,27 +14,15 @@
 
 The App Server is a FastAPI/MongoDB program which stores apps for use in Administer and a website later on, there is no backend panel or anything. What you see is what you get.
 
-## Installation Prerequisites
+For everything knowledge related (recommended specs, installation, API reference, ...) please refer to our official documentation.
 
-Install python3 3.13 and pip.
-
-In addition to that, make sure you have a MongoDB instance which **runs locally ONLY** without a password. Because it will not have a password, exposing it to the internet is a bad idea.
+https://docs.admsoftware.org/AOS/information/about
 
 # Installation
 
-## Standard installation (recommended)
+Please refer to our Quickstart Guide on the official documentation.
 
-Just clone the repo and run the installer:
-```sh
-git clone https://github.com/administer-org/app-server
-
-cd app-server
-
-chmod +x Install_AOS.sh
-./Install-AOS.sh
-```
-
-AOS and a systemd unit will be installed automatically.
+https://docs.admsoftware.org/AOS/maintaining/setup
 
 ## Development installation
 
@@ -50,23 +38,17 @@ source .venv/bin/activate
 uv pip install .
 ```
 
-### Note: Fedora Installation
-
-Feodra is used for aos-us-3 and we are having a lot of configuration errors. If AOS refuses to run, please run `sudo setenforce 0` to allow Python to run.
-
-And you're done! Make sure to edit your `__aos__.json` and `config.json` files, then run `aos`. 
-
-## Privacy Policy
+# Privacy Policy
 
 See here: https://docs.admsoftware.org/legal/privacy
 
-## Contributions
+# Contributions
 
 We welcome contributions as long as they are meaningful. Please ensure you are familiar with our code standards and libraries before making pull requests. For larger changes, you may want to [discuss a change in our Discord beforehand.](https://to.admsoftware.org/discord)
 
 
-## License
+# License
 
-All of Administer and your usage of it is governed under the GNU AGPL 3.0 license.
+All projects operated by Administer Software and your usage of it is governed under the GNU AGPL 3.0 license.
 
-<small>Administer Team 2024-2025</small>
+Administer Software 2024-2025
