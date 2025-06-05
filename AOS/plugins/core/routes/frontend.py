@@ -32,9 +32,10 @@ class Frontend():
 
             if day != round(time() / 86400):
                 day = round(time() / 86400)
-                (globals.is_dev) and print(
-                    "Ignoring reporting request, this will go through on prod"
-                ) or daily_report(db)
+                if globals.is_dev:
+                    print("Ignoring reporting request, this will go through on prod")
+                else:
+                    daily_report(db)
 
             return PlainTextResponse(
                 f"This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#\nVersion: {globals.version}")

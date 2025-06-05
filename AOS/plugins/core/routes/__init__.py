@@ -14,6 +14,7 @@ while app is None:
 
 # Load required dependencies
 for plugin in ["middleware"]:
+#for plugin in []:
     AOS.plugin_loader.load_plugin(plugin, "")
 
 
