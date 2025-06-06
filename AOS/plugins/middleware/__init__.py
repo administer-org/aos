@@ -206,7 +206,7 @@ class Logger(BaseHTTPMiddleware):
 
         il.request(
             str(req.url),
-            req.headers.get("CF-Connecting-IP"),
+            f"{time.time()} - {req.headers.get("CF-Connecting-IP")}",
             f"Code {res.status_code} ({HTTPStatus(res.status_code).phrase})",
             str(res.status_code).startswith("2") and 32 or 31,
             time.time() - t,
