@@ -1,7 +1,7 @@
 # pyxfluff 2025
 
 from pydantic import BaseModel
-from typing import Dict, Any
+from typing import Dict, List, Any, Optional
 
 
 class Ratelimiting(BaseModel):
@@ -37,6 +37,8 @@ class CoreConfig(BaseModel):
 
     node: str
     can_be_home_node: bool
+
+    extra_plugins: Optional[List[str]] = []
 
     banner: Banner
     report_webhook_url: str

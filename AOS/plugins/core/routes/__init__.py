@@ -1,12 +1,12 @@
 # pyxfluff 2025
 
-import AOS.plugin_loader
 from .frontend import Frontend
 from .backend import BackendAPI
 from .public import PublicAPI
 from AOS import globals, app
 from time import sleep
 
+import AOS.plugin_loader
 import AOS
 
 while app is None:

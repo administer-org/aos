@@ -20,9 +20,11 @@ class Database(object):
             "secrets",
             "v2_logs",
             "api_keys",
+            "bot_store",
             "abuse_logs",
             "error_refs",
-            "reported_versions"
+            "reported_versions",
+            "discord_remote_secrets"
         ]:
             setattr(self, db_item.upper(), db_item)
 

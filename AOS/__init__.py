@@ -14,6 +14,7 @@ import asyncio
 
 from sys import argv
 from pathlib import Path
+from typing import Optional
 from fastapi import FastAPI
 from uvicorn import Config, Server
 from contextlib import asynccontextmanager
@@ -73,9 +74,11 @@ class AOSVars:
 
 
 class AOSError(Exception):
-    def __init__(self, message):
+    def __init__(self, message, exit: Optional[bool]):
         il.cprint(message, 31)
-        sys.exit(1)
+
+        if exit is None or exit == True:
+            sys.exit(1)
 
 
 globals = AOSVars()

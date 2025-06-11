@@ -16,7 +16,11 @@ def get_plugins(only_include_autoload):
     plugins = {}
     order = globals.plugin_load_order
 
-    # load autoload plugins anyways
+    # add "extra" plugins (plugins we don't need globally but are useful for one or two nodes)
+    for plugin in globals.extra_plugins:
+        order.append(plugin)
+
+    # load autoload plugins
     for plugin in order:
         config = orjson.loads(
             (Path("AOS/plugins") / plugin / "meta.json").read_text())
