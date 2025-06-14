@@ -9,7 +9,7 @@ Type=simple
 WorkingDirectory=$WD
 ExecStart=$ES
 Restart=on-failure
-StartLimitIntervalSec=30
+StartLimitInterval=30
 
 [Install]
 WantedBy=multi-user.target
