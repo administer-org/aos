@@ -24,7 +24,7 @@ if var.logging_location is None:
 if Path(var.logging_location).is_file() is not True:
     il.cprint(
         "Your logfile (._config.json\\logging_location) is not a file! Please ensure it exists and is not a directory.",
-        24,
+        24
     )
 
 if not var.is_dev:
@@ -34,7 +34,7 @@ if not var.is_dev:
     except Exception as e:
         il.cprint(
             f"Failed to write to the logfile! Please make sure you have properly initialized AOS ({e}).",
-            24,
+            24
         )
 
 
