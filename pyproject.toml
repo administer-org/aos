@@ -22,6 +22,7 @@ dependencies = [
     "orjson",
     "psutil>=7.0.0",
     "rich",
+    "pydantic",
 
     # Discord
     #"audioop-lts",
@@ -29,7 +30,7 @@ dependencies = [
     
     # Development
     "matplotlib",
-    "flake8>=7.2.0",
+    "flake8>=7.2.0"
 ]
 
 urls.homepage = "https://admsoftware.org"
