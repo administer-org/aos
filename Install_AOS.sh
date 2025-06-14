@@ -73,7 +73,7 @@ sudo systemctl start adm
 
 echo "All done! AOS is now running at the URL defined in your ._aos.json file.
 
-The service was installed to /etc/systemd/system/aos.service incase you need to modify it.
+The service was installed to /etc/systemd/system/adm.service incase you need to modify it.
 "
 
 tail -f /etc/adm/log
