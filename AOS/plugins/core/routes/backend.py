@@ -46,7 +46,8 @@ class BackendAPI:
                     "label": "Administer Downloads",
                     "message": str(len(db.get_all(db.PLACES))),
                     "color": "orange",
-                }
+                },
+                status_code=200
             )
 
         @self.router.get("/directory")
@@ -208,6 +209,8 @@ class BackendAPI:
 
             else:
                 place["HomeNode"] = vars.node
+
+            place["LastUpdated"] = time.time()
 
             db.set(placeid, place, db.PLACES)
             return JSONResponse({"code": 200, "message": "Registered!"}, status_code=200)
