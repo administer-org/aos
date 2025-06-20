@@ -54,7 +54,7 @@ source .venv/bin/activate
 
 echo "< Installing AOS packages"
 
-uv pip install .
+python3 -m uv pip install .
 
 echo "< Installing systemd unit"
 
