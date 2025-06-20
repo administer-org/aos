@@ -82,7 +82,7 @@ try:
     _ = argv[1]
 except IndexError:
     help_command()
-    raise AOSError("A command is required. Showing help command.")
+    raise AOSError("A command is required. Showing help command.", True)
 
 match argv[1]:
     # Built-ins:
@@ -103,19 +103,22 @@ with console.status("Loading plugins...") as status:
 
 # change the list to have unloaded plugins
 plugin_list = Plugin.get_plugins(False)
+bypass_fastapi = False
 
 for config in plugin_list.values():
     if argv[1].lower() == config["name"].lower():
         if config["init"]:
             Plugin.load_plugin(config["name"].lower(), "")
 
-            exit(0)
-
         for name, command in config.get("commands", {}).items():
-            if argv[2].lower() == name:
-                # TODO: i want to be able to catch missing commands here but i'm not sure how to do it
-                Plugin.load_plugin(config["name"].lower(), name)
+            if argv[2].lower() == name.lower():
+                if bypass_fastapi:
+                    Plugin.load_plugin(config["name"].lower(), name.lower())
+                    continue
 
-if AOS.app is not None:
+                bypass_fastapi = Plugin.load_plugin(config["name"].lower(), name.lower())
+
+
+if AOS.app is not None and not bypass_fastapi:
     AOS.run_server()
 

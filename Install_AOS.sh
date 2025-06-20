@@ -65,6 +65,18 @@ sudo cp AOS/installer/example_unit.service /etc/systemd/system/adm.service
 sudo sed -i "s|\$WD|$WD|g" /etc/systemd/system/adm.service
 sudo sed -i "s|\$ES|$ES|g" /etc/systemd/system/adm.service
 
+echo "[ok] AOS is now installed, performing post-setup tasks before exeucting systemd"
+
+{
+    python3 -m AOS database genkeys
+} || {
+    echo "[!] Oops, your database is unreachable. Please make sure you can reach the host Mongo instance."
+
+    echo "  > AOS setup is now exiting as it cannot continue without Mongo. When you edit your ._config.json file with a valid MongoDB instance, please run the following:"
+    echo "      > sudo systemctl daemon-reload"
+    echo "      > sudo systemctl enable --now adm"
+}
+
 echo "< Reloading systemd config"
 
 sudo systemctl daemon-reload
@@ -75,5 +87,7 @@ echo "All done! AOS is now running at the URL defined in your ._aos.json file.
 
 The service was installed to /etc/systemd/system/adm.service incase you need to modify it.
 "
+
+curl -s "http://localhost:8020/pub/.administer" | python3 -m json.tool
 
 tail -f /etc/adm/log
