@@ -9,10 +9,14 @@ from typing import Any, List, Dict
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
+from urllib.parse import quote_plus as q
+
 
 # Main database class
 class Database(object):
     def __init__(self) -> None:
+        dbattrs = globals.dbattrs
+
         for db_item in [
             "apps",
             "logs",
@@ -29,12 +33,17 @@ class Database(object):
             setattr(self, db_item.upper(), db_item)
 
         client = MongoClient(
-            globals.dbattrs["address"],
-            serverSelectionTimeoutMS=globals.dbattrs["timeout_ms"]
+            dbattrs["address"],
+            serverSelectionTimeoutMS=dbattrs["timeout_ms"],
+            **{
+               "username":  dbattrs["auth"]["username"],
+               "password":  dbattrs["auth"]["password"],
+               "authSource": "admin"
+            } if dbattrs["auth"]["use_auth"] else {}
         )
 
         self.db = client[
-            globals.dbattrs["use_prod_db"] and "administer" or "administer_dev"
+            dbattrs["use_prod_db"] and "administer" or "administer_dev"
         ]
 
         try:

@@ -61,7 +61,7 @@ class AOSVars:
             il.cprint(
                 "       > If you are running on a unix-like system then please run", 32)
             il.cprint("         > ./Install_AOS", 33)
-            raise AOSError(f"exiting: {e}")
+            raise AOSError(f"exiting: {e}", True)
         
         for config in [
             CoreConfig(**config).model_dump().items(), 

@@ -14,10 +14,16 @@ class Banner(BaseModel):
     color: str
     text: str
 
+class MongoAuth(BaseModel):
+    use_auth: bool
+    username: str
+    password: str
+
 
 class MongoConfig(BaseModel):
     use_prod_db: bool
     address: str
+    auth: Optional[MongoAuth]
     timeout_ms: int
 
 
