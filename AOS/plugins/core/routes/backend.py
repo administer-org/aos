@@ -45,7 +45,7 @@ class BackendAPI:
                     "schemaVersion": 1,
                     "label": "Administer Downloads",
                     "message": str(len(db.get_all(db.PLACES))),
-                    "color": "orange",
+                    "color": "orange"
                 },
                 status_code=200
             )
@@ -60,8 +60,10 @@ class BackendAPI:
                 rating = 0
                 try:
                     rating = (
-                        (data["Votes"]["Likes"] + data["Votes"]["Dislikes"]) == 0 and 0 
-                        or data["Votes"]["Likes"] / (data["Votes"]["Likes"] + data["Votes"]["Dislikes"])
+                        (data["Votes"]["Likes"] + data["Votes"]["Dislikes"]) == 0
+                        and 0
+                        or data["Votes"]["Likes"]
+                        / (data["Votes"]["Likes"] + data["Votes"]["Dislikes"])
                     )
                 except ZeroDivisionError:
                     rating = 0  # ideally we can remove this in some months
@@ -72,13 +74,14 @@ class BackendAPI:
                         "short_desc": data["ShortDescription"],
                         "downloads": data["Downloads"],
                         "rating": rating,
-                        "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9)) +
-                            data["Votes"]["Favorites"],
+                        "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9))
+                        + data["Votes"]["Favorites"],
                         "developer": data["Developer"],
                         "last_update": data["Metadata"]["UpdatedAt"],
                         "id": data["Metadata"]["AdministerID"],
                         "object_type": data["Metadata"]["AssetType"]
-                     })
+                    }
+                )
 
             for app in apps:
                 app = app["data"]
@@ -86,20 +89,20 @@ class BackendAPI:
                 serialize(app)
 
             if final == []:
-                final = [{
-                    "object_type": "message",
-                    "text": "This marketplace server does not have any objects with the requested type."
-                }]
+                final = [
+                    {
+                        "object_type": "message",
+                        "text": "This marketplace server does not have any objects with the requested type."
+                    }
+                ]
 
             if asset_type == "FEATURED":
                 print(final)
                 # Render four top apps and one header, the game selects at random
                 # TODO: Top app, need to develop daily installs first
-                final = sorted(
-                    final,
-                    key=lambda x: x["weighted_score"],
-                    reverse=True
-                )[:4]
+                final = sorted(final, key=lambda x: x["weighted_score"], reverse=True)[
+                    :4
+                ]
 
             return JSONResponse(final, status_code=200)
 
@@ -107,15 +110,12 @@ class BackendAPI:
         async def search(req: Request, search: str):
             apps = db.get_all(db.APPS)
             final = []
-            ratio_info = { "is_ratio": False }
+            ratio_info = {"is_ratio": False}
 
             search.strip()
             if search in [None, "", " "] or len(search) >= 50:
                 return JSONResponse(
-                    {
-                        "meta": { "_aos_search_api": "4.0" },
-                        "index": "invalid_query"
-                    },
+                    {"meta": {"_aos_search_api": "4.0"}, "index": "invalid_query"},
                     status_code=200
                 )
 
@@ -161,10 +161,7 @@ class BackendAPI:
 
             if final == []:
                 return JSONResponse(
-                    {
-                        "meta": { "_aos_search_api": "4.0" },
-                        "index": "no_results"
-                    },
+                    {"meta": {"_aos_search_api": "4.0"}, "index": "no_results"},
                     status_code=200
                 )
 
@@ -174,13 +171,13 @@ class BackendAPI:
                         "_aos_search_api": "4.0",
                         "ratio_info": ratio_info,
                         "indexed_query": search,
-                        "results": len(final)
+                        "results": len(final),
                     },
                     "index": final
                 },
                 status_code=200
             )
-        
+
         @self.router.post("/register-home-node")
         async def home_node(req: Request):
             placeid = req.headers.get("Roblox-Id", 0)
@@ -188,10 +185,12 @@ class BackendAPI:
 
             if place is None:
                 if req.headers.get("Roblox-Id", 0) == 0:
-                    return JSONResponse({
-                        "code": 400,
-                        "message": "This API endpoint cannot be used outside of a Roblox game."
-                    })
+                    return JSONResponse(
+                        {
+                            "code": 400,
+                            "message": "This API endpoint cannot be used outside of a Roblox game."
+                        }
+                    )
 
                 place = {
                     "Apps": [],
@@ -199,10 +198,10 @@ class BackendAPI:
                     "StartTimestamp": time.time(),
                     "StartSource": (
                         "RobloxStudio" in req.headers.get("user-agent")
-                            and "STUDIO"
-                            or "RobloxApp" in req.headers.get("user-agent")
-                            and "CLIENT"
-                            or "UNKNOWN"
+                        and "STUDIO"
+                        or "RobloxApp" in req.headers.get("user-agent")
+                        and "CLIENT"
+                        or "UNKNOWN"
                     ),
                     "HomeNode": vars.node
                 }
@@ -213,7 +212,9 @@ class BackendAPI:
             place["LastUpdated"] = time.time()
 
             db.set(placeid, place, db.PLACES)
-            return JSONResponse({"code": 200, "message": "Registered!"}, status_code=200)
+            return JSONResponse(
+                {"code": 200, "message": "Registered!"}, status_code=200
+            )
 
         @self.router.get("/misc/get_prominent_color")
         async def get_prominent_color(image_url: str):
@@ -245,13 +246,7 @@ class BackendAPI:
                 )
 
             if not key:
-                key = {
-                    "internal": {},
-                    "qa": {},
-                    "canary": {},
-                    "beta": {},
-                    "live": {}
-                }
+                key = {"internal": {}, "qa": {}, "canary": {}, "beta": {}, "live": {}}
 
             if not key[branch].get(json["version"]):
                 key[branch][json["version"]] = 0
@@ -261,24 +256,31 @@ class BackendAPI:
             db.set(round(time.time() / 86400), key, db.REPORTED_VERSIONS)
 
             return JSONResponse(
-                {"code": 200, "message": "Version has been recorded"},
-                status_code=200
+                {"code": 200, "message": "Version has been recorded"}, status_code=200
             )
 
         @self.router.post("/app-config/upload")
         async def app_config(req: Request):
-            config: { any } = await req.json()
+            config: {any} = await req.json()
 
             try:
                 new_app_id = config["Metadata"]["AdministerID"]
             except KeyError:
-                return JSONResponse({"code": 400, "message": "Metadata.AdministerID must not be None and should be an AOSId2 (RDNSN)"}, status_code=400)
-            
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "Metadata.AdministerID must not be None and should be an AOSId2 (RDNSN)"
+                    },
+                    status_code=400
+                )
+
             existing = db.get(new_app_id, db.APPS)
 
             if existing is None:
                 config["Metadata"]["CreatedAt"] = time.time()
-                config["Metadata"]["AOSGenerator"] = f"AOS/{vars.version} AOS_NODE.{vars.node.upper()}"
+                config["Metadata"][
+                    "AOSGenerator"
+                ] = f"AOS/{vars.version} AOS_NODE.{vars.node.upper()}"
             else:
                 # stuff that should never be overwritten
                 config["Votes"] = existing["Votes"]
@@ -290,9 +292,9 @@ class BackendAPI:
 
             return JSONResponse(
                 {
-                    "code": 200, 
+                    "code": 200,
                     "message": "Submitted! Please allow a mintue for indexes to rebuild and databases to sync."
-                }, 
+                },
                 status_code=200
             )
 
@@ -314,7 +316,7 @@ class BackendAPI:
             except Exception:
                 return JSONResponse(
                     {
-                        "code": 404, 
+                        "code": 404,
                         "message": "not-found",
                         "user_facing_message": "This asset wasn't found. Maybe it was deleted while you were viewing it?"
                     },
@@ -322,8 +324,7 @@ class BackendAPI:
                 )
 
         @self.asset_router.put("/{asset_id}/vote")
-        async def rate_app(
-                asset_id: str, payload: RatingPayload, req: Request):
+        async def rate_app(asset_id: str, payload: RatingPayload, req: Request):
             # if "RobloxStudio" in req.headers.get("user-agent"):
             #     return JSONResponse(
             #         {
@@ -351,7 +352,7 @@ class BackendAPI:
             if asset_id not in place["Apps"]:
                 return JSONResponse(
                     {
-                        "code": 400, 
+                        "code": 400,
                         "message": "Bad request",
                         "user_facing_message": "You have to install this asset before you can rate it."
                     },
@@ -362,9 +363,9 @@ class BackendAPI:
             if not app:
                 return JSONResponse(
                     {
-                        "code": 404, 
+                        "code": 404,
                         "message": "Not Found",
-                        "user_facing_message": "That AssetID is invalid." 
+                        "user_facing_message": "That AssetID is invalid."
                     },
                     status_code=404
                 )
@@ -374,7 +375,8 @@ class BackendAPI:
                 is_overwrite = True
 
                 app["Votes"][
-                    place["Ratings"][asset_id]["rating"] and "Likes" or "Dislikes"] -= 1
+                    place["Ratings"][asset_id]["rating"] and "Likes" or "Dislikes"
+                ] -= 1
                 place["Ratings"][asset_id] = None
 
             place["Ratings"][asset_id] = {
@@ -404,18 +406,21 @@ class BackendAPI:
             place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
 
             if place is None:
-                return JSONResponse({
-                    "code": 400,
-                    "message": "This database node doesn't know who you are!"
-                }, status_code=400)
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "This database node doesn't know who you are!"
+                    },
+                    status_code=400
+                )
 
             app = request_app(asset_id)
             if not app:
                 return JSONResponse(
                     {
-                        "code": 404, 
+                        "code": 404,
                         "message": "not-found",
-                        "user_facing_message": "That isn't a valid asset. Did it get removed?" 
+                        "user_facing_message": "That isn't a valid asset. Did it get removed?"
                     },
                     status_code=404
                 )
@@ -423,7 +428,7 @@ class BackendAPI:
             if asset_id in place["Apps"]:
                 return JSONResponse(
                     {
-                        "code": 400, 
+                        "code": 400,
                         "message": "resource-limited",
                         "user_facing_message": "You may only install an asset once."
                     },
@@ -439,11 +444,7 @@ class BackendAPI:
             vars.state["downloads_today"] += 1
 
             return JSONResponse(
-                {
-                    "code": 200, 
-                    "message": "success",
-                    "user_facing_message": "Success!"
-                 },
+                {"code": 200, "message": "success", "user_facing_message": "Success!"},
                 status_code=200
             )
 

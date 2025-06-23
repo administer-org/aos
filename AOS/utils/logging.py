@@ -27,4 +27,5 @@ def process_command(command):
 
         case _:
             raise AOSError(
-                "Command not found! Please use `aos help` for more information.")
+                "Command not found! Please use `aos help` for more information."
+            )

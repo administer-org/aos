@@ -15,9 +15,9 @@ from collections import defaultdict
 from AOS import globals, app
 from AOS.plugins.database import db
 
-known_good_ips  = []
-limited_ips     = defaultdict(list)
-mem_incidents   = defaultdict(list)
+known_good_ips = []
+limited_ips = defaultdict(list)
+mem_incidents = defaultdict(list)
 mem_blocked_ips = defaultdict(list)
 
 blocked_users = db.get("__BLOCKED_USERS__", db.API_KEYS)
@@ -28,16 +28,15 @@ auth_key = db.get("__ENV_AUTH__", db.SECRETS)
 
 
 class AuthMiddleware(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request,
-                       call_next: FunctionType) -> Response:
+    async def dispatch(self, request: Request, call_next: FunctionType) -> Response:
         if request.headers.get("CF-Connecting-IP") in forbidden_ips:
             return JSONResponse(
-                    {
-                        "code": 400,
-                        "message": "Sorry, but your IP has been blocked due to suspected abuse. Please reach out if this was a mistake." 
-                    },
-                    status_code=400
-                )
+                {
+                    "code": 400,
+                    "message": "Sorry, but your IP has been blocked due to suspected abuse. Please reach out if this was a mistake."
+                },
+                status_code=400
+            )
 
         try:
             if (
@@ -49,26 +48,22 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 str(request.url).split("/")[4] == "app-config"
                 and request.headers.get("X-Adm-Auth", "") != auth_key
             ):
-                return JSONResponse(
-                    {"code": 401, "message": "Bad authorization."}, 401)
+                return JSONResponse({"code": 401, "message": "Bad authorization."}, 401)
         except IndexError:
             pass
 
         if globals.security["use_roblox_lock"]:
-            if str(request.url).split(
-                    "/")[4] in globals.state["unchecked_endpoints"]:
+            if str(request.url).split("/")[4] in globals.state["unchecked_endpoints"]:
                 return await call_next(request)
 
-            if (
-                not request.headers.get("Roblox-Id")
-            ):
+            if not request.headers.get("Roblox-Id"):
                 return JSONResponse(
-                        {
-                            "code": 400,
-                            "message": "This App Server is only accepting requests from Roblox game servers."
-                        },
-                        status_code=400
-                    )
+                    {
+                        "code": 400,
+                        "message": "This App Server is only accepting requests from Roblox game servers."
+                    },
+                    status_code=400
+                )
 
             if request.headers.get("CF-Connecting-IP") in known_good_ips:
                 # all is well
@@ -94,7 +89,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
                         ).json(),
                         "roblox-id": request.headers.get("Roblox-Id"),
                         "user-agent": request.headers.get("user-agent", "unknown"),
-                        "endpoint": request.url,
+                        "endpoint": request.url
                     },
                 )
 
@@ -129,8 +124,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             )
 
         elif globals.security["use_api_keys"]:
-            api_key_data = db.get(
-                request.headers.get("X-Administer-Key"), db.API_KEYS)
+            api_key_data = db.get(request.headers.get("X-Administer-Key"), db.API_KEYS)
 
             if (
                 api_key_data.disabled
@@ -138,14 +132,12 @@ class AuthMiddleware(BaseHTTPMiddleware):
                 or api_key_data.registered_game in blocked_games
             ):
                 return JSONResponse(
-                        {
-                            "code": 400,
-                            "message":
-                            "Your API key has been disabled due to possible abuse. To reach out to the API team please join the discord and make a ticket (/discord).", 
-                        },
-
-                        status_code=400
-                    )
+                    {
+                        "code": 400,
+                        "message": "Your API key has been disabled due to possible abuse. To reach out to the API team please join the discord and make a ticket (/discord).",
+                    },
+                    status_code=400
+                )
 
         if globals.security["use_sessions"] and not request.headers.get(
             "X-Administer-Session"
@@ -159,8 +151,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
 
 class RateLimiter(BaseHTTPMiddleware):
-    async def dispatch(self, request: Request,
-                       call_next: FunctionType) -> Response:
+    async def dispatch(self, request: Request, call_next: FunctionType) -> Response:
         cf_ip = request.headers.get("CF-Connecting-IP")
 
         if cf_ip in mem_blocked_ips:
@@ -182,10 +173,12 @@ class RateLimiter(BaseHTTPMiddleware):
             > time.time() - globals.security["ratelimiting"]["reset_timeframe"]
         ]
 
-        if len(limited_ips[cf_ip]) >= globals.security["ratelimiting"][
-                "max_reqs"]:
+        if len(limited_ips[cf_ip]) >= globals.security["ratelimiting"]["max_reqs"]:
             return JSONResponse(
-                {"code": 400, "message": "You are being rate limited, please try again later."},
+                {
+                    "code": 400,
+                    "message": "You are being rate limited, please try again later.",
+                },
                 status_code=400
             )
 
@@ -197,8 +190,7 @@ class RateLimiter(BaseHTTPMiddleware):
 
 
 class Logger(BaseHTTPMiddleware):
-    async def dispatch(self, req: Request,
-                       call_next: FunctionType) -> Response:
+    async def dispatch(self, req: Request, call_next: FunctionType) -> Response:
         cf_ip = req.headers.get("CF-Connecting-IP")
 
         t = time.time()
@@ -211,11 +203,13 @@ class Logger(BaseHTTPMiddleware):
             str(res.status_code).startswith("2") and 32 or 31,
             time.time() - t,
             f"PlaceID: {req.headers.get('Roblox-Id') or 'Not a Roblox place'}\n\nRatelimiting data: {len(limited_ips[cf_ip])}/{globals.security['ratelimiting']['max_reqs']} used",
-            req.method,
+            req.method
         )
 
         res.headers["X-Powered-By"] = f"AdministerAppServer; AOS/{globals.version}"
-        res.headers["Server-Timing"] = f"{res.headers.get('Server-Timing', '')}full_process;dur={str((time.time() - t) * 1000)}"
+        res.headers["Server-Timing"] = (
+            f"{res.headers.get('Server-Timing', '')}full_process;dur={str((time.time() - t) * 1000)}"
+        )
 
         return res
 

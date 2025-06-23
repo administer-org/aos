@@ -45,26 +45,24 @@ class AOSVars:
         try:
             config, aos_config, version_data = (
                 orjson.loads((Path(__file__).parent / f).read_text())
-                    for f in [
-                        "../._config.json",
-                        "../._aos.json",
-                        "../._version_data.json"
-                    ]
+                for f in ["../._config.json", "../._aos.json", "../._version_data.json"]
             )
         except Exception as e:
             il.cprint("[!] Welcome to AOS!", 34)
+            il.cprint("    > It seems like your enviornment has not been setup.", 32)
             il.cprint(
-                "    > It seems like your enviornment has not been setup.", 32)
-            il.cprint(
-                "       > If you are installed via PyPI or on Windows, run the following:", 32)
+                "       > If you are installed via PyPI or on Windows, run the following:",
+                32
+            )
             il.cprint("         > aos setup run", 33)
             il.cprint(
-                "       > If you are running on a unix-like system then please run", 32)
+                "       > If you are running on a unix-like system then please run", 32
+            )
             il.cprint("         > ./Install_AOS", 33)
             raise AOSError(f"exiting: {e}", True)
-        
+
         for config in [
-            CoreConfig(**config).model_dump().items(), 
+            CoreConfig(**config).model_dump().items(),
             AOSConfig(**aos_config).model_dump().items()
         ]:
             for k, v in config:

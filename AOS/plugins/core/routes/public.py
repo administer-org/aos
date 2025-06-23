@@ -61,24 +61,29 @@ class PublicAPI:
             current_vers = req.headers.get("X-Adm-Version")
 
             try:
-                globals.versions["versions"][current_vers]["_retrieved_at"] = time.time(
-                )
+                globals.versions["versions"][current_vers][
+                    "_retrieved_at"
+                ] = time.time()
             except KeyError:
-                return JSONResponse({
-                    "message": "That is not a valid version."
-                }, status_code=400)
+                return JSONResponse(
+                    {"message": "That is not a valid version."}, status_code=400
+                )
 
             return JSONResponse(
                 {
-                    "latest_version": globals.versions["_latest_versions"][req.headers.get("X-Adm-Branch")],
-
+                    "latest_version": globals.versions["_latest_versions"][
+                        req.headers.get("X-Adm-Branch")
+                    ],
                     "your_version": {
                         "version": current_vers,
                         "branch": req.headers.get("X-Adm-Branch"),
-                        "featureset": globals.versions["versions"][current_vers]["featureset"],
-                        "is_outdated": globals.versions["versions"][current_vers]["is_outdated"]
+                        "featureset": globals.versions["versions"][current_vers][
+                            "featureset"
+                        ],
+                        "is_outdated": globals.versions["versions"][current_vers][
+                            "is_outdated"
+                        ]
                     },
-
                     "versions": globals.versions["versions"]
                 }
             )

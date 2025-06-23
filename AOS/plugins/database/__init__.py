@@ -9,8 +9,6 @@ from typing import Any, List, Dict
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
-from urllib.parse import quote_plus as q
-
 
 # Main database class
 class Database(object):
@@ -35,16 +33,17 @@ class Database(object):
         client = MongoClient(
             dbattrs["address"],
             serverSelectionTimeoutMS=dbattrs["timeout_ms"],
-            **{
-               "username":  dbattrs["auth"]["username"],
-               "password":  dbattrs["auth"]["password"],
-               "authSource": "admin"
-            } if dbattrs["auth"]["use_auth"] else {}
+            **(
+                {
+                    "username": dbattrs["auth"]["username"],
+                    "password": dbattrs["auth"]["password"]
+                }
+                if dbattrs["auth"]["use_auth"]
+                else {}
+            ),
         )
 
-        self.db = client[
-            dbattrs["use_prod_db"] and "administer" or "administer_dev"
-        ]
+        self.db = client[dbattrs["use_prod_db"] and "administer" or "administer_dev"]
 
         try:
             client.admin.command("ping")
@@ -56,8 +55,7 @@ class Database(object):
             raise e
 
     def set(self, key: str | int, value: Any, db: str) -> None:
-        assert isinstance(
-            key, (str, int)), "key must be a string (integers accepted)!"
+        assert isinstance(key, (str, int)), "key must be a string (integers accepted)!"
         assert isinstance(db, str), "db must be a string!"
 
         if db == self.APPS:
@@ -82,8 +80,7 @@ class Database(object):
             self.set(k, v, db)
 
     def get(self, key: str | int, db: str) -> dict | None:
-        assert isinstance(
-            key, (str, int)), "key must be a string (integers accepted)"
+        assert isinstance(key, (str, int)), "key must be a string (integers accepted)"
         assert isinstance(db, str), "db must be an attr of db"
 
         document = self.db[db].find_one({"administer_id": str(key)})
@@ -93,8 +90,7 @@ class Database(object):
         assert isinstance(identifier, dict), "identifier must be a dict!"
         assert isinstance(db, str), "db must be a string!"
 
-        document = self.db[db].find_one(
-            {f"data.{k}": v for k, v in identifier.items()})
+        document = self.db[db].find_one({f"data.{k}": v for k, v in identifier.items()})
         return document and document["administer_id"]
 
     def delete(self, key: str | int, db: str) -> None:
@@ -103,8 +99,7 @@ class Database(object):
         self.db[db].delete_one({"administer_id": str(key)})
 
     def bulk_delete(self, keys: List[str | int], db: str) -> None:
-        assert isinstance(
-            keys, list), "keys must be a list! (try using db.delete())"
+        assert isinstance(keys, list), "keys must be a list! (try using db.delete())"
 
         self.db[db].delete_many({"administer_id": {"$in": keys}})
 

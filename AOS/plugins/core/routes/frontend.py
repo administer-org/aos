@@ -12,6 +12,7 @@ from fastapi.responses import PlainTextResponse
 if globals.is_dev:
     from .utils.report import daily_report
 else:
+
     def daily_report(db):
         print("[x] Request to spawn daily report ignored due to missing modules")
 
@@ -20,7 +21,7 @@ root = Path(__file__).parents[1]
 day = 0
 
 
-class Frontend():
+class Frontend:
     def __init__(self, app):
         self.app = app
         self.t = time()
@@ -38,7 +39,8 @@ class Frontend():
                     daily_report(db)
 
             return PlainTextResponse(
-                f"This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#\nVersion: {globals.version}")
+                f"This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#\nVersion: {globals.version}\n" # curl-safe
+            )
 
         @self.app.get("/app/{app:str}")
         def app_frontend(req: Request, app: str):

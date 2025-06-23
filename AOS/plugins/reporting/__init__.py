@@ -24,19 +24,19 @@ def daily_usage_graph():
         x.append(int(day["administer_id"]))
         y.append(day["data"]["live"])
 
-    y2 = [item.get('1.2', 0) for item in y]
-    y3 = [item.get('1.2.1', 0) for item in y]
-    y4 = [item.get('1.2.2', 0) for item in y]
-    y5 = [item.get('1.2.3', 0) for item in y]
-    y6 = [item.get('2.0', 0) for item in y]
-    y = [item.get('1.1.1', 0) for item in y]
+    y2 = [item.get("1.2", 0) for item in y]
+    y3 = [item.get("1.2.1", 0) for item in y]
+    y4 = [item.get("1.2.2", 0) for item in y]
+    y5 = [item.get("1.2.3", 0) for item in y]
+    y6 = [item.get("2.0", 0) for item in y]
+    y = [item.get("1.1.1", 0) for item in y]
 
-    plt.plot(x, y, marker='o')
-    plt.plot(x, y2, marker='*')
-    plt.plot(x, y3, marker='o')
-    plt.plot(x, y4, marker='o')
-    plt.plot(x, y5, marker='o')
-    plt.plot(x, y6, marker='o')
+    plt.plot(x, y, marker="o")
+    plt.plot(x, y2, marker="*")
+    plt.plot(x, y3, marker="o")
+    plt.plot(x, y4, marker="o")
+    plt.plot(x, y5, marker="o")
+    plt.plot(x, y6, marker="o")
 
     # Add labels and title
     plt.ylabel("Place Starts")
@@ -58,7 +58,7 @@ def overall_places():
             x.append(day_number)
             y.append(places_len)
 
-    plt.plot(x, y, marker='o', label="Overall Places")
+    plt.plot(x, y, marker="o", label="Overall Places")
 
     plt.ylabel("Places")
     plt.xlabel("Day")
@@ -80,19 +80,19 @@ def combined():
         except Exception:
             x.remove(int(day["administer_id"]))
 
-    y2 = [item.get('1.2', 0) for item in y]
-    y3 = [item.get('1.2.1', 0) for item in y]
-    y4 = [item.get('1.2.2', 0) for item in y]
-    y5 = [item.get('1.2.3', 0) for item in y]
-    y6 = [item.get('2.0.0', 0) for item in y]
-    y = [item.get('1.1.1', 0) for item in y]
+    y2 = [item.get("1.2", 0) for item in y]
+    y3 = [item.get("1.2.1", 0) for item in y]
+    y4 = [item.get("1.2.2", 0) for item in y]
+    y5 = [item.get("1.2.3", 0) for item in y]
+    y6 = [item.get("2.0.0", 0) for item in y]
+    y = [item.get("1.1.1", 0) for item in y]
 
-    plt.plot(x, y, marker='o', label="1.1.1")
-    plt.plot(x, y2, marker='o', label="1.2")
-    plt.plot(x, y3, marker='o', label="1.2.1")
-    plt.plot(x, y4, marker='o', label="1.2.2")
-    plt.plot(x, y5, marker='o', label="1.2.3")
-    plt.plot(x, y6, marker='o', label="2.0.0")
+    plt.plot(x, y, marker="o", label="1.1.1")
+    plt.plot(x, y2, marker="o", label="1.2")
+    plt.plot(x, y3, marker="o", label="1.2.1")
+    plt.plot(x, y4, marker="o", label="1.2.2")
+    plt.plot(x, y5, marker="o", label="1.2.3")
+    plt.plot(x, y6, marker="o", label="2.0.0")
 
     x, y = [], []
 
@@ -105,7 +105,7 @@ def combined():
             x.append(day_number)
             y.append(places_len)
 
-    plt.plot(x, y, marker='*', label="Overall Places")
+    plt.plot(x, y, marker="*", label="Overall Places")
     plt.xlabel("Day (missing some data)")
     plt.ylabel("Total Places")
 

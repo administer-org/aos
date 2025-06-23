@@ -45,12 +45,17 @@ def help_command():
     il.cprint("Commands", 32)
 
     for config in plugins.values():
-        if len(config.get("commands", {}).items()) == 0: 
+        if len(config.get("commands", {}).items()) == 0:
             commandless_plugins += 1
 
     il.cprint(f"│  \033[1m{len(plugins)}\033[0m\033[32m plugins are installed", 32)
-    il.cprint(f"│  \033[1m{commandless_plugins}\033[0m\033[32m of which have no commands (not displayed)", 32)
-    il.cprint(f"└> and \033[1m{len(plugins_autoload)}\033[0m\033[32m load automatically!", 32)
+    il.cprint(
+        f"│  \033[1m{commandless_plugins}\033[0m\033[32m of which have no commands (not displayed)",
+        32
+    )
+    il.cprint(
+        f"└> and \033[1m{len(plugins_autoload)}\033[0m\033[32m load automatically!", 32
+    )
 
     il.box(50, "Built-in", "1 command")
 
@@ -61,7 +66,9 @@ def help_command():
     )
 
     for config in plugins.values():
-        if len(config.get("commands", {}).items()) == 0: return
+        if len(config.get("commands", {}).items()) == 0:
+            return
+        
         il.box(
             50,
             config["name"],
@@ -70,8 +77,7 @@ def help_command():
 
         for name, command in config.get("commands", {}).items():
             il.cprint(
-                f"* aos {config['name'].lower()} {name}\n└→    {command['help']}",
-                34
+                f"* aos {config['name'].lower()} {name}\n└→    {command['help']}", 34
             )
 
 
@@ -116,9 +122,10 @@ for config in plugin_list.values():
                     Plugin.load_plugin(config["name"].lower(), name.lower())
                     continue
 
-                bypass_fastapi = Plugin.load_plugin(config["name"].lower(), name.lower())
+                bypass_fastapi = Plugin.load_plugin(
+                    config["name"].lower(), name.lower()
+                )
 
 
 if AOS.app is not None and not bypass_fastapi:
     AOS.run_server()
-

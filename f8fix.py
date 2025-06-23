@@ -128,7 +128,7 @@ def insert_space_after(bundle):
     with open(path, "w") as f:
         for index, line in enumerate(lines):
             if index == row:
-                newline = line[: col + 1] + " " + line[col + 1:]
+                newline = line[: col + 1] + " " + line[col + 1 :]
                 f.write(newline)
             else:
                 f.write(line)
@@ -171,7 +171,7 @@ def delete_character(bundle):
     with open(path, "w") as f:
         for index, line in enumerate(lines):
             if index == row:
-                line = line[:col] + line[col + 1:]
+                line = line[:col] + line[col + 1 :]
             f.write(line)
 
 

@@ -14,11 +14,14 @@ token = db.get("VERSION_BOT", db.SECRETS)
 
 
 @bot.slash_command(name="create-release", description="Creates a new release.")
-async def new_release(ctx, name: str, latest: bool,
-                      distributed_with: str, changelogs: str):
+async def new_release(
+    ctx, name: str, latest: bool, distributed_with: str, changelogs: str
+):
     # Tests
     if not re.search(r"^\d+\.\d+\.\d+(-rc\d+|-beta\d+|-git)?$", name):
-        await ctx.respond(":x: The provided version is invalid (does not follow x.x.x-x(git, rc, beta) format)")
+        await ctx.respond(
+            ":x: The provided version is invalid (does not follow x.x.x-x(git, rc, beta) format)"
+        )
 
     await ctx.respond(f"\n- {name}\n- {latest}\n- {distributed_with}\n- {changelogs}")
 
@@ -30,9 +33,9 @@ async def on_connect():
 
     await bot.change_presence(
         activity=discord.Activity(
-            type=discord.ActivityType.watching,
-            name="for new administer versions"
-        ), status=discord.Status.idle
+            type=discord.ActivityType.watching, name="for new administer versions"
+        ),
+        status=discord.Status.idle
     )
 
     il.cprint("[✓] Versioning bot connected!", 32)

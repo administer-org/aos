@@ -64,7 +64,7 @@ def load_plugin(plugin, command):
             f".plugins.{plugin}.{config.get('commands', {})[cmd]['directory']}",
             package="AOS"
         )
-        
+
         return config["commands"][cmd]["bypass_fastapi"]
     except KeyError:
         if not cmd:
@@ -73,5 +73,5 @@ def load_plugin(plugin, command):
         il.cprint(f"[x] Invalid command for plugin {plugin}", 31)
     except Exception as e:
         raise AOSError(f"Failed to load plugin: {e}", False)
-    
+
     return False
