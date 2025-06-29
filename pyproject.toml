@@ -3,7 +3,7 @@ name = "adm-aos"
 description = "Administer's AOS service for distributing apps."
 readme = "README.md"
 
-version = "5.3.2"
+version = "5.5"
 requires-python = ">=3.12"
 
 authors = [{ name = "pyxfluff", email = "pyx@admsoftware.org" }]
