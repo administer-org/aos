@@ -11,11 +11,10 @@ from AOS.plugins.database import db
 async def DiscordAuthentication(
         request: Request
     ):
-    return
     place_id = request.headers.get("Roblox-Id")
     print(place_id)
 
-    if not place_id:
+    if not place_id and not "/aos" in str(request.url):
         raise HTTPException(status_code=401, detail="You must add a place ID.")
     
     if "/api" in str(request.url):
@@ -29,3 +28,6 @@ async def DiscordAuthentication(
             raise HTTPException(status_code=401, detail="You must provide a secret.")
         elif secret != request.headers.get("X-Adm-Secret", ""):
             raise HTTPException(status_code=401, detail="Invalid, expired, or incorrect secret.")
+        elif "/aos" in str(request.url):
+            # do standard core auth
+            pass

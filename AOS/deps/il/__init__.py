@@ -3,7 +3,7 @@
 # Modules
 import atexit
 from pathlib import Path
-from typing import Optional
+from typing import Optional, List
 from io import TextIOWrapper
 
 # Version
@@ -72,7 +72,7 @@ def request(
     summary: str,
     summary_color: int,
     time_taken_seconds: float | int,
-    detail_text: Optional[str] = None,
+    detail_text: Optional[List[str]] = None,
     verb: Optional[str] = "REQ"
 ) -> None:
     """Generate a log given request parameters."""
@@ -82,8 +82,9 @@ def request(
 
     create_log(f"\033[33m\u26a1 {verb} {path}\t[{remote_ip}]")
     if detail_text is not None:
-        create_log(f"\033[90m   │   \033[{summary_color}m{detail_text}")
+        for item in detail_text:
+            create_log(f"\033[90m   │   \033[{summary_color}m{item}")
 
     create_log(
-        f"\033[90m   └→  \033[{summary_color}m{summary}{spacing}\t\033[33m[{total_time:.1f}ms]\033[0m"
+        f"\033[90m   └→  \033[{summary_color}m{summary}{spacing}\t\033[33m[{total_time:.1f}ms]\033[0m\n"
     )

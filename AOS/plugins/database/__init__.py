@@ -40,7 +40,7 @@ class Database(object):
                 }
                 if dbattrs["auth"]["use_auth"]
                 else {}
-            ),
+            )
         )
 
         self.db = client[dbattrs["use_prod_db"] and "administer" or "administer_dev"]
@@ -53,6 +53,28 @@ class Database(object):
                 "Failed to connect to MongoDB within the required timeframe! Is Mongo running? Aborting startup..."
             )
             raise e
+
+        server_info = client.server_info()
+        repl_status = client.admin.command("replSetGetStatus")
+
+        if repl_status:
+            me = next(
+                (
+                    m
+                    for m in repl_status["members"]
+                    if m.get("name") == dbattrs["address"].replace("mongodb://", "")
+                ),
+                None
+            )
+
+            replica_state = me["stateStr"] if me else "UNKNOWN"
+        else:
+            replica_state = "STANDALONE"
+
+        il.cprint(
+            f"[✓] Connected to MongoDB {server_info["version"]} {server_info["gitVersion"][:7]} at {dbattrs['address']}:/{dbattrs["use_prod_db"] and 'administer' or 'administer_dev'} <RCN [{replica_state} {repl_status["set"]}]>",
+            32
+        )
 
     def set(self, key: str | int, value: Any, db: str) -> None:
         assert isinstance(key, (str, int)), "key must be a string (integers accepted)!"
