@@ -104,8 +104,6 @@ class BackendAPI:
                     :4
                 ]
 
-            final["instance_name"] = vars.instance_name
-
             return JSONResponse(final, status_code=200)
 
         @self.router.get("/search/{search}")
