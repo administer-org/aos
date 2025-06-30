@@ -98,12 +98,13 @@ class BackendAPI:
                 ]
 
             if asset_type == "FEATURED":
-                print(final)
                 # Render four top apps and one header, the game selects at random
                 # TODO: Top app, need to develop daily installs first
                 final = sorted(final, key=lambda x: x["weighted_score"], reverse=True)[
                     :4
                 ]
+
+            final["instance_name"] = vars.instance_name
 
             return JSONResponse(final, status_code=200)
 
