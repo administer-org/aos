@@ -214,6 +214,21 @@ class Logger(BaseHTTPMiddleware):
             f"{res.headers.get('Server-Timing', '')}full_process;dur={str((time.time() - t) * 1000)}"
         )
 
+        if globals.plausible["use_plausible"]:
+            r = httpx.post(
+                f"{globals.plausible["data_url"]}/api/event",
+                headers={
+                    "User-Agent": f"AdministerAppServer; AOS/{globals.version}; User/{req.headers.get("Roblox-Id")}"
+                },
+                json={
+                    "domain": globals.plausible["site_url"],
+                    "name": "pageview",
+                    "url": f"https://{globals.plausible["site_url"]}{str(req.url.path)}"
+                }
+            )
+
+            print(r.text)
+
         return res
 
 

@@ -33,6 +33,11 @@ class SecurityConfig(BaseModel):
     use_api_keys: bool = False
     use_sessions: bool = False
 
+class Plausible(BaseModel):
+    use_plausible: bool = False
+    data_url: str
+    site_url: str
+
 
 class CoreConfig(BaseModel):
     instance_name: str
@@ -43,6 +48,8 @@ class CoreConfig(BaseModel):
 
     node: str
     can_be_home_node: bool
+
+    plausible: Plausible
 
     extra_plugins: Optional[List[str]] = []
 
