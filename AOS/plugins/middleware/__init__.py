@@ -214,7 +214,7 @@ class Logger(BaseHTTPMiddleware):
             f"{res.headers.get('Server-Timing', '')}full_process;dur={str((time.time() - t) * 1000)}"
         )
 
-        if globals.plausible["use_plausible"]:
+        if globals.plausible["use_plausible"] and not str(req.url.path) == "/api/ping":
             r = httpx.post(
                 f"{globals.plausible["data_url"]}/api/event",
                 headers={
