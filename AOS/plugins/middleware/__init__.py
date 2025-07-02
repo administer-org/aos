@@ -8,6 +8,7 @@ from starlette.middleware.base import BaseHTTPMiddleware
 
 import time
 import httpx
+import asyncio
 
 from types import FunctionType
 from collections import defaultdict
@@ -192,13 +193,12 @@ class RateLimiter(BaseHTTPMiddleware):
 class Logger(BaseHTTPMiddleware):
     async def dispatch(self, req: Request, call_next: FunctionType) -> Response:
         cf_ip = req.headers.get("CF-Connecting-IP")
-
         t = time.time()
         res = await call_next(req)
 
         il.request(
             str(req.url),
-            f"{time.time()} - {req.headers.get("CF-Connecting-IP")}",
+            f"{time.time()} - {req.headers.get('CF-Connecting-IP')}",
             f"Code {res.status_code} ({HTTPStatus(res.status_code).phrase})",
             str(res.status_code).startswith("2") and 32 or 31,
             time.time() - t,
@@ -215,19 +215,21 @@ class Logger(BaseHTTPMiddleware):
         )
 
         if globals.plausible["use_plausible"] and not str(req.url.path) == "/api/ping":
-            r = httpx.post(
-                f"{globals.plausible["data_url"]}/api/event",
-                headers={
-                    "User-Agent": f"AdministerAppServer; AOS/{globals.version}; User/{req.headers.get("Roblox-Id")}"
-                },
-                json={
-                    "domain": globals.plausible["site_url"],
-                    "name": "pageview",
-                    "url": f"https://{globals.plausible["site_url"]}{str(req.url.path)}"
-                }
-            )
+            async def send_plausible():
+                r = httpx.post(
+                    f"{globals.plausible['data_url']}/api/event",
+                    headers={
+                        "User-Agent": f"AdministerAppServer; AOS/{globals.version}; User/{req.headers.get('Roblox-Id')}"
+                    },
+                    json={
+                        "domain": globals.plausible["site_url"],
+                        "name": "pageview",
+                        "url": f"https://{globals.plausible['site_url']}{str(req.url.path)}"
+                    }
+                )
+                print(r.text)
 
-            print(r.text)
+            asyncio.create_task(asyncio.to_thread(send_plausible))
 
         return res
 
