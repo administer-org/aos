@@ -229,7 +229,7 @@ class Logger(BaseHTTPMiddleware):
                 )
                 print(r.text)
 
-            await asyncio.create_task(asyncio.to_thread(send_plausible))
+            asyncio.create_task(send_plausible())
 
         return res
 
