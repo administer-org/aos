@@ -112,25 +112,23 @@ class BackendAPI:
             final = []
             ratio_info = {"is_ratio": False}
 
-            search.strip()
+            search = search.strip().lower()
             if search in [None, "", " "] or len(search) >= 50:
                 return JSONResponse(
-                    {"meta": {"_aos_search_api": "4.0"}, "index": "invalid_query"},
+                    {"meta": {"_aos_search_api": "4.1"}, "index": "invalid_query"},
                     status_code=200
                 )
 
             for app in apps:
                 app = app["data"]
 
-                print(app["Name"], ratio(search, app["Name"]))
-
-                if search in app["Title"]:
+                if search in app["Title"].lower():
                     app["indexed"] = "name"
                     final.append(app)
 
                     continue
 
-                elif ratio(search, app["Name"]) >= 0.7:
+                elif ratio(search, app["Name"].lower()) >= 0.7:
                     ratio_info = {
                         "is_ratio": True,
                         "keyword": app["Name"],
@@ -161,14 +159,14 @@ class BackendAPI:
 
             if final == []:
                 return JSONResponse(
-                    {"meta": {"_aos_search_api": "4.0"}, "index": "no_results"},
+                    {"meta": {"_aos_search_api": "4.1"}, "index": "no_results"},
                     status_code=200
                 )
 
             return JSONResponse(
                 {
                     "meta": {
-                        "_aos_search_api": "4.0",
+                        "_aos_search_api": "4.1",
                         "ratio_info": ratio_info,
                         "indexed_query": search,
                         "results": len(final),
