@@ -244,7 +244,7 @@ class BackendAPI:
                 )
 
             if not key:
-                key = {"internal": {}, "qa": {}, "canary": {}, "beta": {}, "live": {}}
+                key = {"internal": {}, "qa": {}, "canary": {}, "beta": {}, "stable": {}}
 
             if not key[branch].get(json["version"]):
                 key[branch][json["version"]] = 0

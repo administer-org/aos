@@ -20,7 +20,6 @@
             "released": 1743311951.327297
         }
     },
-
     "versions": {
         "2.0.0": {
             "is_outdated": false,
@@ -31,12 +30,10 @@
                     "can_install": true,
                     "can_access_marketplace": true
                 },
-
                 "administer": {
                     "can_report_version": true
                 }
             },
-            
             "update_logs": [
                 "Update log 1",
                 "Update log 2",
