@@ -7,8 +7,6 @@ from AOS import globals, AOSError
 
 
 def process_command(command):
-    print(command)
-
     match command:
         case "clear":
             if input(
@@ -19,9 +17,6 @@ def process_command(command):
             with open(globals.logging_location, "w") as log:
                 log.write("")
                 log.close()
-
-            print("Done!")
-
         case "read":
             run(["less", globals.logging_location])
 

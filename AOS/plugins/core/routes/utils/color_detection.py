@@ -14,5 +14,4 @@ def get_color(path):
         b += pixel[2]
         total_pixels += 1
 
-    print(total_pixels, r, g, b)
     return r / total_pixels, g / total_pixels, b / total_pixels

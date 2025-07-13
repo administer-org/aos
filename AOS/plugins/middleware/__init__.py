@@ -227,7 +227,6 @@ class Logger(BaseHTTPMiddleware):
                         "url": f"https://{globals.plausible['site_url']}{str(req.url.path)}"
                     }
                 )
-                print(r.text)
 
             asyncio.create_task(send_plausible())
 

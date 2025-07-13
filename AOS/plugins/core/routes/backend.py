@@ -369,7 +369,6 @@ class BackendAPI:
                 )
 
             if asset_id in place["Ratings"]:
-                print("Overwriting rating.")
                 is_overwrite = True
 
                 app["Votes"][
