@@ -3,8 +3,10 @@
 # This script was previously internal only but now that everybody can host AOS it is open-source.
 # I know it's ugly and `start` is wrong so I am working to fix it
 
-import matplotlib.pyplot as plt
+from collections import Counter
 from AOS.plugins.database import db
+
+import matplotlib.pyplot as plt
 
 # start = 20019
 x, y, fy = [], [], []
@@ -112,9 +114,35 @@ def combined():
     plt.legend()
 
 
+def home_nodes():
+    places = db.get_all(db.PLACES)
+
+    nodes = [
+        place["data"].get("HomeNode")
+        for place in places
+        if "data" in place and "HomeNode" in place["data"]
+    ]
+
+    values = [
+        Counter(nodes).get(n, 0)
+        for n in ["aos-canary", "us-1", "us-2", "us-3", "eur-1"]
+    ]
+    versions = [
+        f"{n} ({Counter(nodes).get(n, 0)})"
+        for n in ["aos-canary", "us-1", "us-2", "us-3", "eur-1"]
+    ]
+
+    plt.bar(versions, values)
+    plt.xlabel("Node Name (Usage Count)")
+    plt.ylabel("Adoption")
+    plt.title("AOS Node Usage")
+    plt.xticks(rotation=45)
+
+
 # daily_usage_graph()
 # overall_places()
-combined()
+# combined()
+home_nodes()
 
 plt.tight_layout()
 plt.savefig("/home/Pyx/adm/Log")
