@@ -244,6 +244,10 @@ class BackendAPI:
                 )
 
             if not key:
+                db.set(f"day-{round(time.time() / 86400) - 1}", {
+                    "places_len": len(db.get_all(db.PLACES))
+                }, db.REPORTED_VERSIONS)
+                
                 key = {"internal": {}, "qa": {}, "canary": {}, "beta": {}, "stable": {}}
 
             if not key[branch].get(json["version"]):
