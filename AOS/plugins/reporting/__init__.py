@@ -67,50 +67,46 @@ def overall_places():
     plt.title("Number of Administer-powered games over time")
     plt.legend()
 
+def sort(x, y, **kw):
+    x, y = zip(*sorted(zip(x, y)))
+    plt.plot(x, y, **kw)
 
 def combined():
     x, y = [], []
     for day in data:
         try:
-            z = day["data"]["live"]
-        except KeyError:
+            x.append(int(day["administer_id"]))
+            y.append(
+                {
+                    **day["data"].get("live", {}),
+                    **day["data"].get("beta", {}),
+                    **day["data"].get("stable", {})
+                }
+            )
+        except Exception:
             continue
 
-        x.append(int(day["administer_id"]))
-        try:
-            y.append(dict(day["data"]["live"], **day["data"]["beta"]))
-        except Exception:
-            x.remove(int(day["administer_id"]))
+    for version, y_vals in {
+        "1.1.1": [item.get("1.1.1", 0) for item in y],
+        "1.2": [item.get("1.2", 0) for item in y],
+        "1.2.1": [item.get("1.2.1", 0) for item in y],
+        "1.2.2": [item.get("1.2.2", 0) for item in y],
+        "1.2.3": [item.get("1.2.3", 0) for item in y],
+        "2.0.0": [item.get("2.0.0", 0) for item in y]
+    }.items():
+        sort(x, y_vals, marker="o", label=version)
 
-    y2 = [item.get("1.2", 0) for item in y]
-    y3 = [item.get("1.2.1", 0) for item in y]
-    y4 = [item.get("1.2.2", 0) for item in y]
-    y5 = [item.get("1.2.3", 0) for item in y]
-    y6 = [item.get("2.0.0", 0) for item in y]
-    y = [item.get("1.1.1", 0) for item in y]
-
-    plt.plot(x, y, marker="o", label="1.1.1")
-    plt.plot(x, y2, marker="o", label="1.2")
-    plt.plot(x, y3, marker="o", label="1.2.1")
-    plt.plot(x, y4, marker="o", label="1.2.2")
-    plt.plot(x, y5, marker="o", label="1.2.3")
-    plt.plot(x, y6, marker="o", label="2.0.0")
-
-    x, y = [], []
-
+    x2, y2 = [], []
     for day in data:
-        db_key: str = day["administer_id"]
+        db_key = day["administer_id"]
+
         if db_key.startswith("day-"):
-            day_number = int(db_key.split("-")[1])
-            places_len = day["data"].get("places_len", 0)
+            x2.append(int(db_key.split("-")[1]))
+            y2.append(day["data"].get("places_len", 0))
 
-            x.append(day_number)
-            y.append(places_len)
-
-    plt.plot(x, y, marker="*", label="Overall Places")
+    sort(x2, y2, marker="*", label="Overall Places")
     plt.xlabel("Day (missing some data)")
     plt.ylabel("Total Places")
-
     plt.legend()
 
 
@@ -142,7 +138,7 @@ def home_nodes():
 # daily_usage_graph()
 # overall_places()
 combined()
-#home_nodes()
+# home_nodes()
 
 plt.tight_layout()
 plt.savefig("/home/Pyx/adm/Log")
