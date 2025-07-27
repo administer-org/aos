@@ -8,6 +8,7 @@ from pathlib import Path
 
 from fastapi import Request
 from fastapi.responses import PlainTextResponse
+from fastapi.staticfiles import StaticFiles
 
 if globals.is_dev:
     from .utils.report import daily_report
@@ -45,3 +46,5 @@ class Frontend:
         @self.app.get("/app/{app:str}")
         def app_frontend(req: Request, app: str):
             pass
+
+        self.app.mount("/", StaticFiles(directory="AOS/plugins/core/routes/static"), name="static")
