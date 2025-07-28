@@ -1,4 +1,4 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %}
+{% extends "base.html" %} {% block title %}Sign Up{% endblock %}
 
 {% block head %}
 <link rel="stylesheet" href="/a/static/css/login.css">
@@ -13,29 +13,26 @@
 <div class="login-body">
     <div class="login-form">
         <img class="aos-header" src="/a/static/i/aos_optimized.png" alt="AOS">
-        <span class="h1">Welcome back.</span>
+        <span class="h1">Create your AOS Account</span>
+        <span>Manage your AOS Server Cluster from one place.</span>
         <div class="inner-form">
-            {% if login_allowed %}
-            <form id="login">
+            {% if signup_allowed %}
+            <form id="signup">
                 <input type="text" name="username" placeholder="Username">
                 <input type="password" name="password" placeholder="Password">
-                <label title="You won't be asked to sign in again.">
-                    <input type="checkbox" class="js-switch" checked />
-                    Stay logged in
+                <input type="email" name="email" placeholder="Email">
+                <label title="Code given by the owner of this server to create your account">
+                    <i class="fi fi-rr-info"></i>
+                    <input type="text" name="signup_token" placeholder="Signup Code">
                 </label>
-                <button>Log in</button>
+                <button>Sign Up</button>
             </form>
             <p id="login-feedback"></p>
-            <div class="other-options">
-                <button onclick="window.location.href='/a/signup'">Sign up with code</button> <span>&bullet;</span> <button>Forgot Password</button>
-            </div>
             {% else %}
-            <h2>Logins are disabled on this server.</h2>
+            <h2>Signups are disabled on this server.</h2>
             <p>Please contact the maintainer for more information.</p>
             {% endif %}
         </div>
-
-        <button id="aos-info"><i class="fi fi-rr-interrogation"></i></button>
     </div>
 </div>
 

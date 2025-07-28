@@ -19,13 +19,16 @@ class Database(object):
             "apps",
             "logs",
             "places",
+            "users",
             "secrets",
             "v2_logs",
+            "sessions",
             "api_keys",
             "sessions",
             "bot_store",
             "abuse_logs",
             "error_refs",
+            "signup_tokens",
             "reported_versions",
             "discord_remote_secrets",
         ]:
@@ -165,6 +168,8 @@ if globals.dbattrs["use_prod_db"]:
 
 
 def get_web_database():
+    global web_database
+
     if web_database is None:
         web_database = Database("web")
 

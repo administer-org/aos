@@ -15,7 +15,8 @@
         border-radius: 18px;
 
         width: 40%;
-        height: 50vh;
+        height: fit-content;
+        min-height: 50vh;
         min-width: 320px;
         max-width: 500px;
 
@@ -98,7 +99,8 @@
             }
 
             input[type="text"],
-            input[type="password"] {
+            input[type="password"],
+            input[type="email"] {
                 border: 1px solid $border;
                 background-color: $input;
 
@@ -155,6 +157,17 @@
             p {
                 font-size: 0.95rem;
                 color: $muted-color;
+            }
+
+        }
+
+        #login-feedback {
+            &.good {
+                color: rgb(74, 255, 74);
+            }
+
+            &.bad {
+                color: rgb(255, 52, 52);
             }
         }
     }

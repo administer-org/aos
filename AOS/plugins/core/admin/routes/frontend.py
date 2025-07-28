@@ -16,9 +16,10 @@ from fastapi.templating import Jinja2Templates
 
 from pathlib import Path
 
-from AOS.plugins.database import db
+from AOS.plugins.database import get_web_database
 from AOS import globals as config, il
 
+db = get_web_database()
 
 class AdminFrontend:
     def __init__(self, app):
@@ -47,8 +48,7 @@ class AdminFrontend:
                 scss.stem + ".css"
             )
             try:
-                compiled = sass.compile(filename=str(scss))
-                css_file.write_text(compiled)
+                css_file.write_text(sass.compile(filename=str(scss)))
                 il.cprint(f"[✓] Compiled {scss.name} → {css_file.name}", 32)
             except Exception as e:
                 il.cprint(f"[x] Failed to compile {scss.name}: {e}", 32)
@@ -75,4 +75,10 @@ class AdminFrontend:
         def login_page(req: Request):
             return self.templates.TemplateResponse(
                 "auth/login.html", context={"login_allowed": True, "request": req}
+            )
+        
+        @self.router.get("/signup")
+        def signup_page(req: Request):
+            return self.templates.TemplateResponse(
+                "auth/signup.html", context={"signup_allowed": True, "request": req}
             )
