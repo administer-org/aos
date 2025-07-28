@@ -9,12 +9,12 @@ from typing import Any, List, Dict
 from pymongo import MongoClient
 from pymongo.errors import ConnectionFailure
 
+# Config
+dbattrs = globals.dbattrs
 
 # Main database class
 class Database(object):
-    def __init__(self) -> None:
-        dbattrs = globals.dbattrs
-
+    def __init__(self, db_type) -> None:
         for db_item in [
             "apps",
             "logs",
@@ -27,7 +27,7 @@ class Database(object):
             "abuse_logs",
             "error_refs",
             "reported_versions",
-            "discord_remote_secrets"
+            "discord_remote_secrets",
         ]:
             setattr(self, db_item.upper(), db_item)
 
@@ -44,7 +44,7 @@ class Database(object):
             )
         )
 
-        self.db = client[dbattrs["use_prod_db"] and "administer" or "administer_dev"]
+        self.db = client[db_type]
 
         try:
             client.admin.command("ping")
@@ -157,7 +157,15 @@ class Database(object):
 
 
 # Initialize db
-db = Database()
+db = Database(dbattrs["use_prod_db"] and "administer" or "administer_dev")
+web_database = None
 
 if globals.dbattrs["use_prod_db"]:
     il.cprint("[!] Production database is enabled. Proceed with caution!", 35)
+
+
+def get_web_database():
+    if web_database is None:
+        web_database = Database("web")
+
+    return web_database

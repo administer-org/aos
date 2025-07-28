@@ -7,8 +7,9 @@ uv.lock
 build/
 dist/
 
-# Administer Config
+# Administer Config (old & new)
 ._config.json
+._config.jsonc
 
 # Plugin config files
 AOS/plugins/FeedbackAssistant/config/FeedbackAssistant.json

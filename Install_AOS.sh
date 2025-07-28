@@ -21,7 +21,7 @@ This tool will fully install and set up an Administer AOS instance. It will also
 echo "Now we'll start by having you edit your configuration with GNU nano. You will need a MongoDB instance ready. Press enter to continue."
 read 
 
-cp config.json.templ ._config.json
+cp config.jsonc.templ ._config.jsonc
 nano ._config.json
 
 echo -n "

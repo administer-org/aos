@@ -1,0 +1,70 @@
+{
+    "instance_name": "My AOS Server", // Node name
+
+    "is_dev": true, // Enable Starlette Debugging
+    "enable_bot_execution": false, // Run the version bot?
+    "logging_location": "/etc/adm/log", // Log text file
+
+    "node": "aos", // Node ID
+    "can_be_home_node": true, // Can be home node?
+
+    "banner": { // Not working yet
+        "color": "#fff",
+        "text": ""
+    },
+
+    "plausible": {
+        "use_plausible": true, // Report to Plausible
+        "data_url": "https://plausible.io", // Plausible API URL
+        "site_url": "aos-us-1.admsoftware.org" // Plausible Site URL
+    },
+
+    "extra_plugins": [ // Type names of plugins to auto load here
+
+    ],
+
+    "admin": {
+        "allowClustering": true, // Can this server join a cluster?
+        "allowLogin": true, // Enable logging into accounts
+        "allowSignup": true, // Allow creation of signup codes on the admin UI
+        "retentionDays": 90 // Statistics retention
+    },
+
+    "dbattrs": {
+        "use_prod_db": true, // Whether or not to use `administer` or `administer_dev`
+        "address": "mongodb://192.168.0.1:27017", // MongoDB Address (do not use mongodb+srv://)
+        "auth": {
+            "use_auth": true, // Is authentication enabled? Strongly recommended for clustered MongoDB.
+            "username": "administer", // Username
+            "password": "" // Password
+        },
+        "timeout_ms": 7500, // Connection timeout
+        "collections": [ // Active collections in the administer database
+            "apps",
+            "logs",
+            "places",
+            "secrets",
+            "v2_logs",
+            "api_keys",
+            "abuse_logs",
+            "error_refs",
+            "reported_versions"
+        ]
+    },
+
+    "security": {
+        "use_roblox_lock": false, // Restrict API to Roblox servers
+        "use_api_keys": false, // Enable the X-Adm-Token header
+        "use_sessions": false, // Use sessions, not done
+
+        "ratelimiting": {
+            "max_reqs": 30, // Max requests in x seconds
+            "reset_timeframe": 150, // X in the previous statement
+            "max_incidents_before_block": 5 // How many times can they reach the ratelimit before we block them?
+        }
+    },
+
+    "flags": { }, // TBA
+
+    "report_webhook_url": "https://discord.com/api/webhooks/..." // Also TBA
+}
