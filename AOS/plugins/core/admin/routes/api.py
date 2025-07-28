@@ -90,9 +90,9 @@ class AdminRoutes:
                     "max_uses": 1,
                     "users": [],
                     "expiry": 99999999999999,
-                    "creator": "system",
+                    "creator": "system"
                 },
-                db.SIGNUP_TOKENS,
+                db.SIGNUP_TOKENS
             )
             data = await req.json()
             token = db.get(data["signup_token"], db.SIGNUP_TOKENS)
@@ -124,7 +124,7 @@ class AdminRoutes:
                         "code": 400,
                         "data": "That password is too weak. Please make sure it has one upper and lowercase letter, one digit, has one special character, and is 8 characters long.",
                     },
-                    status_code=400,
+                    status_code=400
                 )
             elif data["username"] in ["system", "aos", "administer"]:
                 return JSONResponse(
@@ -133,7 +133,7 @@ class AdminRoutes:
             elif len(data["username"]) <= 3:
                 return JSONResponse(
                     {"code": 400, "data": "That username is too short."},
-                    status_code=400,
+                    status_code=400
                 )
             elif len(data["username"]) >= 30:
                 return JSONResponse(
@@ -142,15 +142,15 @@ class AdminRoutes:
             elif data["username"] in data["password"]:
                 return JSONResponse(
                     {"code": 400, "data": "Your username can't contain your password."},
-                    status_code=400,
+                    status_code=400
                 )
             elif not re.match(r"^[a-zA-Z0-9_.!,\-]+$", data["username"]):
                 return JSONResponse(
                     {
                         "code": 400,
-                        "data": "Please keep your username limited to standard latin characters.",
+                        "data": "Please keep your username limited to standard latin characters."
                     },
-                    status_code=400,
+                    status_code=400
                 )
             elif not re.match(r"^[^@]+@[^@]+\.[^@]+$", data["email"]):
                 return JSONResponse(
