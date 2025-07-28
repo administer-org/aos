@@ -1,0 +1,188 @@
+// pyxfluff 2025
+@import "common.scss";
+
+.login-body {
+    display: flex;
+    flex-direction: row;
+    height: 100vh;
+    margin-left: 5vw;
+
+    z-index: 2;
+
+    .login-form {
+        background-color: rgba($form-background-rgb, .5);
+        backdrop-filter: blur(2rem);
+        border-radius: 18px;
+
+        width: 40%;
+        height: 50vh;
+        min-width: 320px;
+        max-width: 500px;
+
+        box-shadow: 0 0 20px rgba($accent-color-rgb, 0.15);
+
+        padding: 3rem 2.5rem;
+        z-index: 5;
+
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-self: center;
+
+        #aos-info {
+            width: fit-content;
+            height: 16px;
+            aspect-ratio: 1;
+
+            background-color: transparent;
+            border: 0px;
+
+            color: white;
+        }
+
+        .other-options {
+            display: flex;
+
+            align-items: center;
+            justify-content: center;
+
+            span {
+                width: fit-content;
+                margin-left: 3px;
+                margin-right: 3px;
+            }
+
+            button {
+                color: white !important; // stop overriding for a:visited
+
+                background-color: transparent;
+                border: 0px;
+
+                cursor: context-menu;
+            }
+        }
+
+        .aos-header {
+            height: auto;
+            width: auto;
+            max-width: 30%;
+
+            object-fit: contain;
+            align-self: center;
+            display: block;
+
+            margin-bottom: 15px;
+        }
+
+        span.h1 {
+            width: fit-content;
+            font-size: 1.8rem;
+            margin-bottom: 1.5rem;
+            font-weight: 500;
+
+            color: $accent-color;
+        }
+
+        .inner-form {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+
+        form {
+            display: contents;
+
+            input,
+            button {
+                border-radius: 14px;
+            }
+
+            input[type="text"],
+            input[type="password"] {
+                border: 1px solid $border;
+                background-color: $input;
+
+                color: $text-color;
+
+                padding: 0.8rem;
+                font-size: 1rem;
+                transition: border 0.2s;
+
+                width: 100%;
+
+                margin-bottom: 10px;
+            }
+
+            .switchery-small {
+                border: 1px solid $border
+            }
+
+            label {
+                margin-bottom: 10px;
+                cursor: context-menu;
+            }
+
+            input:focus {
+                outline: none;
+                border-color: $accent-color;
+            }
+
+            button {
+                background-color: $accent-color;
+
+                width: 100%;
+                padding: 0.8rem;
+
+                border: none;
+                font-size: 1rem;
+                color: #fff;
+                font-weight: 600;
+
+                cursor: pointer;
+                transition: background 0.2s ease;
+            }
+
+            button:hover {
+                background-color: darken($accent-color, 10%);
+            }
+
+            h2 {
+                font-size: 1.2rem;
+                margin-bottom: 0.5rem;
+                color: $accent-color;
+            }
+
+            p {
+                font-size: 0.95rem;
+                color: $muted-color;
+            }
+        }
+    }
+}
+
+header {
+    position: absolute; // override header position
+}
+
+.login-sphere {
+    top: 50%;
+    left: 50%;
+    width: 1200px;
+    height: 1200px;
+
+    position: absolute;
+    transform: translate(-50%, 5%);
+
+    border-radius: 50%;
+    filter: blur(120px);
+
+    background-color: black;
+    z-index: 0;
+
+    animation: to-primary 7s linear;
+    animation-fill-mode: forwards;
+}
+
+body {
+    overflow-y: hidden !important; // stop the sphere from messing with stuff
+}

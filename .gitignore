@@ -12,3 +12,6 @@ dist/
 
 # Plugin config files
 AOS/plugins/FeedbackAssistant/config/FeedbackAssistant.json
+
+# Static Compiled CSS 
+AOS/plugins/core/admin/static/css

@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <title>AOS | {% block title %}{% endblock %}</title>
+
+    <link rel="stylesheet" href="/a/static/css/common.css">
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon">
+
+    <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+    <link rel='stylesheet' href='https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css'>
+
+    {% block head %}{% endblock %}
+</head>
+
+<body>
+    <header>
+        <p>Begin Header</p>
+    </header>
+    <main>
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer>
+        <p>Footer Block</p>
+        <p>&copy;</p>
+    </footer>
+
+</body>
+
+</html>

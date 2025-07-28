@@ -12,7 +12,6 @@ dependencies = [
     "uvicorn",
     "fastapi",
     "httpx",
-
     # Utilities
     "Levenshtein",
     "colorthief",
@@ -23,14 +22,13 @@ dependencies = [
     "psutil>=7.0.0",
     "rich",
     "pydantic",
-
     # Discord
     #"audioop-lts",
     #"py-cord",
-    
     # Development
     "matplotlib",
-    "flake8>=7.2.0"
+    "flake8>=7.2.0",
+    "libsass>=0.23.0",
 ]
 
 urls.homepage = "https://admsoftware.org"

@@ -22,6 +22,7 @@ class Database(object):
             "secrets",
             "v2_logs",
             "api_keys",
+            "sessions",
             "bot_store",
             "abuse_logs",
             "error_refs",
