@@ -57,8 +57,6 @@ class AdminFrontend:
         def root(req: Request):
             aos_auth = req.cookies.get("AOS_-SessionAuth")
 
-            print(aos_auth, db.get(aos_auth, db.SESSIONS))
-
             if aos_auth is None:
                 return RedirectResponse("/a/login?type=logged_out")
             else:
