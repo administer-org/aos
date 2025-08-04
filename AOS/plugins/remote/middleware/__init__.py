@@ -13,7 +13,7 @@ async def DiscordAuthentication(
     ):
     place_id = request.headers.get("Roblox-Id")
 
-    if not place_id and not "/aos" in str(request.url):
+    if not place_id and "/aos" not in str(request.url):
         raise HTTPException(status_code=401, detail="You must add a place ID.")
     
     if "/api" in str(request.url):

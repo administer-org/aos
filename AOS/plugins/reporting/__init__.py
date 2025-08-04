@@ -19,7 +19,7 @@ def daily_usage_graph():
 
     for day in data:
         try:
-            z = day["data"]["live"]
+            day["data"]["live"]
         except KeyError:
             continue
 

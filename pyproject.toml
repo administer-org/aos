@@ -48,3 +48,9 @@ build.targets.wheel.packages = ["AOS"]
 
 [project.scripts]
 aos = "AOS.__main__:main"
+
+[tool.ruff.format]
+quote-style = "double"
+line-ending = "lf"
+indent-style = "space"
+skip-magic-trailing-comma = true

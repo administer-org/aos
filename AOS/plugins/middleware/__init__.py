@@ -216,7 +216,7 @@ class Logger(BaseHTTPMiddleware):
 
         if globals.plausible["use_plausible"] and not str(req.url.path) == "/api/ping":
             async def send_plausible():
-                r = httpx.post(
+                httpx.post(
                     f"{globals.plausible['data_url']}/api/event",
                     headers={
                         "User-Agent": f"AdministerAppServer; AOS/{globals.version}; User/{req.headers.get('Roblox-Id')}"

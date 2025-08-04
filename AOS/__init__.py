@@ -47,7 +47,7 @@ class AOSVars:
                 orjson.loads((Path(__file__).parent / f).read_text())
                 for f in ["../._config.jsonc", "../._aos.json", "../._version_data.json"]
             )
-        except Exception as e:
+        except Exception:
             # try again with legacy .json
             try:
                 config, aos_config, version_data = (
@@ -82,7 +82,7 @@ class AOSError(Exception):
     def __init__(self, message, exit: Optional[bool]):
         il.cprint(message, 31)
 
-        if exit is None or exit == True:
+        if exit is None or exit:
             sys.exit(1)
 
 

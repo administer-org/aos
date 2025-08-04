@@ -1,7 +1,6 @@
 # pyxfluff 2025
 
 from subprocess import run
-from pathlib import Path
 
 from AOS import globals, AOSError
 

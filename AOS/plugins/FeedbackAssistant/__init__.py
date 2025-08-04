@@ -21,7 +21,7 @@ try:
     webhook_url = orjson.loads(
         (Path(__file__).resolve().parent / "config/FeedbackAssistant.json").read_text()
     )["webhook_url"]
-except FileNotFoundError as e:
+except FileNotFoundError:
     il.cprint(
         "FeedbackAssistant config not found! Webhook logging will NOT be active.", 34
     )
@@ -79,7 +79,7 @@ async def submit_feedback(req: Request):
             return JSONResponse(
                 {
                     "title": "Bad input",
-                    "body": f"Illegitimate data was recieved that the server cannot process."
+                    "body": "Illegitimate data was recieved that the server cannot process."
                 },
                 status_code=400
             )
@@ -95,7 +95,7 @@ async def submit_feedback(req: Request):
     httpx.post(
         url=webhook_url,
         json={
-            "content": f"New report recieved",
+            "content": "New report recieved",
             "embeds": [
                 {
                     "title": "Report",

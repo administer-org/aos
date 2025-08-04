@@ -51,7 +51,7 @@ def action_queue(req: Request):
 
 @router.post("/api/queue-action")
 async def create_action(req: Request):
-    data = await req.json()
+    await req.json()
 
     return JSONResponse(
         {

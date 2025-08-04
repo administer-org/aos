@@ -1,7 +1,7 @@
 # pyxfluff 2025
 
 from discord import ui
-from httpx import get, HTTPError
+from httpx import get
 
 from . import processor
 
@@ -72,7 +72,7 @@ class RegisterModal(ui.Modal):
         )
 
         await interaction.response.send_message(
-            f":white_check_mark: Saved! You can now make moderation actions with commands."
+            ":white_check_mark: Saved! You can now make moderation actions with commands."
         )
 
 

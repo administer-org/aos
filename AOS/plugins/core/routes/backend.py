@@ -234,7 +234,7 @@ class BackendAPI:
             key = db.get(round(time.time() / 86400), db.REPORTED_VERSIONS)
             branch = str(json["branch"]).lower()
 
-            if not json["version"] in vars.state["permitted_versions"]:
+            if json["version"] not in vars.state["permitted_versions"]:
                 return JSONResponse(
                     {
                         "code": 400,
@@ -395,7 +395,7 @@ class BackendAPI:
             return JSONResponse(
                 {
                     "code": 200,
-                    "message": f"Success!",
+                    "message": "Success!",
                     "is_re_record": is_overwrite,
                     "user_facing_message": f"Your review has been recorded, thanks for voting!{is_overwrite and ' Your previous vote for this asset has been removed.'}"
                 },

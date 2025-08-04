@@ -11,8 +11,6 @@ from sys import argv
 from pathlib import Path
 from rich.console import Console
 
-import orjson
-import threading
 import logging as Pythonlogging
 
 console = Console()

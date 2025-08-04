@@ -6,9 +6,6 @@ from time import time
 
 from fastapi import APIRouter, Request
 from fastapi.responses import (
-    JSONResponse,
-    PlainTextResponse,
-    FileResponse,
     RedirectResponse,
 )
 from fastapi.staticfiles import StaticFiles
@@ -17,7 +14,7 @@ from fastapi.templating import Jinja2Templates
 from pathlib import Path
 
 from AOS.plugins.database import get_web_database
-from AOS import globals as config, il
+from AOS import il
 
 db = get_web_database()
 
