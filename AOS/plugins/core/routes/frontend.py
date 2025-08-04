@@ -40,11 +40,13 @@ class Frontend:
                     daily_report(db)
 
             return PlainTextResponse(
-                f"This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#\nVersion: {globals.version}\n" # curl-safe
+                f"This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#\nVersion: {globals.version}\n\n{globals.admin["enable_admin"] and "To log into the admin interface, please visit /a/." or "The admin interface is not enabled currently. Please contact the instance owner for more information."}"
             )
 
         @self.app.get("/app/{app:str}")
         def app_frontend(req: Request, app: str):
             pass
 
-        self.app.mount("/", StaticFiles(directory="AOS/plugins/core/routes/static"), name="static")
+        self.app.mount(
+            "/", StaticFiles(directory="AOS/plugins/core/routes/static"), name="static"
+        )

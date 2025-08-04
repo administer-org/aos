@@ -2,200 +2,199 @@
 @import "common.scss";
 
 .login-body {
-    display: flex;
-    flex-direction: row;
-    height: 100vh;
-    margin-left: 5vw;
+	display: flex;
+	flex-direction: row;
+	height: 100vh;
+	margin-left: 5vw;
 
-    z-index: 2;
+	z-index: 2;
 
-    .login-form {
-        background-color: rgba($form-background-rgb, .5);
-        backdrop-filter: blur(2rem);
-        border-radius: 18px;
+	.login-form {
+		background-color: rgba($form-background-rgb, 0.5);
+		backdrop-filter: blur(2rem);
+		border-radius: 18px;
 
-        width: 40%;
-        height: fit-content;
-        min-height: 50vh;
-        min-width: 320px;
-        max-width: 500px;
+		width: 40%;
+		height: fit-content;
+		min-height: 50vh;
+		min-width: 320px;
+		max-width: 500px;
 
-        box-shadow: 0 0 20px rgba($accent-color-rgb, 0.15);
+		box-shadow: 0 0 20px rgba($accent-color-rgb, 0.15);
 
-        padding: 3rem 2.5rem;
-        z-index: 5;
+		padding: 3rem 2.5rem;
+		z-index: 5;
 
-        display: flex;
-        flex-direction: column;
-        justify-content: center;
-        align-self: center;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-self: center;
 
-        #aos-info {
-            width: fit-content;
-            height: 16px;
-            aspect-ratio: 1;
+		#aos-info {
+			width: fit-content;
+			height: 16px;
+			aspect-ratio: 1;
 
-            background-color: transparent;
-            border: 0px;
+			background-color: transparent;
+			border: 0px;
 
-            color: white;
-        }
+			color: white;
+		}
 
-        .other-options {
-            display: flex;
+		.other-options {
+			display: flex;
 
-            align-items: center;
-            justify-content: center;
+			align-items: center;
+			justify-content: center;
 
-            span {
-                width: fit-content;
-                margin-left: 3px;
-                margin-right: 3px;
-            }
+			span {
+				width: fit-content;
+				margin-left: 3px;
+				margin-right: 3px;
+			}
 
-            button {
-                color: white !important; // stop overriding for a:visited
+			button {
+				color: white !important; // stop overriding for a:visited
 
-                background-color: transparent;
-                border: 0px;
+				background-color: transparent;
+				border: 0px;
 
-                cursor: context-menu;
-            }
-        }
+				cursor: context-menu;
+			}
+		}
 
-        .aos-header {
-            height: auto;
-            width: auto;
-            max-width: 30%;
+		.aos-header {
+			height: auto;
+			width: auto;
+			max-width: 30%;
 
-            object-fit: contain;
-            align-self: center;
-            display: block;
+			object-fit: contain;
+			align-self: center;
+			display: block;
 
-            margin-bottom: 15px;
-        }
+			margin-bottom: 15px;
+		}
 
-        span.h1 {
-            width: fit-content;
-            font-size: 1.8rem;
-            margin-bottom: 1.5rem;
-            font-weight: 500;
+		span.h1 {
+			width: fit-content;
+			font-size: 1.8rem;
+			margin-bottom: 1.5rem;
+			font-weight: 500;
 
-            color: $accent-color;
-        }
+			color: $accent-color;
+		}
 
-        .inner-form {
-            display: flex;
-            flex-direction: column;
-            gap: 1rem;
-        }
+		.inner-form {
+			display: flex;
+			flex-direction: column;
+			gap: 1rem;
+		}
 
-        form {
-            display: contents;
+		form {
+			display: contents;
 
-            input,
-            button {
-                border-radius: 14px;
-            }
+			input,
+			button {
+				border-radius: 14px;
+			}
 
-            input[type="text"],
-            input[type="password"],
-            input[type="email"] {
-                border: 1px solid $border;
-                background-color: $input;
+			input[type="text"],
+			input[type="password"],
+			input[type="email"] {
+				border: 1px solid $border;
+				background-color: $input;
 
-                color: $text-color;
+				color: $text-color;
 
-                padding: 0.8rem;
-                font-size: 1rem;
-                transition: border 0.2s;
+				padding: 0.8rem;
+				font-size: 1rem;
+				transition: border 0.2s;
 
-                width: 100%;
+				width: 100%;
 
-                margin-bottom: 10px;
-            }
+				margin-bottom: 10px;
+			}
 
-            .switchery-small {
-                border: 1px solid $border
-            }
+			.switchery-small {
+				border: 1px solid $border;
+			}
 
-            label {
-                margin-bottom: 10px;
-                cursor: context-menu;
-            }
+			label {
+				margin-bottom: 10px;
+				cursor: context-menu;
+			}
 
-            input:focus {
-                outline: none;
-                border-color: $accent-color;
-            }
+			input:focus {
+				outline: none;
+				border-color: $accent-color;
+			}
 
-            button {
-                background-color: $accent-color;
+			button {
+				background-color: $accent-color;
 
-                width: 100%;
-                padding: 0.8rem;
+				width: 100%;
+				padding: 0.8rem;
 
-                border: none;
-                font-size: 1rem;
-                color: #fff;
-                font-weight: 600;
+				border: none;
+				font-size: 1rem;
+				color: #fff;
+				font-weight: 600;
 
-                cursor: pointer;
-                transition: background 0.2s ease;
-            }
+				cursor: pointer;
+				transition: background 0.2s ease;
+			}
 
-            button:hover {
-                background-color: darken($accent-color, 10%);
-            }
+			button:hover {
+				background-color: darken($accent-color, 10%);
+			}
 
-            h2 {
-                font-size: 1.2rem;
-                margin-bottom: 0.5rem;
-                color: $accent-color;
-            }
+			h2 {
+				font-size: 1.2rem;
+				margin-bottom: 0.5rem;
+				color: $accent-color;
+			}
 
-            p {
-                font-size: 0.95rem;
-                color: $muted-color;
-            }
+			p {
+				font-size: 0.95rem;
+				color: $muted-color;
+			}
+		}
 
-        }
+		#login-feedback {
+			&.good {
+				color: rgb(74, 255, 74);
+			}
 
-        #login-feedback {
-            &.good {
-                color: rgb(74, 255, 74);
-            }
-
-            &.bad {
-                color: rgb(255, 52, 52);
-            }
-        }
-    }
+			&.bad {
+				color: rgb(255, 52, 52);
+			}
+		}
+	}
 }
 
 header {
-    position: absolute; // override header position
+	position: absolute; // override header position
 }
 
 .login-sphere {
-    top: 50%;
-    left: 50%;
-    width: 1200px;
-    height: 1200px;
+	top: 50%;
+	left: 50%;
+	width: 1200px;
+	height: 1200px;
 
-    position: absolute;
-    transform: translate(-50%, 5%);
+	position: absolute;
+	transform: translate(-50%, 5%);
 
-    border-radius: 50%;
-    filter: blur(120px);
+	border-radius: 50%;
+	filter: blur(120px);
 
-    background-color: black;
-    z-index: 0;
+	background-color: black;
+	z-index: 0;
 
-    animation: to-primary 7s linear;
-    animation-fill-mode: forwards;
+	animation: to-primary 7s linear;
+	animation-fill-mode: forwards;
 }
 
 body {
-    overflow-y: hidden !important; // stop the sphere from messing with stuff
+	overflow-y: hidden !important; // stop the sphere from messing with stuff
 }

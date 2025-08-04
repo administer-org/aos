@@ -1,13 +1,13 @@
 {
-    "name": "Database",
-    "description": "Pymongo wrapper for AOS.",
-    "requires_fastapi": false,
-    "init": true,
-    "commands": {
-        "genkeys": {
-            "directory": "tools",
-            "help": "Tests your MongoDB connection and generates API tokens.",
-            "bypass_fastapi": true
-        }
-    }
+	"name": "Database",
+	"description": "Pymongo wrapper for AOS.",
+	"requires_fastapi": false,
+	"init": true,
+	"commands": {
+		"genkeys": {
+			"directory": "tools",
+			"help": "Tests your MongoDB connection and generates API tokens.",
+			"bypass_fastapi": true
+		}
+	}
 }

@@ -1,15 +1,13 @@
 {
-    "name": "Core",
-    "description": "AOS Core web modules",
-    "requires_fastapi": true,
-    "init": false,
-    "commands": {
-        "serve": {
-            "directory": "routes",
-            "help": "Loads the AOS Webserver."
-        }
-    },
-    "dependencies": [
-        "org.admsoftware.aos.middleware"
-    ]
+	"name": "Core",
+	"description": "AOS Core web modules",
+	"requires_fastapi": true,
+	"init": false,
+	"commands": {
+		"serve": {
+			"directory": "routes",
+			"help": "Loads the AOS Webserver."
+		}
+	},
+	"dependencies": ["org.admsoftware.aos.middleware"]
 }

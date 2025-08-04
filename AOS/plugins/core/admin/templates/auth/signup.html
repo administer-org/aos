@@ -1,39 +1,41 @@
-{% extends "base.html" %} {% block title %}Sign Up{% endblock %}
-
-{% block head %}
-<link rel="stylesheet" href="/a/static/css/login.css">
+{% extends "base.html" %} {% block title %}Sign Up{% endblock %} {% block head
+%}
+<link rel="stylesheet" href="/a/static/css/login.css" />
 
 <!-- Switches -->
-<link rel="stylesheet" href="https://abpetkov.github.io/switchery/dist/switchery.min.css" />
+<link
+	rel="stylesheet"
+	href="https://abpetkov.github.io/switchery/dist/switchery.min.css"
+/>
 <script src="https://abpetkov.github.io/switchery/dist/switchery.min.js"></script>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="login-sphere"></div>
 <div class="login-body">
-    <div class="login-form">
-        <img class="aos-header" src="/a/static/i/aos_optimized.png" alt="AOS">
-        <span class="h1">Create your AOS Account</span>
-        <span>Manage your AOS Server Cluster from one place.</span>
-        <div class="inner-form">
-            {% if signup_allowed %}
-            <form id="signup">
-                <input type="text" name="username" placeholder="Username">
-                <input type="password" name="password" placeholder="Password">
-                <input type="email" name="email" placeholder="Email">
-                <label title="Code given by the owner of this server to create your account">
-                    <i class="fi fi-rr-info"></i>
-                    <input type="text" name="signup_token" placeholder="Signup Code">
-                </label>
-                <button>Sign Up</button>
-            </form>
-            <p id="login-feedback"></p>
-            {% else %}
-            <h2>Signups are disabled on this server.</h2>
-            <p>Please contact the maintainer for more information.</p>
-            {% endif %}
-        </div>
-    </div>
+	<div class="login-form">
+		<img class="aos-header" src="/a/static/i/aos_optimized.png" alt="AOS" />
+		<span class="h1">Create your AOS Account</span>
+		<span>Manage your AOS Server Cluster from one place.</span>
+		<div class="inner-form">
+			{% if signup_allowed %}
+			<form id="signup">
+				<input type="text" name="username" placeholder="Username" />
+				<input type="password" name="password" placeholder="Password" />
+				<input type="email" name="email" placeholder="Email" />
+				<label
+					title="Code given by the owner of this server to create your account"
+				>
+					<i class="fi fi-rr-info"></i>
+					<input type="text" name="signup_token" placeholder="Signup Code" />
+				</label>
+				<button>Sign Up</button>
+			</form>
+			<p id="login-feedback"></p>
+			{% else %}
+			<h2>Signups are disabled on this server.</h2>
+			<p>Please contact the maintainer for more information.</p>
+			{% endif %}
+		</div>
+	</div>
 </div>
 
 <!-- Load JS now -->

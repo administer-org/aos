@@ -38,6 +38,12 @@ class Plausible(BaseModel):
     data_url: str
     site_url: str
 
+class AdminConfig(BaseModel):
+    enable_admin: bool
+    allow_clustering: bool
+    allow_login: bool
+    allow_signup: bool
+    data_retention_days: int
 
 class CoreConfig(BaseModel):
     instance_name: str
@@ -50,6 +56,7 @@ class CoreConfig(BaseModel):
     can_be_home_node: bool
 
     plausible: Plausible
+    admin: AdminConfig
 
     extra_plugins: Optional[List[str]] = []
 

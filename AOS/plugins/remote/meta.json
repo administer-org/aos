@@ -1,7 +1,7 @@
 {
-    "name": "Remote",
-    "description": "Discord Bot remote for Player Management features",
-    "requires_fastapi": true,
-    "init": true,
-    "commands": {}
+	"name": "Remote",
+	"description": "Discord Bot remote for Player Management features",
+	"requires_fastapi": true,
+	"init": true,
+	"commands": {}
 }

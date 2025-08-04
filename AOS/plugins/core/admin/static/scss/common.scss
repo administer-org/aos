@@ -11,48 +11,48 @@ $muted-color: #a0a0a0;
 $border: #2e3338d0;
 
 @keyframes to-primary {
-    0% {
-        background-color: $body;
-    }
+	0% {
+		background-color: $body;
+	}
 
-    15% {
-        background-color: $body;
-    }
+	15% {
+		background-color: $body;
+	}
 
-    100% {
-        background-color: $accent-color;
-    }
+	100% {
+		background-color: $accent-color;
+	}
 }
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
 }
 
 body,
 html {
-    height: 100%;
-    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background: $body;
-    color: $text-color;
+	height: 100%;
+	font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+	background: $body;
+	color: $text-color;
 }
 
 .shimmer {
-    position: relative;
-    overflow: hidden;
-    color: #fff;
-    background: linear-gradient(90deg, #4a90e2 25%, #6db0ff 50%, #4a90e2 75%);
-    background-size: 200% 100%;
-    animation: shimmer 1s infinite;
+	position: relative;
+	overflow: hidden;
+	color: #fff;
+	background: linear-gradient(90deg, #4a90e2 25%, #6db0ff 50%, #4a90e2 75%);
+	background-size: 200% 100%;
+	animation: shimmer 1s infinite;
 }
 
 @keyframes shimmer {
-    0% {
-        background-position: 200% 0;
-    }
+	0% {
+		background-position: 200% 0;
+	}
 
-    100% {
-        background-position: 0 0;
-    }
+	100% {
+		background-position: 0 0;
+	}
 }

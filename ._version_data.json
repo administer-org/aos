@@ -1,45 +1,39 @@
 {
-    "_branches": [
-        "PUB_BETA",
-        "LIVE",
-        "CANARY",
-        "GIT",
-        "QUALASSUR"
-    ],
+	"_branches": ["PUB_BETA", "LIVE", "CANARY", "GIT", "QUALASSUR"],
 
-    "_latest_versions": {
-        "STABLE": {
-            "branch": "STABLE",
-            "version": "2.0.0",
-            "released": 1743311951.327297
-        },
+	"_latest_versions": {
+		"STABLE": {
+			"branch": "STABLE",
+			"version": "2.0.0",
+			"released": 1743311951.327297
+		},
 
-        "BETA": {
-            "branch": "BETA",
-            "version": "2.0.0",
-            "released": 1743311951.327297
-        }
-    },
-    "versions": {
-        "2.0.0": {
-            "is_outdated": false,
-            "released": 1743311951.327297,
-            "hash": "4632709",
-            "featureset": {
-                "apps": {
-                    "can_install": true,
-                    "can_access_marketplace": true
-                },
-                "administer": {
-                    "can_report_version": true
-                }
-            },
-            "update_logs": [
-                "Update log 1",
-                "Update log 2",
-                "Update log 3",
-                "Update log 4"
-            ]
-        }
-    }
+		"BETA": {
+			"branch": "BETA",
+			"version": "2.0.0",
+			"released": 1743311951.327297
+		}
+	},
+	"versions": {
+		"2.0.0": {
+			"is_outdated": false,
+			"released": 1743311951.327297,
+			"hash": "4632709",
+			"featureset": {
+				"apps": {
+					"can_install": true,
+					"can_access_marketplace": true
+				},
+				"administer": {
+					"can_report_version": true
+				}
+			},
+			"update_logs": [
+				"Update log 1",
+				"Update log 2",
+				"Update log 3",
+				"Update log 4"
+			]
+		}
+	}
 }

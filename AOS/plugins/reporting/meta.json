@@ -1,7 +1,7 @@
 {
-    "name": "Reporting",
-    "description": "Use this tool to see what versions of Administer connect to your AOS instance.",
-    "requires_fastapi": false,
-    "init": true,
-    "commands": {}
+	"name": "Reporting",
+	"description": "Use this tool to see what versions of Administer connect to your AOS instance.",
+	"requires_fastapi": false,
+	"init": true,
+	"commands": {}
 }

@@ -5,30 +5,29 @@ name: Python application
 
 on:
   push:
-    branches: [ "main", "4.0" ]
+    branches: ["main", "4.0"]
   pull_request:
-    branches: [ "main" ]
+    branches: ["main"]
 
 permissions:
   contents: read
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
 
     steps:
-    - uses: actions/checkout@v4
-    - name: Set up Python 3.13
-      uses: actions/setup-python@v3
-      with:
-        python-version: "3.13"
-    - name: Install dependencies
-      run: |
-        python -m pip install --upgrade pip
-        pip install flake8 git+https://github.com/iiPythonx/il
-        pip install .
-    - name: Lint with flake8
-      run: |
-        flake8 AOS --count --select=E9,F63,F7,F82 --show-source --statistics --ignore=E501,W503,E241
-        flake8 AOS --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --ignore=E501,W503,E241
+      - uses: actions/checkout@v4
+      - name: Set up Python 3.13
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.13"
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install flake8 git+https://github.com/iiPythonx/il
+          pip install .
+      - name: Lint with flake8
+        run: |
+          flake8 AOS --count --select=E9,F63,F7,F82 --show-source --statistics --ignore=E501,W503,E241
+          flake8 AOS --count --exit-zero --max-complexity=10 --max-line-length=127 --statistics --ignore=E501,W503,E241

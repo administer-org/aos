@@ -9,7 +9,6 @@
 
 </div>
 
-
 # What is it?
 
 The App Server is a FastAPI/MongoDB program which stores apps for use in Administer and a website later on, there is no backend panel or anything. What you see is what you get.
@@ -27,6 +26,7 @@ https://docs.admsoftware.org/AOS/maintaining/setup
 ## Development installation
 
 Run the following (assuming you already have python3 and pip):
+
 ```sh
 pip install uv
 
@@ -45,7 +45,6 @@ See here: https://docs.admsoftware.org/legal/privacy
 # Contributions
 
 We welcome contributions as long as they are meaningful. Please ensure you are familiar with our code standards and libraries before making pull requests. For larger changes, you may want to [discuss a change in our Discord beforehand.](https://to.admsoftware.org/discord)
-
 
 # License
 

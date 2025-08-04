@@ -1,42 +1,44 @@
-{% extends "base.html" %} {% block title %}Login{% endblock %}
-
-{% block head %}
-<link rel="stylesheet" href="/a/static/css/login.css">
+{% extends "base.html" %} {% block title %}Login{% endblock %} {% block head %}
+<link rel="stylesheet" href="/a/static/css/login.css" />
 
 <!-- Switches -->
-<link rel="stylesheet" href="https://abpetkov.github.io/switchery/dist/switchery.min.css" />
+<link
+	rel="stylesheet"
+	href="https://abpetkov.github.io/switchery/dist/switchery.min.css"
+/>
 <script src="https://abpetkov.github.io/switchery/dist/switchery.min.js"></script>
-{% endblock %}
-
-{% block content %}
+{% endblock %} {% block content %}
 <div class="login-sphere"></div>
 <div class="login-body">
-    <div class="login-form">
-        <img class="aos-header" src="/a/static/i/aos_optimized.png" alt="AOS">
-        <span class="h1">Welcome back.</span>
-        <div class="inner-form">
-            {% if login_allowed %}
-            <form id="login">
-                <input type="text" name="username" placeholder="Username">
-                <input type="password" name="password" placeholder="Password">
-                <label title="You won't be asked to sign in again.">
-                    <input type="checkbox" class="js-switch" checked />
-                    Stay logged in
-                </label>
-                <button>Log in</button>
-            </form>
-            <p id="login-feedback"></p>
-            <div class="other-options">
-                <button onclick="window.location.href='/a/signup'">Sign up with code</button> <span>&bullet;</span> <button>Forgot Password</button>
-            </div>
-            {% else %}
-            <h2>Logins are disabled on this server.</h2>
-            <p>Please contact the maintainer for more information.</p>
-            {% endif %}
-        </div>
+	<div class="login-form">
+		<img class="aos-header" src="/a/static/i/aos_optimized.png" alt="AOS" />
+		<span class="h1">Welcome back.</span>
+		<div class="inner-form">
+			{% if login_allowed %}
+			<form id="login">
+				<input type="text" name="username" placeholder="Username" />
+				<input type="password" name="password" placeholder="Password" />
+				<label title="You won't be asked to sign in again.">
+					<input type="checkbox" class="js-switch" checked />
+					Stay logged in
+				</label>
+				<button>Log in</button>
+			</form>
+			<p id="login-feedback"></p>
+			<div class="other-options">
+				<button onclick="window.location.href='/a/signup'">
+					Sign up with code
+				</button>
+				<span>&bullet;</span> <button>Forgot Password</button>
+			</div>
+			{% else %}
+			<h2>Logins are disabled on this server.</h2>
+			<p>Please contact the maintainer for more information.</p>
+			{% endif %}
+		</div>
 
-        <button id="aos-info"><i class="fi fi-rr-interrogation"></i></button>
-    </div>
+		<button id="aos-info"><i class="fi fi-rr-interrogation"></i></button>
+	</div>
 </div>
 
 <!-- Load JS now -->
