@@ -1,27 +1,33 @@
 <div align = "center">
 <img src="https://github.com/administer-org/administer/raw/main/.readme/Administer-Text.png?raw=true" width="512">
 
-# App Server
+# AOS
 
-[![administer-org - app-server](https://img.shields.io/static/v1?label=administer-org&message=app-server&color=green&logo=github)](https://github.com/administer-org/app-server "Go to GitHub repo") [![stars - app-server](https://img.shields.io/github/stars/administer-org/app-server?style=social)](https://github.com/administer-org/app-server) [![forks - app-server](https://img.shields.io/github/forks/administer-org/app-server?style=social)](https://github.com/administer-org/app-server)
+[![administer-org - aos](https://img.shields.io/static/v1?label=administer-org&message=aos&color=green&logo=github)](https://github.com/administer-org/aos "Go to GitHub repo") [![stars - AOS](https://img.shields.io/github/stars/administer-org/aos?style=social)](https://github.com/administer-org/aos) [![forks - AOS](https://img.shields.io/github/forks/administer-org/aos?style=social)](https://github.com/administer-org/aos)
 
-[![GitHub tag](https://img.shields.io/github/tag/administer-org/app-server?include_prereleases=&sort=semver&color=green)](https://github.com/administer-org/app-server/releases/) [![License](https://img.shields.io/badge/License-AGPL--3.0-green)](#license) [![issues - app-server](https://img.shields.io/github/issues/administer-org/app-server)](https://github.com/administer-org/app-server/issues) [![Hits-of-Code](https://hitsofcode.com/github/administer-org/app-server?branch=main)](https://hitsofcode.com/github/administer-org/app-server/view?branch=main)
+[![GitHub tag](https://img.shields.io/github/tag/administer-org/aos?include_prereleases=&sort=semver&color=green)](https://github.com/administer-org/aos/releases/) [![License](https://img.shields.io/badge/License-AGPL--3.0-green)](#license) [![issues - AOS](https://img.shields.io/github/issues/administer-org/aos)](https://github.com/administer-org/aos/issues) [![Hits-of-Code](https://hitsofcode.com/github/administer-org/aos?branch=main)](https://hitsofcode.com/github/administer-org/aos/view?branch=main)
 
 </div>
 
 # What is it?
 
-The App Server is a FastAPI/MongoDB program which stores apps for use in Administer and a website later on, there is no backend panel or anything. What you see is what you get.
+The Administer AOS is a FastAPI program which manages Administer applications, collects statistics, and completes recurring tasks. It is designed for [Administer 2.0 and later](https://github.com/administer-org/administer) panels.
 
 For everything knowledge related (recommended specs, installation, API reference, ...) please refer to our official documentation.
 
 https://docs.admsoftware.org/AOS/information/about
 
-# Installation
+# Installation & configuration
 
 Please refer to our Quickstart Guide on the official documentation.
 
 https://docs.admsoftware.org/AOS/maintaining/setup
+
+Once you have installed AOS, log into the webpanel to set it up. It runs at :8020 by default, so you can visit the Admin Interface at MACHINE_IP:8020/a/.
+
+## Demo
+
+We do not have a live demo yet, but when we do you will be able to use it at https://demo.admsoftware.org. 
 
 ## Development installation
 
