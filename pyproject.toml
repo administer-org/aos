@@ -26,17 +26,23 @@ dependencies = [
     #"audioop-lts",
     #"py-cord",
     # Development
-    "matplotlib",
-    "flake8>=7.2.0",
-    "libsass>=0.23.0",
-    "jinja2>=3.1.6",
-    "argon2-cffi>=25.1.0",
-    "bcrypt>=4.3.0",
-    "ruff>=0.12.7",
+    "matplotlib"
 ]
 
-urls.homepage = "https://admsoftware.org"
-urls.repository = "https://github.com/administer-org/app-server"
+[project.optional-dependencies]
+server = [
+    "redis",
+    "bcrypt",
+    "argon2-cffi",
+    "jinja2",
+    "libsass"
+]
+
+dev = ["ruff", "flake8"]
+
+[project.urls]
+homepage = "https://admsoftware.org"
+repository = "https://github.com/administer-org/app-server"
 
 [build-system]
 requires = ["hatchling"]
