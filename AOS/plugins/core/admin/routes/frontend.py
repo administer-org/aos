@@ -60,6 +60,8 @@ class AdminFrontend:
                 # verify token
                 token_data = db.get(aos_auth, db.SESSIONS)
 
+                print(token_data["expiry"], time())
+
                 if token_data is None:
                     return RedirectResponse("/a/login?type=logged_out")
                 elif token_data["expiry"] <= time():

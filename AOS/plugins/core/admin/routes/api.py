@@ -57,7 +57,7 @@ class AdminRoutes:
                 "creation": time.time(),
                 "ip": req.headers.get("CF-Connecting-IP"),
                 "browser": req.headers.get("User-Agent"),
-                "expiry": data["stayLoggedIn"] and 62899200 or time.time() + 86400 # 2 years is ample time
+                "expiry": data["stayLoggedIn"] and time.time() + 62899200 or time.time() + 86400 # 2 years is ample time
             }
 
             user["sessions"].append(f"{user["username"]}-{session["id"]}")
@@ -83,17 +83,6 @@ class AdminRoutes:
 
         @self.router.post("/signup")
         async def signup(req: Request):
-            db.set(
-                "abc",
-                {
-                    "uses": 0,
-                    "max_uses": 1,
-                    "users": [],
-                    "expiry": 99999999999999,
-                    "creator": "system"
-                },
-                db.SIGNUP_TOKENS
-            )
             data = await req.json()
             token = db.get(data["signup_token"], db.SIGNUP_TOKENS)
 
@@ -106,7 +95,7 @@ class AdminRoutes:
             elif token["uses"] >= token["max_uses"]:
                 return JSONResponse(
                     {"code": 400, "data": "This token may not be used anymore"},
-                    status_code=400,
+                    status_code=400
                 )
             elif token["expiry"] <= time.time():
                 return JSONResponse(
@@ -122,7 +111,7 @@ class AdminRoutes:
                 return JSONResponse(
                     {
                         "code": 400,
-                        "data": "That password is too weak. Please make sure it has one upper and lowercase letter, one digit, has one special character, and is 8 characters long.",
+                        "data": "That password is too weak. Please make sure it has one upper and lowercase letter, one digit, has one special character, and is 8 characters long."
                     },
                     status_code=400
                 )
@@ -177,9 +166,9 @@ class AdminRoutes:
                     "sessions": [],
                     "permissions": [],
                     "inactive": False,
-                    "seen": -1,
+                    "seen": -1
                 },
-                db.USERS,
+                db.USERS
             )
 
             return JSONResponse(
