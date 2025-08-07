@@ -15,7 +15,7 @@ import AOS.plugin_loader as plugin_loader
 from AOS.deps import il
 
 while app is None:
-    sleep(0)  # wait for fastapi
+    sleep()  # wait for fastapi
 
 # Load required dependencies
 for plugin in ["middleware"]:
@@ -33,7 +33,7 @@ app.include_router(backend_api.router, prefix="/api")
 app.include_router(backend_api.asset_router, prefix="/api")
 app.include_router(public_api.router, prefix="/pub")
 
-# Mount Admin API if we are installed with the `admin` optional
+# Mount Admin API if we are installed with the `server` optional
 
 if importlib.util.find_spec("bcrypt"):
     admin_frontend = AdminFrontend(app)
