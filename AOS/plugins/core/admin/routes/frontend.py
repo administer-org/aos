@@ -4,10 +4,8 @@ import sass
 
 from time import time
 
-from fastapi import APIRouter, Request
-from fastapi.responses import (
-    RedirectResponse,
-)
+from fastapi import APIRouter, Request, Response
+from fastapi.responses import RedirectResponse
 from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 
@@ -17,6 +15,7 @@ from AOS.plugins.database import get_web_database
 from AOS import il
 
 db = get_web_database()
+
 
 class AdminFrontend:
     def __init__(self, app):
@@ -60,8 +59,6 @@ class AdminFrontend:
                 # verify token
                 token_data = db.get(aos_auth, db.SESSIONS)
 
-                print(token_data["expiry"], time())
-
                 if token_data is None:
                     return RedirectResponse("/a/login?type=logged_out")
                 elif token_data["expiry"] <= time():
@@ -73,11 +70,34 @@ class AdminFrontend:
         @self.router.get("/login")
         def login_page(req: Request):
             return self.templates.TemplateResponse(
-                "auth/login.html", context={"login_allowed": True, "request": req}
+                "auth/login.html",
+                context={
+                    "login_allowed": True, 
+                    "request": req, 
+                    "show_blip": True,
+                    "blip_text": r"{%blip_text}",
+                    "blip_body": r"{%blip_body}"
+                }
             )
-        
+
+        @self.router.get("/logout")
+        def logout(resp: Response):
+            resp.delete_cookie("AOS._SessionAuth", path="/")
+
+            return RedirectResponse("/a/login?type=successful_logout")
+
         @self.router.get("/signup")
         def signup_page(req: Request):
             return self.templates.TemplateResponse(
                 "auth/signup.html", context={"signup_allowed": True, "request": req}
+            )
+
+        @self.router.get("/home")
+        def homepage(req: Request):
+            return self.templates.TemplateResponse(
+                "admin/home.html", 
+                context={
+                    "request": req, 
+                    "logged_in": True
+                }
             )

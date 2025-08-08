@@ -1,30 +1,36 @@
 <!doctype html>
 <html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<title>AOS | {% block title %}{% endblock %}</title>
 
-		<link rel="stylesheet" href="/a/static/css/common.css" />
-		<link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
+<head>
+    <meta charset="UTF-8" />
+    <title>AOS | {% block title %}{% endblock %}</title>
 
-		<script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
-		<link
-			rel="stylesheet"
-			href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css"
-		/>
+    <link rel="stylesheet" href="/a/static/css/common.css" />
+    <link rel="shortcut icon" href="/favicon.ico" type="image/x-icon" />
 
-		{% block head %}{% endblock %}
-	</head>
+    <script src="https://unpkg.com/micromodal/dist/micromodal.min.js"></script>
+    <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/3.0.0/uicons-regular-rounded/css/uicons-regular-rounded.css" />
 
-	<body>
-		<header>
-			<p>Begin Header</p>
-		</header>
-		<main>{% block content %}{% endblock %}</main>
+    {% block head %}{% endblock %}
+</head>
 
-		<footer>
-			<p>Footer Block</p>
-			<p>&copy;</p>
-		</footer>
-	</body>
+<body>
+    <header>
+        <p>Begin Header</p>
+    </header>
+
+    {% if logged_in %}
+    <div class="sidebar"></div>
+    {% endif %}
+
+    <main>{% block content %}{% endblock %}</main>
+
+    <footer>
+        <p>Footer Block</p>
+        <p>&copy;</p>
+    </footer>
+</body>
+
+<script src="/a/static/js/common.js"></script>
+
 </html>
