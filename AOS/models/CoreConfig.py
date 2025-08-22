@@ -1,6 +1,6 @@
 # pyxfluff 2025
 
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 from typing import Dict, List, Any, Optional
 
 
@@ -58,11 +58,11 @@ class CoreConfig(BaseModel):
     plausible: Plausible
     admin: AdminConfig
 
-    extra_plugins: Optional[List[str]] = []
-
     banner: Banner
     report_webhook_url: str
 
-    flags: Dict[str, Any] = {}
     dbattrs: MongoConfig
     security: SecurityConfig
+
+    flags: Dict[str, Any] = Field(default_factory=dict)
+    extra_plugins: List[str] = Field(default_factory=list)
