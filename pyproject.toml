@@ -26,7 +26,8 @@ dependencies = [
     #"audioop-lts",
     #"py-cord",
     # Development
-    "matplotlib"
+    "matplotlib",
+    "bcrypt>=4.3.0",
 ]
 
 [project.optional-dependencies]

@@ -124,14 +124,14 @@ def home_nodes():
         for n in ["aos-canary", "us-1", "us-2", "us-3", "eur-1"]
     ]
     versions = [
-        f"{n} ({Counter(nodes).get(n, 0)})"
+        f"{n} ({Counter(nodes).get(n, 0)} {str(round((Counter(nodes).get(n, 0) / len(nodes)) * 100) / 100).replace("0.", "")}%)"
         for n in ["aos-canary", "us-1", "us-2", "us-3", "eur-1"]
     ]
 
     plt.bar(versions, values)
     plt.xlabel("Node Name (Usage Count)")
     plt.ylabel("Adoption")
-    plt.title("AOS Node Usage")
+    plt.title(f"AOS Node Usage (/{len(nodes)})")
     plt.xticks(rotation=45)
 
 
