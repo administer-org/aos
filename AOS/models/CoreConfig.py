@@ -56,7 +56,7 @@ class CoreConfig(BaseModel):
     can_be_home_node: bool
 
     plausible: Plausible
-    admin: AdminConfig
+    #admin: AdminConfig
 
     banner: Banner
     report_webhook_url: str
