@@ -45,7 +45,7 @@ class Frontend:
                 )
             except AttributeError:
                 return PlainTextResponse(
-                    f"This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#\nVersion: {globals.version}\n\n{globals.admin["enable_admin"] and "The admin interface is disabled on this server. Please contact the maintainer for more information."}"
+                    f"This is an Administer AOS instance. All routes are under /pub and /api.\n\nDocs: /docs#\nVersion: {globals.version}\n\nThe admin interface is disabled on this server. Please contact the maintainer for more information."
                 )
 
         @self.app.get("/app/{app:str}")
