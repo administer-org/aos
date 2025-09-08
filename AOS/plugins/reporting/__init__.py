@@ -67,22 +67,23 @@ def overall_places():
     plt.title("Number of Administer-powered games over time")
     plt.legend()
 
+
 def sort(x, y, **kw):
     x, y = zip(*sorted(zip(x, y)))
     plt.plot(x, y, **kw)
+
 
 def combined():
     x, y = [], []
     for day in data:
         try:
             x.append(int(day["administer_id"]))
-            y.append(
-                {
-                    **day["data"].get("live", {}),
-                    **day["data"].get("beta", {}),
-                    **day["data"].get("stable", {})
-                }
-            )
+            combined = {}
+            for key in ("live", "beta", "stable"):
+                for ver, val in day["data"].get(key, {}).items():
+                    combined[ver] = combined.get(ver, 0) + val
+            y.append(combined)
+
         except Exception:
             continue
 
@@ -92,9 +93,12 @@ def combined():
         "1.2.1": [item.get("1.2.1", 0) for item in y],
         "1.2.2": [item.get("1.2.2", 0) for item in y],
         "1.2.3": [item.get("1.2.3", 0) for item in y],
-        "2.0.0": [item.get("2.0.0", 0) for item in y]
+        "2.0.0": [item.get("2.0.0", 0) for item in y],
+        "2.1.0": [item.get("2.1.0", 0) for item in y]
     }.items():
         sort(x, y_vals, marker="o", label=version)
+
+    print(data)
 
     x2, y2 = [], []
     for day in data:
@@ -137,8 +141,8 @@ def home_nodes():
 
 # daily_usage_graph()
 # overall_places()
-#combined()
-home_nodes()
+combined()
+# home_nodes()
 
 plt.tight_layout()
 plt.savefig("/home/Pyx/adm/Log")

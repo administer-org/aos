@@ -1,5 +1,5 @@
 [project]
-name = "adm-aos"
+name = "administer-aos"
 description = "Administer's AOS service for distributing apps."
 readme = "README.md"
 
