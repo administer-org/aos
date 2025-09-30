@@ -8,6 +8,7 @@ from AOS import AOSError, globals as var
 from AOS.utils import logging as logging
 
 from sys import argv
+from time import time
 from pathlib import Path
 from rich.console import Console
 
@@ -81,6 +82,7 @@ def help_command():
 
 if "--nobox" not in argv:
     il.box(85, "Administer AOS", f"v{var.version}")
+    il.cprint(f"AOS webserver starting up at {time()}", 34)
 
 try:
     _ = argv[1]

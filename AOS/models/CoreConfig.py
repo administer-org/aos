@@ -19,11 +19,16 @@ class MongoAuth(BaseModel):
     username: str
     password: str
 
+class AddressV2(BaseModel):
+    use_multiple_connections: bool
+    addresses: List[str]
+
 
 class MongoConfig(BaseModel):
     use_prod_db: bool
-    address: str
-    auth: Optional[MongoAuth]
+    address: Optional[str] = None
+    addressv2: Optional[AddressV2] = None
+    auth: Optional[MongoAuth] = None
     timeout_ms: int
 
 

@@ -1,9 +1,11 @@
 # Copyright (c) 2023-2024-2025 Codelet Team (pyxfluff / iiPythonx)
 
 # Modules
-from AOS import globals
+from AOS import globals, AOSError
 from AOS.deps import il
 
+from tqdm import tqdm
+from time import time
 from typing import Any, List, Dict
 
 from pymongo import MongoClient
@@ -11,6 +13,7 @@ from pymongo.errors import ConnectionFailure
 
 # Config
 dbattrs = globals.dbattrs
+
 
 # Main database class
 class Database(object):
@@ -30,22 +33,62 @@ class Database(object):
             "error_refs",
             "signup_tokens",
             "reported_versions",
-            "discord_remote_secrets",
+            "discord_remote_secrets"
         ]:
             setattr(self, db_item.upper(), db_item)
 
-        client = MongoClient(
-            dbattrs["address"],
-            serverSelectionTimeoutMS=dbattrs["timeout_ms"],
-            **(
-                {
-                    "username": dbattrs["auth"]["username"],
-                    "password": dbattrs["auth"]["password"]
-                }
-                if dbattrs["auth"]["use_auth"]
-                else {}
+        def connect(address: str):
+            # raise Exception("test")
+            return MongoClient(
+                address,
+                serverSelectionTimeoutMS=dbattrs["timeout_ms"],
+                **(
+                    {
+                        "username": dbattrs["auth"]["username"],
+                        "password": dbattrs["auth"]["password"]
+                    }
+                    if dbattrs["auth"]["use_auth"]
+                    else {}
+                )
             )
-        )
+
+        try:
+            if not dbattrs["addressv2"]["use_multiple_connections"]:
+                client = connect(dbattrs["address"])
+            elif dbattrs["addressv2"]["use_multiple_connections"]:
+                with tqdm(dbattrs["addressv2"]["addresses"], desc="Testing optimal database to connect to") as bar:
+                    databases = {}
+                    for address in bar:
+                        t = time()
+                        client = connect(f"mongodb://{address}")
+
+                        try:
+                            client.admin.command("ping")
+                        except ConnectionFailure:
+                            tqdm.write(f"{address} is down!")
+                            continue
+
+                        elapsed_ms = (time() - t) * 1000
+
+                        databases[address] = elapsed_ms
+                        bar.set_description(f"Testing {address} (took {elapsed_ms:.2f}ms)")
+                pick = min(databases.items(), key=lambda x: x[1])
+                print(f"connecting to {pick[0]} (quickest @ {pick[1]}ms)")
+
+                client = connect(f"mongodb://{pick[0]}")
+                db_address = pick[0]
+            else:
+                raise AOSError(
+                    "either AddressV2 or Address must be defined in the MongoConfig model"
+                )
+
+        except (
+            KeyError,
+            IndexError,
+            TypeError
+        ):  # support for not updated 5.6 config files
+            client = connect(dbattrs["address"])
+            db_address = dbattrs["address"].replace("mongodb://", "")
 
         self.db = client[db_type]
 
@@ -66,7 +109,7 @@ class Database(object):
                 (
                     m
                     for m in repl_status["members"]
-                    if m.get("name") == dbattrs["address"].replace("mongodb://", "")
+                    if m.get("name") == db_address
                 ),
                 None
             )
@@ -76,7 +119,7 @@ class Database(object):
             replica_state = "STANDALONE"
 
         il.cprint(
-            f"[✓] Connected to MongoDB {server_info["version"]} {server_info["gitVersion"][:7]} at {dbattrs['address']}:/{dbattrs["use_prod_db"] and 'administer' or 'administer_dev'} <RCN [{replica_state} {repl_status["set"]}]>",
+            f"[✓] Connected to MongoDB {server_info["version"]} {server_info["gitVersion"][:7]} at {db_address}:/{dbattrs["use_prod_db"] and 'administer' or 'administer_dev'} <RCN [{replica_state} {repl_status["set"]}]>",
             32
         )
 

@@ -16,7 +16,7 @@ from sys import argv
 from pathlib import Path
 from typing import Optional
 from fastapi import FastAPI
-from uvicorn import Config, Server
+from uvicorn import Config, Server, __version__
 from contextlib import asynccontextmanager
 
 
@@ -91,11 +91,11 @@ app = None
 
 
 def load_fastapi_app():
-    il.cprint("[-] Loading Uvicorn..", 33)
+    il.cprint("[-] Loading FastAPI..", 33)
     AOS.app = FastAPI(
         debug=globals.is_dev,
-        title=f"AOS ({globals.version})",
-        description="An AOS instance for distributing Administer applications and serving other plugins.\n\nThe documentation here will only show URLs. For actual API refernece, please refer to https://docs.admsoftware.org",
+        title=f"Administer AOS ({globals.version})",
+        description="An AOS instance for distributing Administer applications and serving other plugins.\n\nThe documentation here will only show URLs. For actual API reference, please refer to https://docs.admsoftware.org",
         version=globals.version,
         openapi_url="/_misc/openapi.json",
         lifespan=lifespan
@@ -103,9 +103,11 @@ def load_fastapi_app():
 
     app = AOS.app
 
+    il.cprint(f"[-] spawning uvicorn {__version__} with {globals.workers} cpu threads", 34)
+
     try:
         config = Config(
-            app=app, host=argv[2], port=int(argv[3]), workers=globals.workers
+            app=app, host=argv[3], port=int(argv[4]), workers=globals.workers
         )
     except IndexError:
         config = Config(

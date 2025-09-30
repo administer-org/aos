@@ -1,5 +1,9 @@
 {
 	"python.REPL.enableREPLSmartSend": false,
 	"stylua.targetReleaseVersion": "latest",
-	"cSpell.words": ["dbattrs", "Switchery"]
+	"cSpell.words": [
+        "addressv",
+        "dbattrs",
+        "Switchery"
+    ]
 }

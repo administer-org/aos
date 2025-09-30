@@ -141,8 +141,8 @@ def home_nodes():
 
 # daily_usage_graph()
 # overall_places()
-combined()
-# home_nodes()
+#combined()
+home_nodes()
 
 plt.tight_layout()
 plt.savefig("/home/Pyx/adm/Log")
