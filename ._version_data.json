@@ -4,8 +4,8 @@
 	"_latest_versions": {
 		"STABLE": {
 			"branch": "STABLE",
-			"version": "2.1.0",
-			"released": 1756926741
+			"version": "2.1.1",
+			"released": 1759356244.4481351
 		},
 
 		"BETA": {
@@ -15,8 +15,24 @@
 		}
 	},
 	"versions": {
-        "2.1.0": {
+        "2.1.1": {
 			"is_outdated": false,
+			"released": 1759356244.4481351,
+			"hash": "4632709",
+			"featureset": {
+				"apps": {
+					"can_install": true,
+					"can_access_marketplace": true
+				},
+				"administer": {
+					"can_report_version": true
+				}
+			},
+			"update_logs": []
+		},
+
+        "2.1.0": {
+			"is_outdated": true,
 			"released": 1756926741,
 			"hash": "4632709",
 			"featureset": {
