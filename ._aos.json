@@ -1,33 +1,38 @@
 {
-	"version": "5.6",
-
-	"def_port": 8020,
-	"def_host": "0.0.0.0",
-
-	"workers": 8,
-
-	"plugin_load_order": ["database", "FeedbackAssistant"],
-
-	"state": {
-		"requests": 0,
-		"votes_today": 0,
-		"default_app": {},
-		"downloads_today": 0,
-
-		"loaded_plugins": [],
-
-		"permitted_versions": ["2.1.0", "2.0.0", "1.2.3", "1.2.2", "1.2.1", "1.2", "1.1.1"],
-
-		"unchecked_endpoints": [
-			"logs",
-			"css",
-			"scss",
-			"js",
-			"img",
-			"download-count",
-			".administer",
-			"to",
-			"/"
-		]
-	}
+    "version": "5.6",
+    "def_port": 8020,
+    "def_host": "0.0.0.0",
+    "workers": 8,
+    "plugin_load_order": [
+        "database",
+        "FeedbackAssistant"
+    ],
+    "state": {
+        "requests": 0,
+        "votes_today": 0,
+        "default_app": {},
+        "downloads_today": 0,
+        "loaded_plugins": [],
+        "permitted_versions": [
+            "2.1.1",
+            "2.1.0",
+            "2.0.0",
+            "1.2.3",
+            "1.2.2",
+            "1.2.1",
+            "1.2",
+            "1.1.1"
+        ],
+        "unchecked_endpoints": [
+            "logs",
+            "css",
+            "scss",
+            "js",
+            "img",
+            "download-count",
+            ".administer",
+            "to",
+            "/"
+        ]
+    }
 }
