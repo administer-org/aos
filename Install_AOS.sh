@@ -22,7 +22,7 @@ echo "Now we'll start by having you edit your configuration with GNU nano. You w
 read 
 
 cp config.jsonc.templ ._config.jsonc
-nano ._config.json
+nano ._config.jsonc
 
 echo -n "
 Would you like to edit the AOS environment file (._aos.json)? This is where you edit the port and host that AOS will serve on. By default, AOS serves on 0.0.0.0:8200, which can also be changed by using the CLI (\`aos core serve HOST PORT\`).
