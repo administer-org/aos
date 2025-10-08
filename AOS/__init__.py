@@ -47,9 +47,7 @@ class AOSVars:
         if not p.exists():
             raise FileNotFoundError
 
-        text = p.read_text(encoding="utf-8")
-        text = re.sub(r'(?<!:)//.*', '', text)
-        text = text.strip()
+        text = (re.sub(r'(?<!:)//.*', '', p.read_text(encoding="utf-8"))).strip()
 
         try:
             return orjson.loads(text)
