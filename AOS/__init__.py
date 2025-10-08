@@ -7,6 +7,7 @@ from AOS.models.AOSConfig import AOSConfig
 from AOS.models.CoreConfig import CoreConfig
 
 
+import re
 import sys
 import orjson
 import logging
@@ -41,14 +42,33 @@ async def lifespan(app: FastAPI):
 
 
 class AOSVars:
+    def remove_comments(self, path):
+        p = Path(path)
+        if not p.exists():
+            raise FileNotFoundError
+
+        text = p.read_text(encoding="utf-8")
+        text = re.sub(r'(?<!:)//.*', '', text)
+        text = text.strip()
+
+        try:
+            return orjson.loads(text)
+        except Exception as e:
+            raise ValueError(f"Failed to parse AOS config: {e}")
+
     def __init__(self):
         try:
             config, aos_config, version_data = (
-                orjson.loads((Path(__file__).parent / f).read_text())
+                self.remove_comments(Path(__file__).parent / f)
                 for f in ["../._config.jsonc", "../._aos.json", "../._version_data.json"]
             )
-        except Exception:
+        except Exception as c_exception:
             # try again with legacy .json
+            il.cprint(
+                f"[!] Failed to read ._config.json, please migrate ASAP. Falling back to legacy file. {c_exception}", 
+                33
+            )
+
             try:
                 config, aos_config, version_data = (
                     orjson.loads((Path(__file__).parent / f).read_text())
