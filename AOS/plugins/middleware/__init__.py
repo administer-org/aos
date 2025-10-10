@@ -33,10 +33,10 @@ class AuthMiddleware(BaseHTTPMiddleware):
         if request.headers.get("CF-Connecting-IP") in forbidden_ips:
             return JSONResponse(
                 {
-                    "code": 400,
-                    "message": "Sorry, but your IP has been blocked due to suspected abuse. Please reach out if this was a mistake."
+                    "code": 403,
+                    "message": "You have been blocked from using this server."
                 },
-                status_code=400
+                status_code=403
             )
 
         try:
@@ -99,7 +99,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
 
                 return JSONResponse(
                     {
-                        "code": 400,
+                        "code": 401,
                         "message": "Your IP has been blocked due to suspected API abuse."
                     },
                     status_code=401
@@ -112,7 +112,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             "X-Administer-Key"
         ):
             return JSONResponse(
-                {"code": 400, "message": "A valid API key must be used."},
+                {"code": 401, "message": "A valid API key must be used."},
                 status_code=401
             )
 
@@ -120,7 +120,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
             request.headers.get("X-Administer-Key"), db.API_KEYS
         ):
             return JSONResponse(
-                {"code": 400, "message": "Please provide a valid API key."},
+                {"code": 401, "message": "Please provide a valid API key."},
                 status_code=401
             )
 
@@ -156,10 +156,10 @@ class RateLimiter(BaseHTTPMiddleware):
         cf_ip = request.headers.get("CF-Connecting-IP")
 
         if cf_ip in mem_blocked_ips:
-            print("This IP is blocked in memory.")
+            print("[!] This IP is blocked in memory.")
             return JSONResponse(
-                {"code": 400, "message": "Sorry, you have been blocked."},
-                status_code=400
+                {"code": 401, "message": "You have been blocked from using this server."},
+                status_code=401
             )
 
         if not cf_ip:
@@ -177,10 +177,10 @@ class RateLimiter(BaseHTTPMiddleware):
         if len(limited_ips[cf_ip]) >= globals.security["ratelimiting"]["max_reqs"]:
             return JSONResponse(
                 {
-                    "code": 400,
+                    "code": 429,
                     "message": "You are being rate limited, please try again later.",
                 },
-                status_code=400
+                status_code=429
             )
 
         limited_ips[cf_ip].append(time.time())
@@ -209,7 +209,7 @@ class Logger(BaseHTTPMiddleware):
             req.method
         )
 
-        res.headers["X-Powered-By"] = f"AdministerAppServer; AOS/{globals.version}"
+        res.headers["X-Powered-By"] = f"AdministerAOS; AOS/{globals.version}"
         res.headers["Server-Timing"] = (
             f"{res.headers.get('Server-Timing', '')}full_process;dur={str((time.time() - t) * 1000)}"
         )
@@ -219,7 +219,7 @@ class Logger(BaseHTTPMiddleware):
                 httpx.post(
                     f"{globals.plausible['data_url']}/api/event",
                     headers={
-                        "User-Agent": f"AdministerAppServer; AOS/{globals.version}; User/{req.headers.get('Roblox-Id')}"
+                        "User-Agent": f"AdministerAOS; AOS/{globals.version}; User/{req.headers.get('Roblox-Id')}"
                     },
                     json={
                         "domain": globals.plausible["site_url"],
@@ -235,12 +235,14 @@ class Logger(BaseHTTPMiddleware):
 
 class Middleware:
     def __init__(self):
-        il.cprint("[✓] Middleware loaded, following rules in ._aos.json!", 34)
+        il.cprint("[-] Loading HttpMiddleware modules", 31)
 
     def init(self):
         app.add_middleware(AuthMiddleware)
         app.add_middleware(RateLimiter)
         app.add_middleware(Logger)
+
+        il.cprint("[✓] Middleware loaded, following rules in ._aos.json!", 34)
 
 
 middleware = Middleware()

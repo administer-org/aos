@@ -116,7 +116,7 @@ class BackendAPI:
             if search in [None, "", " "] or len(search) >= 50:
                 return JSONResponse(
                     {"meta": {"_aos_search_api": "4.1"}, "index": "invalid_query"},
-                    status_code=200
+                    status_code=400
                 )
 
             for app in apps:
@@ -187,7 +187,8 @@ class BackendAPI:
                         {
                             "code": 400,
                             "message": "This API endpoint cannot be used outside of a Roblox game."
-                        }
+                        },
+                        status_code=400
                     )
 
                 place = {
@@ -271,7 +272,7 @@ class BackendAPI:
                 return JSONResponse(
                     {
                         "code": 400,
-                        "message": "Metadata.AdministerID must not be None and should be an AOSId2 (RDNSN)"
+                        "message": "Metadata.AdministerID must not be None and should be an AOSId2 format string"
                     },
                     status_code=400
                 )
@@ -295,7 +296,7 @@ class BackendAPI:
             return JSONResponse(
                 {
                     "code": 200,
-                    "message": "Submitted! Please allow a mintue for indexes to rebuild and databases to sync."
+                    "message": "Submitted! Please allow a minute for indexes to rebuild and databases to sync."
                 },
                 status_code=200
             )
@@ -320,7 +321,7 @@ class BackendAPI:
                     {
                         "code": 404,
                         "message": "not-found",
-                        "user_facing_message": "This asset wasn't found. Maybe it was deleted while you were viewing it?"
+                        "user_facing_message": "That asset wasn't found. Maybe it was deleted while you were viewing it?"
                     },
                     status_code=404
                 )
@@ -367,7 +368,7 @@ class BackendAPI:
                     {
                         "code": 404,
                         "message": "Not Found",
-                        "user_facing_message": "That AssetID is invalid."
+                        "user_facing_message": "That asset is not registered on this server"
                     },
                     status_code=404
                 )
@@ -396,7 +397,7 @@ class BackendAPI:
                 {
                     "code": 200,
                     "message": "Success!",
-                    "is_re_record": is_overwrite,
+                    "was_overwritten": is_overwrite,
                     "user_facing_message": f"Your review has been recorded, thanks for voting!{is_overwrite and ' Your previous vote for this asset has been removed.'}"
                 },
                 status_code=200
@@ -410,7 +411,7 @@ class BackendAPI:
                 return JSONResponse(
                     {
                         "code": 400,
-                        "message": "This database node doesn't know who you are!"
+                        "message": "You must first register with AOS before installing an asset!"
                     },
                     status_code=400
                 )

@@ -15,25 +15,26 @@ import asyncio
 import threading
 
 router = APIRouter(
-    prefix="/remote",
-    dependencies=[Depends(middleware.DiscordAuthentication)]
+    prefix="/remote", dependencies=[Depends(middleware.DiscordAuthentication)]
 )
 
 
 @router.get("/")
 def root():
     return JSONResponse(
-        {"code": 200, "data": "OK", "plugin": "DiscordRemote", "queue": queue.action_queue}, status_code=200
+        {
+            "code": 200,
+            "data": "OK",
+            "plugin": "DiscordRemote",
+            "queue": queue.action_queue
+        },
+        status_code=200
     )
+
 
 @router.get("/api/ping")
 def api_ping():
-    return JSONResponse(
-        {
-            "code": 200, 
-            "data": "OK"
-        }, status_code=200
-    )
+    return JSONResponse({"code": 200, "data": "OK"}, status_code=200)
 
 
 @router.get("/api/action-queue")
@@ -53,43 +54,33 @@ def action_queue(req: Request):
 async def create_action(req: Request):
     await req.json()
 
-    return JSONResponse(
-        {
-            "code": 200, 
-            "data": {}
-        }, status_code=200
-    )
+    return JSONResponse({"code": 200, "data": {}}, status_code=200)
+
 
 @router.post("/secret/generate")
 def generate_secret(req: Request):
     if req.headers.get("Roblox-Id") is None:
-         return JSONResponse(
-            {
-                "code": 400, 
-                "data": "You can only do that from Roblox."
-            }, status_code=400
+        return JSONResponse(
+            {"code": 400, "data": "You can only do that from Roblox."}, status_code=400
         )
-    
+
     if db.get(req.headers.get("Roblox-Id"), db.DISCORD_REMOTE_SECRETS):
-           return JSONResponse(
+        return JSONResponse(
             {
-                "code": 400, 
-                "data": "You may not generate another token until you delete your first."
-            }, status_code=200
-        )   
-    
+                "code": 400,
+                "data": "You may not generate another token until you delete your first.",
+            },
+            status_code=200,
+        )
+
     new_secret = generate(size=randint(30, 45))
     db.set(req.headers.get("Roblox-Id"), new_secret, db.DISCORD_REMOTE_SECRETS)
 
-    return JSONResponse(
-        {
-            "code": 200, 
-            "data": new_secret
-        }, status_code=200
-    )
+    return JSONResponse({"code": 200, "data": new_secret}, status_code=200)
 
 
 app.include_router(router)
+
 
 def run_bot():
     import discord
@@ -118,11 +109,13 @@ def run_bot():
 
     loop.run_until_complete(bot.start(db.get("VERSION_BOT", db.SECRETS)))
 
+
 def spawn():
     try:
         bot_thread = threading.Thread(target=run_bot, name="DiscordBot", daemon=True)
         bot_thread.start()
     except ImportError:
-        print("pycord isn't installed, install it ") 
+        print("pycord isn't installed, install it ")
+
 
 spawn()

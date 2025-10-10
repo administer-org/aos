@@ -52,7 +52,8 @@ class PublicAPI:
             log = db.get(logid, db.LOGS)
             if log is None:
                 return JSONResponse(
-                    {"error": "This logfile does not exist."}, status_code=404
+                    {"code": 404, "data": "This logfile does not exist."}, 
+                    status_code=404
                 )
             return log
 
@@ -66,7 +67,7 @@ class PublicAPI:
                 ] = time.time()
             except KeyError:
                 return JSONResponse(
-                    {"message": "That is not a valid version."}, status_code=400
+                    {"code": 400, "data": "That is not a valid version."}, status_code=400
                 )
 
             return JSONResponse(
@@ -85,5 +86,6 @@ class PublicAPI:
                         ]
                     },
                     "versions": globals.versions["versions"]
-                }
+                },
+                status_code=200
             )

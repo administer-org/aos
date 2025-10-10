@@ -41,6 +41,7 @@ async def submit_feedback(req: Request):
     if is_blocked:
         return JSONResponse(
             {
+                "code": 401,
                 "title": "Blocked",
                 "body": "Sorry, but your game has been blocked from using the feedback reporter on this instance due to abuse."
             },
@@ -50,6 +51,7 @@ async def submit_feedback(req: Request):
     if (await req.body()) == b"":
         return JSONResponse(
             {
+                "code": 400,
                 "title": "Bad input",
                 "body": "Incomplete or bad data, please ensure all fields are filled correctly."
             },
@@ -78,14 +80,16 @@ async def submit_feedback(req: Request):
         ):
             return JSONResponse(
                 {
+                    "code": 400,
                     "title": "Bad input",
-                    "body": "Illegitimate data was recieved that the server cannot process."
+                    "body": "Illegitimate data was received that the server cannot process."
                 },
                 status_code=400
             )
     except KeyError:
         return JSONResponse(
             {
+                "code": 400,
                 "title": "Bad input",
                 "body": "Incomplete or bad data, please ensure all fields are filled correctly."
             },
@@ -95,7 +99,7 @@ async def submit_feedback(req: Request):
     httpx.post(
         url=webhook_url,
         json={
-            "content": "New report recieved",
+            "content": "New report received",
             "embeds": [
                 {
                     "title": "Report",
@@ -115,11 +119,12 @@ async def submit_feedback(req: Request):
             ],
             "username": "Administer V2 Feedback Agent",
             "attachments": []
-        },
+        }
     )
 
     return JSONResponse(
         {
+            "code": 200,
             "title": "Report submitted",
             "body": f"Thank you for helping Administer! We have recorded your feedback. If you have any further questions, let our support staff know with your unique ticket ID: `{db_key}`"
         },
