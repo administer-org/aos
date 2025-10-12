@@ -86,7 +86,7 @@ class BackendAPI:
                 )
 
             for app in apps:
-                if app["id"] == "__featured": continue
+                if app["administer_id"] == "__featured": continue
 
                 serialize(app["data"])
 
