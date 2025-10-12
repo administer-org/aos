@@ -321,7 +321,10 @@ class BackendAPI:
     def initialize_content_routes(self):
         @self.asset_router.get("/ping")
         async def ping():
-            return "OK"
+            return JSONResponse({
+                "code": 200,
+                "data": "OK"
+            }, status_code=200)
 
         @self.asset_router.get("/{appid:str}")
         async def get_app(appid: str):
@@ -429,7 +432,50 @@ class BackendAPI:
                 },
                 status_code=200
             )
+        
+        @self.asset_router.get("/{asset:str}/vote")
+        async def get_vote(req: Request, asset: str):
+            try:
+                app = request_app(asset)
+                place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
 
+                print(place)
+
+                if app is None:
+                    raise FileNotFoundError
+
+            except Exception as e:
+                print(e)
+                return JSONResponse(
+                    {
+                        "code": 404,
+                        "message": "not-found",
+                        "user_facing_message": "That asset wasn't found. Maybe it was deleted while you were viewing it?"
+                    },
+                    status_code=404
+                )
+            
+            if place is None:
+                return JSONResponse(
+                    {
+                        "code": 401,
+                        "data": "You are not registered on this server."
+                    },
+                    status_code=404
+                )
+            
+            return JSONResponse(
+                {
+                    "code": 200,
+                    "data": {
+                        "liked": place["Ratings"][asset]["rating"],
+                        "disliked": not place["Ratings"][asset]["rating"],
+                        "favorited": False # TODO
+                    }
+                },
+                status_code=200
+            )
+            
         @self.asset_router.post("/{asset_id}/install")
         async def install(req: Request, asset_id: str):
             place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
