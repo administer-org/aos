@@ -90,14 +90,6 @@ class BackendAPI:
 
                 serialize(app["data"])
 
-            if final == []:
-                final = [
-                    {
-                        "object_type": "message",
-                        "text": "This AOS instance does not have any objects with the requested type."
-                    }
-                ]
-
             if asset_type == "FEATURED":
                 # Render four top apps and one header, the game selects at random
                 # TODO: Top app, need to develop daily installs first
@@ -117,6 +109,14 @@ class BackendAPI:
             else:
                 # get all call ig?? idk maybe we want to error one day
                 pass
+
+            if final == []:
+                final = [
+                    {
+                        "object_type": "message",
+                        "text": "This AOS instance does not have any objects with the requested type."
+                    }
+                ]
 
             return JSONResponse(final, status_code=200)
 
