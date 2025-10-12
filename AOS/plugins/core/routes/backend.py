@@ -60,10 +60,11 @@ class BackendAPI:
                 rating = 0
                 try:
                     rating = (
-                        (data["Votes"]["Likes"] + data["Votes"]["Dislikes"]) == 0
-                        and 0
-                        or data["Votes"]["Likes"]
-                        / (data["Votes"]["Likes"] + data["Votes"]["Dislikes"])
+                        (
+                            data["Votes"]["Likes"] + data["Votes"]["Dislikes"]) == 0
+                                and 0 or data["Votes"]["Likes"]
+                                    / (data["Votes"]["Likes"] + data["Votes"]["Dislikes"]
+                        )
                     )
                 except ZeroDivisionError:
                     rating = 0  # ideally we can remove this in some months
@@ -85,24 +86,37 @@ class BackendAPI:
                 )
 
             for app in apps:
-                app = app["data"]
+                if app["id"] == "__featured": continue
 
-                serialize(app)
+                serialize(app["data"])
 
             if final == []:
                 final = [
                     {
                         "object_type": "message",
-                        "text": "This marketplace server does not have any objects with the requested type."
+                        "text": "This AOS instance does not have any objects with the requested type."
                     }
                 ]
 
             if asset_type == "FEATURED":
                 # Render four top apps and one header, the game selects at random
                 # TODO: Top app, need to develop daily installs first
-                final = sorted(final, key=lambda x: x["weighted_score"], reverse=True)[
-                    :4
-                ]
+                if db.get("__featured", db.APPS):
+                    final = sorted(
+                        final,
+                        key=lambda x: (x["id"] != db.get("__featured", db.APPS), -x["weighted_score"])
+                    )[:4]
+                else:
+                    # classic logic
+                    final = sorted(final, key=lambda x: x["weighted_score"], reverse=True)[:4]
+
+            elif asset_type == "THEMES":
+                final = [x for x in final if x["object_type"] == "theme"]
+            elif asset_type == "APPS":
+                final = [x for x in final if x["object_type"] == "app"]
+            else:
+                # get all call ig?? idk maybe we want to error one day
+                pass
 
             return JSONResponse(final, status_code=200)
 
@@ -169,7 +183,7 @@ class BackendAPI:
                         "_aos_search_api": "4.1",
                         "ratio_info": ratio_info,
                         "indexed_query": search,
-                        "results": len(final),
+                        "results": len(final)
                     },
                     "index": final
                 },
@@ -193,6 +207,7 @@ class BackendAPI:
 
                 place = {
                     "Apps": [],
+                    "Themes": [],
                     "Ratings": {},
                     "StartTimestamp": time.time(),
                     "StartSource": (
@@ -245,10 +260,12 @@ class BackendAPI:
                 )
 
             if not key:
-                db.set(f"day-{round(time.time() / 86400) - 1}", {
-                    "places_len": len(db.get_all(db.PLACES))
-                }, db.REPORTED_VERSIONS)
-                
+                db.set(
+                    f"day-{round(time.time() / 86400) - 1}",
+                    {"places_len": len(db.get_all(db.PLACES))},
+                    db.REPORTED_VERSIONS
+                )
+
                 key = {"internal": {}, "qa": {}, "canary": {}, "beta": {}, "stable": {}}
 
             if not key[branch].get(json["version"]):
@@ -339,6 +356,8 @@ class BackendAPI:
             #     )
 
             place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
+            app = request_app(asset_id)
+
             rating = payload.vote == 1
             is_overwrite = False
 
@@ -352,7 +371,16 @@ class BackendAPI:
                     status_code=400
                 )
 
-            if asset_id not in place["Apps"]:
+            if asset_id not in place["Apps"] and app["Metadata"]["AssetType"] == "app":
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "Bad request",
+                        "user_facing_message": "You have to install this app before you can rate it."
+                    },
+                    status_code=400
+                )
+            elif asset_id not in place["Themes"] and app["Metadata"]["AssetType"] == "theme":
                 return JSONResponse(
                     {
                         "code": 400,
@@ -362,7 +390,6 @@ class BackendAPI:
                     status_code=400
                 )
 
-            app = request_app(asset_id)
             if not app:
                 return JSONResponse(
                     {
@@ -427,7 +454,10 @@ class BackendAPI:
                     status_code=404
                 )
 
-            if asset_id in place["Apps"]:
+            if (
+                asset_id
+                in place[app["Metadata"]["AssetType"] == "app" and "Apps" or "Themes"]
+            ):
                 return JSONResponse(
                     {
                         "code": 400,
@@ -437,7 +467,12 @@ class BackendAPI:
                     status_code=400
                 )
 
-            place["Apps"].append(asset_id)
+            if app["Metadata"]["AssetType"] == "theme" and not place["Themes"]:
+                place["Themes"] = []
+
+            place[app["Metadata"]["AssetType"] == "app" and "Apps" or "Themes"].append(
+                asset_id
+            )
             app["Downloads"] += 1
 
             db.set(asset_id, app, db.APPS)
