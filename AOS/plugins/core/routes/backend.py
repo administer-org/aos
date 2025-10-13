@@ -69,21 +69,38 @@ class BackendAPI:
                 except ZeroDivisionError:
                     rating = 0  # ideally we can remove this in some months
 
-                final.append(
-                    {
-                        "name": data["Name"],
-                        "short_desc": data["ShortDescription"],
-                        "downloads": data["Downloads"],
-                        "rating": rating,
-                        "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9))
-                        + data["Votes"]["Favorites"],
-                        "developer": data["Developer"],
-                        "last_update": data["Metadata"]["UpdatedAt"],
-                        "id": data["Metadata"]["AdministerID"],
-                        "object_type": data["Metadata"]["AssetType"],
-                        "image_id": data["IconID"]
-                    }
-                )
+                try:
+                    final.append(
+                        {
+                            "name": data["Name"],
+                            "short_desc": data["ShortDescription"],
+                            "downloads": data["Downloads"],
+                            "rating": rating,
+                            "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9))
+                            + data["Votes"]["Favorites"],
+                            "developer": data["Developer"],
+                            "last_update": data["Metadata"]["UpdatedAt"],
+                            "id": data["Metadata"]["AdministerID"],
+                            "object_type": data["Metadata"]["AssetType"],
+                            "image_id": data["IconID"]
+                        }
+                    )
+                except KeyError:
+                    # chances are we are dealing with a theme..
+                        final.append(
+                        {
+                            "name": data["Name"],
+                            "downloads": data["Downloads"],
+                            "rating": rating,
+                            "weighted_score": (data["Downloads"] * 0.6 + (rating * 0.9))
+                            + data["Votes"]["Favorites"],
+                            "developer": data["Developer"],
+                            "last_update": data["Metadata"]["UpdatedAt"],
+                            "id": data["Metadata"]["AdministerID"],
+                            "object_type": data["Metadata"]["AssetType"],
+                            "image_id": data["IconID"]
+                        }
+                    )
 
             for app in apps:
                 if app["administer_id"] == "__featured": continue
