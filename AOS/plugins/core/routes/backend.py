@@ -81,8 +81,7 @@ class BackendAPI:
                             "developer": data["Developer"],
                             "last_update": data["Metadata"]["UpdatedAt"],
                             "id": data["Metadata"]["AdministerID"],
-                            "object_type": data["Metadata"]["AssetType"],
-                            "image_id": data["IconID"]
+                            "object_type": data["Metadata"]["AssetType"]
                         }
                     )
                 except KeyError:
@@ -97,8 +96,7 @@ class BackendAPI:
                             "developer": data["Developer"],
                             "last_update": data["Metadata"]["UpdatedAt"],
                             "id": data["Metadata"]["AdministerID"],
-                            "object_type": data["Metadata"]["AssetType"],
-                            "image_id": data["IconID"]
+                            "object_type": data["Metadata"]["AssetType"]
                         }
                     )
 
