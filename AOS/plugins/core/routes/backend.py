@@ -542,13 +542,11 @@ class BackendAPI:
                 {"code": 200, "message": "success", "user_facing_message": "Success!"},
                 status_code=200
             )
-        
+
         @self.asset_router.get("/{asset:str}/monetization")
         async def get_paid_status(req: Request, asset: str):
             try:
                 app = request_app(asset)
-
-                print(app)
 
                 if app is None:
                     raise FileNotFoundError
