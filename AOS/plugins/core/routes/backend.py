@@ -542,6 +542,38 @@ class BackendAPI:
                 {"code": 200, "message": "success", "user_facing_message": "Success!"},
                 status_code=200
             )
+        
+        @self.asset_router.get("/{asset:str}/monetization")
+        async def get_paid_status(req: Request, asset: str):
+            try:
+                app = request_app(asset)
+
+                print(app)
+
+                if app is None:
+                    raise FileNotFoundError
+
+            except Exception:
+                return JSONResponse(
+                    {
+                        "code": 404,
+                        "message": "not-found",
+                        "user_facing_message": "App not found on this server"
+                    },
+                    status_code=404
+                )
+            
+            return JSONResponse(
+                {
+                    "code": 200,
+                    "data": {
+                        "is_paid_asset": app["RequirePayment"] == True,
+                        "is_for_sale": app["GamePassID"] != -1,
+                        "pass_id": app["GamePassID"]
+                    }
+                },
+                status_code=200
+            )
 
 
 # @router.get("/logs/{logid:str}")
