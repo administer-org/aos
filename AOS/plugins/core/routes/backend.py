@@ -217,6 +217,7 @@ class BackendAPI:
             )
 
         @self.router.post("/register-home-node")
+        @self.router.post("/register")
         async def home_node(req: Request):
             placeid = req.headers.get("Roblox-Id", 0)
             place = db.get(placeid, db.PLACES)
