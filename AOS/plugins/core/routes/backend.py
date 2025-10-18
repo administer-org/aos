@@ -454,13 +454,10 @@ class BackendAPI:
                 app = request_app(asset)
                 place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
 
-                print(place)
-
                 if app is None:
                     raise FileNotFoundError
 
             except Exception as e:
-                print(e)
                 return JSONResponse(
                     {
                         "code": 404,
