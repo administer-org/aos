@@ -4,9 +4,10 @@ from .utils.color_detection import get_color
 from .utils.helpers import request_app
 from AOS import globals as vars
 
+from typing import Literal
 from fastapi import Request
-from fastapi.responses import JSONResponse
 from fastapi.routing import APIRouter
+from fastapi.responses import JSONResponse
 
 import re
 import time
@@ -51,7 +52,7 @@ class BackendAPI:
             )
 
         @self.router.get("/directory")
-        async def app_list(req: Request, asset_type: str):
+        async def app_list(req: Request, asset_type: Literal["FEATURED", "THEMES", "APPS"]):
             apps = db.get_all(db.APPS)
             final = []
             _t = time.time()
@@ -141,17 +142,19 @@ class BackendAPI:
             final = []
             ratio_info = {"is_ratio": False}
 
-            search = search.strip().lower()
-            if search in [None, "", " "] or len(search) >= 50:
+            search_raw = search.strip().lower()
+            search = search.strip().lower().replace("type:theme", "").replace("type:app", "")
+
+            if search_raw in [None, ""] or len(search) >= 50:
                 return JSONResponse(
-                    {"meta": {"_aos_search_api": "4.1"}, "index": "invalid_query"},
+                    {"meta": {"_aos_search_api": "5.0"}, "index": "invalid_query"},
                     status_code=400
                 )
 
             for app in apps:
                 app = app["data"]
 
-                if search in app["Title"].lower():
+                if app["Metadata"]["AssetType"] == "app" and search in app["Title"].lower():
                     app["indexed"] = "name"
                     final.append(app)
 
@@ -165,6 +168,12 @@ class BackendAPI:
                     }
 
                     app["ratio"] = ratio_info
+                    final.append(app)
+
+                    continue
+                
+                elif search == "*":
+                    app["indexed"] = "wildcard"
                     final.append(app)
 
                     continue
@@ -188,14 +197,16 @@ class BackendAPI:
 
             if final == []:
                 return JSONResponse(
-                    {"meta": {"_aos_search_api": "4.1"}, "index": "no_results"},
+                    {"meta": {"_aos_search_api": "5.0"}, "index": "no_results"},
                     status_code=200
                 )
+            
+            final = [app for app in final if not search_raw.startswith("type:") or app["Metadata"]["AssetType"] in search_raw]
 
             return JSONResponse(
                 {
                     "meta": {
-                        "_aos_search_api": "4.1",
+                        "_aos_search_api": "5.0",
                         "ratio_info": ratio_info,
                         "indexed_query": search,
                         "results": len(final)
@@ -246,6 +257,7 @@ class BackendAPI:
             )
 
         @self.router.get("/misc/get_prominent_color")
+        @self.router.get("/misc/prominent-color")
         async def get_prominent_color(image_url: str):
             if not vars.is_dev:
                 return get_color(BytesIO(httpx.get(image_url).content))
@@ -258,10 +270,35 @@ class BackendAPI:
                     )
 
                 return get_color(BytesIO(httpx.get(image_url).content))
+            
+        @self.router.post("/multiget-assets")
+        async def get_assets(req: Request):
+            try:
+                json: list[str] = await req.json()
+            except Exception:
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": ""
+                    },
+                    status_code=4030
+                )
+
 
         @self.router.post("/report-version")
         async def report_version(req: Request):
-            json = await req.json()
+            try:
+                json = await req.json()
+            except Exception:
+                # stop fucking with the API
+                return JSONResponse(
+                    {
+                        "code": 403,
+                        "message": "Forbidden"
+                    },
+                    status_code=403
+                )
+            
             key = db.get(round(time.time() / 86400), db.REPORTED_VERSIONS)
             branch = str(json["branch"]).lower()
 

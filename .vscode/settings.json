@@ -5,6 +5,8 @@
         "addressv",
         "dbattrs",
         "favorited",
+        "multiget",
+        "placeid",
         "reqs",
         "Switchery",
         "timespec"
