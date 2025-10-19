@@ -549,6 +549,9 @@ class BackendAPI:
                     },
                     status_code=404
                 )
+            
+            if app["Metadata"]["AssetType"] == "theme" and not place["Themes"]:
+                place["Themes"] = []
 
             if (
                 asset_id
@@ -562,10 +565,7 @@ class BackendAPI:
                     },
                     status_code=400
                 )
-
-            if app["Metadata"]["AssetType"] == "theme" and not place["Themes"]:
-                place["Themes"] = []
-
+            
             place[app["Metadata"]["AssetType"] == "app" and "Apps" or "Themes"].append(
                 asset_id
             )
