@@ -550,7 +550,10 @@ class BackendAPI:
                     status_code=404
                 )
             
-            if app["Metadata"]["AssetType"] == "theme" and not place["Themes"]:
+            try:
+                if app["Metadata"]["AssetType"] == "theme" and not place["Themes"]:
+                    place["Themes"] = []
+            except KeyError:
                 place["Themes"] = []
 
             if (
