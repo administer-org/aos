@@ -94,7 +94,8 @@ def combined():
         "1.2.2": [item.get("1.2.2", 0) for item in y],
         "1.2.3": [item.get("1.2.3", 0) for item in y],
         "2.0.0": [item.get("2.0.0", 0) for item in y],
-        "2.1.0": [item.get("2.1.0", 0) for item in y]
+        "2.1.0": [item.get("2.1.0", 0) for item in y],
+        "2.1.1": [item.get("2.1.1", 0) for item in y]
     }.items():
         sort(x, y_vals, marker="o", label=version)
 
@@ -117,6 +118,8 @@ def combined():
 def home_nodes():
     places = db.get_all(db.PLACES)
 
+    print(places)
+
     nodes = [
         place["data"].get("HomeNode")
         for place in places
@@ -125,11 +128,11 @@ def home_nodes():
 
     values = [
         Counter(nodes).get(n, 0)
-        for n in ["aos-canary", "us-1", "us-2", "us-3", "eur-1"]
+        for n in ["aos-canary", "us-1", "us-2", "us-3", "aos-eur-1"]
     ]
     versions = [
         f"{n} ({Counter(nodes).get(n, 0)} {str(round((Counter(nodes).get(n, 0) / len(nodes)) * 100) / 100).replace("0.", "")}%)"
-        for n in ["aos-canary", "us-1", "us-2", "us-3", "eur-1"]
+        for n in ["aos-canary", "us-1", "us-2", "us-3", "aos-eur-1"]
     ]
 
     plt.bar(versions, values)
