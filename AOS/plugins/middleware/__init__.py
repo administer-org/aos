@@ -91,7 +91,7 @@ class AuthMiddleware(BaseHTTPMiddleware):
                         "roblox-id": request.headers.get("Roblox-Id"),
                         "user-agent": request.headers.get("user-agent", "unknown"),
                         "endpoint": request.url
-                    },
+                    }
                 )
 
                 forbidden_ips.append(request.headers.get("CF-Connecting-IP"))
@@ -158,7 +158,10 @@ class RateLimiter(BaseHTTPMiddleware):
         if cf_ip in mem_blocked_ips:
             print("[!] This IP is blocked in memory.")
             return JSONResponse(
-                {"code": 401, "message": "You have been blocked from using this server."},
+                {
+                    "code": 401,
+                    "message": "You have been blocked from using this server."
+                },
                 status_code=401
             )
 
@@ -178,7 +181,7 @@ class RateLimiter(BaseHTTPMiddleware):
             return JSONResponse(
                 {
                     "code": 429,
-                    "message": "You are being rate limited, please try again later.",
+                    "message": "You are being rate limited, please try again later."
                 },
                 status_code=429
             )
@@ -191,6 +194,26 @@ class RateLimiter(BaseHTTPMiddleware):
 
 
 class Logger(BaseHTTPMiddleware):
+    def __init__(self, app):
+        super().__init__(app)
+
+        self.client = httpx.AsyncClient()
+
+        async def send_plausible(req):
+            await self.client.post(
+                f"{globals.plausible['data_url']}/api/event",
+                headers={
+                    "User-Agent": f"AdministerAOS; AOS/{globals.version}; User/{req.headers.get('Roblox-Id') }"
+                },
+                json={
+                    "domain": globals.plausible["site_url"],
+                    "name": "pageview",
+                    "url": f"https://{globals.plausible['site_url']}{str(req.url.path)}"
+                }
+            )
+
+        self.send_plausible = send_plausible
+
     async def dispatch(self, req: Request, call_next: FunctionType) -> Response:
         cf_ip = req.headers.get("CF-Connecting-IP")
         t = time.time()
@@ -215,20 +238,8 @@ class Logger(BaseHTTPMiddleware):
         )
 
         if globals.plausible["use_plausible"] and not str(req.url.path) == "/api/ping":
-            async def send_plausible():
-                httpx.post(
-                    f"{globals.plausible['data_url']}/api/event",
-                    headers={
-                        "User-Agent": f"AdministerAOS; AOS/{globals.version}; User/{req.headers.get('Roblox-Id')}"
-                    },
-                    json={
-                        "domain": globals.plausible["site_url"],
-                        "name": "pageview",
-                        "url": f"https://{globals.plausible['site_url']}{str(req.url.path)}"
-                    }
-                )
 
-            asyncio.create_task(send_plausible())
+            asyncio.create_task(self.send_plausible(req))
 
         return res
 
