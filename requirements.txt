@@ -1,0 +1,14 @@
+pydantic
+orjson
+fastapi
+uvicorn
+rich
+tqdm
+pymongo
+httpx
+nanoid
+Pillow
+Levenshtein
+bcrypt
+libsass
+Jinja2
