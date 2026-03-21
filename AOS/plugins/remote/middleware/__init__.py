@@ -19,7 +19,11 @@ async def DiscordAuthentication(
     if "/api" in str(request.url):
         secret = db.get(place_id, db.DISCORD_REMOTE_SECRETS)
 
+        import logging
+        logger = logging.getLogger(__name__)
+
         print(secret, request.headers.get("X-Adm-Secret"), secret != request.headers.get("X-Adm-Secret", ""))
+        logger.debug("Secret compare: %s %s %s", secret, request.headers.get("X-Adm-Secret"), secret != request.headers.get("X-Adm-Secret", ""))
 
         if not secret:
             raise HTTPException(status_code=401, detail="You must generate a secret before using this API.")

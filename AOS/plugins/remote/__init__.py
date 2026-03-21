@@ -105,7 +105,11 @@ def run_bot():
 
     @bot.event
     async def on_ready():
+        import logging
+        logger = logging.getLogger(__name__)
+
         print(f"{bot.user} ready")
+        logger.info("%s ready", bot.user)
 
     loop.run_until_complete(bot.start(db.get("VERSION_BOT", db.SECRETS)))
 
@@ -116,6 +120,7 @@ def spawn():
         bot_thread.start()
     except ImportError:
         print("pycord isn't installed, install it ")
+        logger.warning("pycord not installed; remote bot will not run")
 
 
 spawn()

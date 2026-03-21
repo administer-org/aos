@@ -1,8 +1,8 @@
 {
-    "version": "5.8",
+    "version": "5.9",
     "def_port": 8020,
     "def_host": "0.0.0.0",
-    "workers": 8,
+    "workers": 4,
     "plugin_load_order": [
         "database",
         "FeedbackAssistant"
@@ -14,14 +14,7 @@
         "downloads_today": 0,
         "loaded_plugins": [],
         "permitted_versions": [
-            "2.1.1",
-            "2.1.0",
-            "2.0.0",
-            "1.2.3",
-            "1.2.2",
-            "1.2.1",
-            "1.2",
-            "1.1.1"
+            "1.0.0"
         ],
         "unchecked_endpoints": [
             "logs",

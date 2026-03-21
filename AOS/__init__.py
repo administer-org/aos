@@ -2,12 +2,16 @@
 
 import AOS
 import AOS.deps.il as il
+import logging
+logger = logging.getLogger(__name__)
 
 from AOS.models.AOSConfig import AOSConfig
 from AOS.models.CoreConfig import CoreConfig
 
 
 import re
+import logging
+logging.basicConfig(level=logging.INFO)
 import sys
 import orjson
 import logging
@@ -62,10 +66,11 @@ class AOSVars:
             )
         except Exception as c_exception:
             # try again with legacy .json
-            il.cprint(
-                f"[!] Failed to read ._config.json, please migrate ASAP. Falling back to legacy file. {c_exception}", 
-                33
-            )
+                    il.cprint(
+                    f"[!] Failed to read ._config.json, please migrate ASAP. Falling back to legacy file. {c_exception}", 
+                    33
+                )
+                logger.warning("Failed to read ._config.json, falling back to legacy: %s", c_exception)
 
             try:
                 config, aos_config, version_data = (
@@ -74,6 +79,7 @@ class AOSVars:
                 )
             except Exception as e:
                 il.cprint("[!] Welcome to AOS!", 34)
+                logger.info("Welcome to AOS - environment not setup")
                 il.cprint("    > It seems like your environment has not been setup.", 32)
                 il.cprint(
                     "       > If you are installed via PyPI or on Windows, run the following:",
@@ -92,6 +98,7 @@ class AOSVars:
         ]:
             for k, v in config:
                 setattr(self, k, v)
+                logger.debug("Config item set: %s", k)
 
         self.versions = version_data
 

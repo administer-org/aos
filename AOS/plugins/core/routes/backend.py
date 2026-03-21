@@ -19,8 +19,29 @@ from Levenshtein import ratio
 
 from AOS.plugins.database import db
 from .models.RatingPayload import RatingPayload
+import logging
+try:
+    from packaging.version import Version
+    from packaging.specifiers import SpecifierSet
+    _HAS_PACKAGING = True
+except Exception:
+    _HAS_PACKAGING = False
 
 sys_string = f"{platform.system()} {platform.release()} ({platform.version()})"
+
+
+def _extract_placeid_from_request(req, default=None):
+    """Extract place id from common header names used by clients.
+
+    This accepts `Roblox-Id`, `X-Roblox-Id`, and `X-Adm-PlaceId` for
+    compatibility. Returns `default` if no header present.
+    """
+    for h in ("Place-Id", "Roblox-Id", "X-Roblox-Id", "X-Adm-PlaceId", "X-Place-Id"):
+        v = req.headers.get(h)
+        if v:
+            return v
+
+    return default
 
 
 class BackendAPI:
@@ -219,11 +240,11 @@ class BackendAPI:
         @self.router.post("/register-home-node")
         @self.router.post("/register")
         async def home_node(req: Request):
-            placeid = req.headers.get("Roblox-Id", 0)
+            placeid = _extract_placeid_from_request(req, 0)
             place = db.get(placeid, db.PLACES)
 
             if place is None:
-                if req.headers.get("Roblox-Id", 0) == 0:
+                if _extract_placeid_from_request(req, 0) == 0:
                     return JSONResponse(
                         {
                             "code": 400,
@@ -303,13 +324,49 @@ class BackendAPI:
             key = db.get(round(time.time() / 86400), db.REPORTED_VERSIONS)
             branch = str(json["branch"]).lower()
 
-            if json["version"] not in vars.state["permitted_versions"]:
+            # Flexible version check: permit exact versions or specifiers
+            permitted = vars.state.get("permitted_versions", []) or []
+            client_version = str(json.get("version", ""))
+
+            allowed = False
+            if _HAS_PACKAGING:
+                try:
+                    v = Version(client_version)
+                except Exception:
+                    v = None
+
+                if v is not None:
+                    for spec in permitted:
+                        spec_s = str(spec)
+                        # treat explicit specifier strings with operators as SpecifierSet
+                        if any(op in spec_s for op in [">", "<", "=", "!", "~", "*"]):
+                            try:
+                                if v in SpecifierSet(spec_s):
+                                    allowed = True
+                                    break
+                            except Exception:
+                                continue
+                        else:
+                            try:
+                                if v == Version(spec_s):
+                                    allowed = True
+                                    break
+                            except Exception:
+                                if spec_s == client_version:
+                                    allowed = True
+                                    break
+            else:
+                # fallback: simple membership check
+                if client_version in permitted:
+                    allowed = True
+
+            if not allowed:
                 return JSONResponse(
                     {
                         "code": 400,
                         "message": "Administer is too old to report its version. Please update Administer."
                     },
-                    status_code=400
+                    status_code=400,
                 )
 
             if not key:
@@ -379,6 +436,32 @@ class BackendAPI:
                 "data": "OK"
             }, status_code=200)
 
+        @self.asset_router.get("/list")
+        async def list_apps():
+            """Return a concise list of apps in the registry.
+
+            Each entry contains `id`, `name`, `downloads` and `object_type`.
+            """
+            apps = db.get_all(db.APPS)
+            final = []
+
+            for app in apps:
+                if app.get("administer_id") == "__featured":
+                    continue
+
+                data = app.get("data", {})
+
+                final.append(
+                    {
+                        "id": app.get("administer_id"),
+                        "name": data.get("Name"),
+                        "downloads": data.get("Downloads", 0),
+                        "object_type": data.get("Metadata", {}).get("AssetType")
+                    }
+                )
+
+            return JSONResponse({"code": 200, "data": final}, status_code=200)
+
         @self.asset_router.get("/{appid:str}")
         async def get_app(appid: str):
             try:
@@ -411,7 +494,7 @@ class BackendAPI:
             #         status_code=400,
             #     )
 
-            place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
+            place = db.get(_extract_placeid_from_request(req), db.PLACES)
             app = request_app(asset_id)
 
             rating = payload.vote == 1
@@ -474,7 +557,7 @@ class BackendAPI:
             vars.state["votes_today"] += 1
 
             db.set(asset_id, app, db.APPS)
-            db.set(req.headers.get("Roblox-Id"), place, db.PLACES)
+            db.set(_extract_placeid_from_request(req), place, db.PLACES)
 
             return JSONResponse(
                 {
@@ -490,7 +573,7 @@ class BackendAPI:
         async def get_vote(req: Request, asset: str):
             try:
                 app = request_app(asset)
-                place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
+                place = db.get(_extract_placeid_from_request(req), db.PLACES)
 
                 if app is None:
                     raise FileNotFoundError
@@ -528,13 +611,18 @@ class BackendAPI:
             
         @self.asset_router.post("/{asset_id}/install")
         async def install(req: Request, asset_id: str):
-            place = db.get(req.headers.get("Roblox-Id"), db.PLACES)
+            placeid = _extract_placeid_from_request(req)
+            logging.info(f"[asset.install] request place={placeid} asset={asset_id}")
+            place = db.get(placeid, db.PLACES)
+            logging.info(f"[asset.install] db.get returned place: {place is not None}")
 
             if place is None:
+                logging.warning(f"[asset.install] place not found in database for placeid={placeid}")
                 return JSONResponse(
                     {
                         "code": 400,
-                        "message": "You must first register with AOS before installing an asset!"
+                        "message": "Place not registered. Please register your place first.",
+                        "user_facing_message": "Your game is not registered. Contact the server administrator."
                     },
                     status_code=400
                 )
@@ -574,14 +662,130 @@ class BackendAPI:
             )
             app["Downloads"] += 1
 
-            db.set(asset_id, app, db.APPS)
-            db.set(req.headers.get("Roblox-Id"), place, db.PLACES)
+            logging.info(f"[asset.install] place before save - Apps: {place.get('Apps', [])}, Themes: {place.get('Themes', [])}")
+            
+            res_app = db.set(asset_id, app, db.APPS)
+            res_place = db.set(placeid, place, db.PLACES)
+
+            logging.info(f"[asset.install] db.set app result: {res_app}")
+            logging.info(f"[asset.install] db.set place result: {res_place}")
 
             vars.state["downloads_today"] += 1
 
             return JSONResponse(
                 {"code": 200, "message": "success", "user_facing_message": "Success!"},
                 status_code=200
+            )
+
+        @self.asset_router.post("/{asset_id}/uninstall")
+        async def uninstall(req: Request, asset_id: str):
+            placeid = _extract_placeid_from_request(req)
+            logging.info(f"[asset.uninstall] request place={placeid} asset={asset_id}")
+            place = db.get(placeid, db.PLACES)
+
+            if place is None:
+                if not placeid:
+                    return JSONResponse(
+                        {
+                            "code": 400,
+                            "message": "This API endpoint cannot be used outside of a Roblox game."
+                        },
+                        status_code=400
+                    )
+
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "Place not registered.",
+                        "user_facing_message": "Your game is not registered. Contact the server administrator."
+                    },
+                    status_code=400
+                )
+
+            app = request_app(asset_id)
+            if not app:
+                return JSONResponse(
+                    {
+                        "code": 404,
+                        "message": "not-found",
+                        "user_facing_message": "That isn't a valid asset. Did it get removed?"
+                    },
+                    status_code=404
+                )
+
+            key = app["Metadata"]["AssetType"] == "app" and "Apps" or "Themes"
+
+            if asset_id not in place.get(key, []):
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "not-installed",
+                        "user_facing_message": "You must install this asset before you can uninstall it."
+                    },
+                    status_code=400
+                )
+
+            try:
+                place[key].remove(asset_id)
+            except Exception:
+                place[key] = [a for a in place.get(key, []) if a != asset_id]
+
+            if isinstance(app.get("Downloads"), int) and app.get("Downloads", 0) > 0:
+                app["Downloads"] -= 1
+
+            logging.info(f"[asset.uninstall] place before save - Apps: {place.get('Apps', [])}, Themes: {place.get('Themes', [])}")
+
+            res_app = db.set(asset_id, app, db.APPS)
+            res_place = db.set(placeid, place, db.PLACES)
+
+            logging.info(f"[asset.uninstall] db.set app result: {res_app}")
+            logging.info(f"[asset.uninstall] db.set place result: {res_place}")
+
+            return JSONResponse(
+                {"code": 200, "message": "success", "user_facing_message": "Uninstalled."},
+                status_code=200
+            )
+
+        @self.asset_router.get("/installed")
+        async def get_installed(req: Request, placeid: str | None = None):
+            """Return installed Apps and Themes for a place.
+
+            Use `Roblox-Id` header if `placeid` query param is not provided.
+            """
+            # prefer explicit query param, fallback to header
+            if not placeid:
+                placeid = req.headers.get("Roblox-Id")
+
+            if not placeid:
+                return JSONResponse(
+                    {
+                        "code": 400,
+                        "message": "missing-placeid",
+                        "user_facing_message": "No place id provided in query or Roblox-Id header."
+                    },
+                    status_code=400,
+                )
+
+            place = db.get(placeid, db.PLACES)
+            if place is None:
+                return JSONResponse(
+                    {
+                        "code": 404,
+                        "message": "not-found",
+                        "user_facing_message": "Place not registered on this server."
+                    },
+                    status_code=404,
+                )
+
+            return JSONResponse(
+                {
+                    "code": 200,
+                    "data": {
+                        "Apps": place.get("Apps", []),
+                        "Themes": place.get("Themes", [])
+                    }
+                },
+                status_code=200,
             )
 
         @self.asset_router.get("/{asset:str}/monetization")

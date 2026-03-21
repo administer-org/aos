@@ -53,7 +53,11 @@ def delete_line(bundle):
     """
     delete line of mentioned row
     """
+    import logging
+    logger = logging.getLogger(__name__)
+
     print("deleting line")
+    logger.debug("deleting line")
     lines, details = bundle
     path, row, col, message, entry = details
     with open(path, "w") as f:
@@ -67,6 +71,7 @@ def delete_blank_line(bundle):
     delete previous line of mentioned row
     """
     print("deleting blank line")
+    logger.debug("deleting blank line")
     lines, details = bundle
     path, row, col, message, entry = details
     with open(path, "w") as f:
@@ -80,6 +85,7 @@ def insert_line(bundle):
     insert an new line at row
     """
     print("inserting line")
+    logger.debug("inserting line")
     lines, details = bundle
     path, row, col, message, entry = details
     with open(path, "w") as f:
@@ -94,6 +100,7 @@ def newline_EOF(bundle):
     insert new line at EOF
     """
     print("inserting line at end")
+    logger.debug("inserting line at end")
     lines, details = bundle
     path, row, col, message, entry = details
     with open(path, "w") as f:
@@ -107,6 +114,7 @@ def insert_space_before(bundle):
     insert space at mentioned col
     """
     print("inserting space")
+    logger.debug("inserting space")
     lines, details = bundle
     path, row, col, message, entry = details
     with open(path, "w") as f:
@@ -123,6 +131,7 @@ def insert_space_after(bundle):
     insert space after mentioned col
     """
     print("inserting space")
+    logger.debug("inserting space")
     lines, details = bundle
     path, row, col, message, entry = details
     with open(path, "w") as f:
@@ -139,6 +148,7 @@ def convert_tabs_to_spaces(bundle):
     convert all tabs to 4 spaces
     """
     print("converting tabs to spaces")
+    logger.debug("converting tabs to spaces")
     lines, details = bundle
     path, row, col, message, entry = details
     with open(path, "w") as f:
@@ -199,6 +209,7 @@ def delete_unused_import(bundle):
                     f.write(line)
     else:
         print("Manually fix", entry)
+        logger.warning("Manually fix %s", entry)
         omitlist.append(entry)
 
 
@@ -243,6 +254,7 @@ def solution_selector(full_details):
         key = find_fix(message)
         if key is None:
             print("Manually fix", entry)
+            logger.warning("Manually fix %s", entry)
             omitlist.append(entry)
         else:
             print(key, entry)

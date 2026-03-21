@@ -4,7 +4,7 @@
 	"_latest_versions": {
 		"STABLE": {
 			"branch": "STABLE",
-			"version": "2.1.1",
+			"version": "1.0.0",
 			"released": 1759356244.4481351
 		},
 
@@ -15,7 +15,7 @@
 		}
 	},
 	"versions": {
-        "2.1.1": {
+        "1.0.0": {
 			"is_outdated": false,
 			"released": 1759356244.4481351,
 			"hash": "4632709",
@@ -29,43 +29,6 @@
 				}
 			},
 			"update_logs": []
-		},
-
-        "2.1.0": {
-			"is_outdated": true,
-			"released": 1756926741,
-			"hash": "4632709",
-			"featureset": {
-				"apps": {
-					"can_install": true,
-					"can_access_marketplace": true
-				},
-				"administer": {
-					"can_report_version": true
-				}
-			},
-			"update_logs": []
-		},
-
-		"2.0.0": {
-			"is_outdated": true,
-			"released": 1743311951.327297,
-			"hash": "4632709",
-			"featureset": {
-				"apps": {
-					"can_install": true,
-					"can_access_marketplace": true
-				},
-				"administer": {
-					"can_report_version": true
-				}
-			},
-			"update_logs": [
-				"Update log 1",
-				"Update log 2",
-				"Update log 3",
-				"Update log 4"
-			]
 		}
 	}
 }

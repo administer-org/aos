@@ -18,13 +18,18 @@ console = Console()
 
 if var.logging_location is None:
     var.logging_location = "/etc/adm/log"
+    import logging
+    logger = logging.getLogger(__name__)
+
     il.cprint("config.logging_location is unset, defaulting to `/etc/adm/log`", 33)
+    logger.warning("config.logging_location is unset, defaulting to /etc/adm/log")
 
 if Path(var.logging_location).is_file() is not True:
     il.cprint(
         "Your logfile (._config.json\\logging_location) is not a file! Please ensure it exists and is not a directory.",
         24
     )
+    logger.error("Logfile path is not a file: %s", var.logging_location)
 
 if not var.is_dev:
     try:
@@ -35,6 +40,7 @@ if not var.is_dev:
             f"Failed to write to the logfile! Please make sure you have properly initialized AOS ({e}).",
             24
         )
+        logger.exception("Failed to write to logfile: %s", e)
 
 
 def help_command():
@@ -42,6 +48,7 @@ def help_command():
     plugins_autoload = Plugin.get_plugins(True)
     commandless_plugins = 0
     il.cprint("Commands", 32)
+    logger.info("Showing help commands")
 
     for config in plugins.values():
         if len(config.get("commands", {}).items()) == 0:
@@ -80,8 +87,9 @@ def help_command():
             )
 
 
-if "--nobox" not in argv:
+    if "--nobox" not in argv:
     il.box(85, "Administer AOS", f"v{var.version}")
+    logger.info("Starting AOS CLI with version %s", var.version)
 
 try:
     _ = argv[1]
@@ -97,6 +105,7 @@ match argv[1]:
         raise AOSError("")
     case "--version":
         print(f"AOS/{var.version}\nPython/{version}")
+        logger.info("Printed version to console")
 
         exit(0)
     case _:

@@ -73,7 +73,11 @@ class Database(object):
                         databases[address] = elapsed_ms
                         bar.set_description(f"Testing {address} (took {elapsed_ms:.2f}ms)")
                 pick = min(databases.items(), key=lambda x: x[1])
+                import logging
+                logger = logging.getLogger(__name__)
+
                 print(f"connecting to {pick[0]} (quickest @ {pick[1]}ms)")
+                logger.info("connecting to %s (quickest @ %sms)", pick[0], pick[1])
 
                 client = connect(f"mongodb://{pick[0]}")
                 db_address = pick[0]
@@ -99,6 +103,7 @@ class Database(object):
             print(
                 "Failed to connect to MongoDB within the required timeframe! Is Mongo running? Aborting startup..."
             )
+            logger.error("Failed to connect to MongoDB within the required timeframe")
             raise e
 
         server_info = client.server_info()
@@ -121,15 +126,18 @@ class Database(object):
                 replica_state = "STANDALONE"
 
             il.cprint(
-                f"[✓] Connected to MongoDB {server_info["version"]} {server_info["gitVersion"][:7]} at {db_address}:/{dbattrs["use_prod_db"] and 'administer' or 'administer_dev'} <RCN [{replica_state} {repl_status["set"]}]>",
+                f"[✓] Connected to MongoDB {server_info['version']} {server_info['gitVersion'][:7]} at {db_address}:/{dbattrs['use_prod_db'] and 'administer' or 'administer_dev'} <RCN [{replica_state} {repl_status['set']}]>",
                 32
             )
+            logger.info("Connected to MongoDB %s %s at %s", server_info.get('version'), server_info.get('gitVersion', '')[:7], db_address)
         except Exception:
             il.cprint("[!] Mongo is not replicating", 33)
+            logger.warning("Mongo is not replicating")
             il.cprint(
-                f"[✓] Connected to MongoDB {server_info["version"]} {server_info["gitVersion"][:7]} at {db_address}:/{dbattrs["use_prod_db"] and 'administer' or 'administer_dev'}",
+                f"[✓] Connected to MongoDB {server_info['version']} {server_info['gitVersion'][:7]} at {db_address}:/{dbattrs['use_prod_db'] and 'administer' or 'administer_dev'}",
                 32
             )
+            logger.info("Connected to MongoDB %s %s at %s", server_info.get('version'), server_info.get('gitVersion', '')[:7], db_address)
     def set(self, key: str | int, value: Any, db: str) -> None:
         assert isinstance(key, (str, int)), "key must be a string (integers accepted)!"
         assert isinstance(db, str), "db must be a string!"
@@ -137,16 +145,29 @@ class Database(object):
         if db == self.APPS:
             key = str(key)
 
-        db = self.db[db]
+        collection = self.db[db]
 
-        internal_document = {"administer_id": str(key)}
-        active_document = db.find_one(internal_document)
+        admin_id = str(key)
+
+        # For places we prefer to store the place id as the MongoDB `_id`
+        # and avoid duplicating it in `administer_id` when identical.
+        if db == self.PLACES:
+            # For places, identify documents by `_id` only.
+            active_document = collection.find_one({"_id": admin_id})
+        else:
+            active_document = collection.find_one({"administer_id": admin_id})
+
         if active_document is not None:
-            return db.update_one(
-                {"_id": active_document["_id"]}, {"$set": {"data": value}}
-            )
+            return collection.update_one({"_id": active_document["_id"]}, {"$set": {"data": value}})
 
-        return db.insert_one(internal_document | {"data": value})
+        # Build new document. For places omit `administer_id` when it matches
+        # the `_id` to avoid duplicate storage.
+        if db == self.PLACES:
+            new_doc = {"_id": admin_id, "data": value}
+        else:
+            new_doc = {"administer_id": admin_id, "data": value}
+
+        return collection.insert_one(new_doc)
 
     def set_batch(self, items: Dict[str | int, dict], db: str) -> None:
         assert isinstance(items, dict), "items must be a dict!"
@@ -159,25 +180,43 @@ class Database(object):
         assert isinstance(key, (str, int)), "key must be a string (integers accepted)"
         assert isinstance(db, str), "db must be an attr of db"
 
-        document = self.db[db].find_one({"administer_id": str(key)})
-        return document and document["data"]
+        admin_id = str(key)
+        if db == self.PLACES:
+            document = self.db[db].find_one({"_id": admin_id})
+        else:
+            document = self.db[db].find_one({"administer_id": admin_id})
+
+        return document and document.get("data")
 
     def find(self, identifier: dict, db: str) -> str | None:
         assert isinstance(identifier, dict), "identifier must be a dict!"
         assert isinstance(db, str), "db must be a string!"
 
         document = self.db[db].find_one({f"data.{k}": v for k, v in identifier.items()})
-        return document and document["administer_id"]
+        if not document:
+            return None
+
+        # For places return the `_id` (string); for others return `administer_id`.
+        if db == self.PLACES:
+            return document.get("_id")
+
+        return document.get("administer_id")
 
     def delete(self, key: str | int, db: str) -> None:
         assert isinstance(key, (str, int)), "key must be a string or integer!"
-
-        self.db[db].delete_one({"administer_id": str(key)})
+        admin_id = str(key)
+        if db == self.PLACES:
+            self.db[db].delete_one({"_id": admin_id})
+        else:
+            self.db[db].delete_one({"administer_id": admin_id})
 
     def bulk_delete(self, keys: List[str | int], db: str) -> None:
         assert isinstance(keys, list), "keys must be a list! (try using db.delete())"
-
-        self.db[db].delete_many({"administer_id": {"$in": keys}})
+        if db == self.PLACES:
+            ids = [str(k) for k in keys]
+            self.db[db].delete_many({"_id": {"$in": ids}})
+        else:
+            self.db[db].delete_many({"administer_id": {"$in": keys}})
 
     def get_all(self, db: str) -> dict:
         return list(self.db[db].find())
@@ -215,6 +254,13 @@ web_database = None
 
 if globals.dbattrs["use_prod_db"]:
     il.cprint("[!] Production database is enabled. Proceed with caution!", 35)
+    try:
+        logger
+    except NameError:
+        import logging
+        logger = logging.getLogger(__name__)
+
+    logger.warning("Production database is enabled")
 
 
 def get_web_database():

@@ -38,9 +38,14 @@ async def on_connect():
         status=discord.Status.idle
     )
 
+    import logging
+    logger = logging.getLogger(__name__)
+
     il.cprint("[✓] Versioning bot connected!", 32)
+    logger.info("Versioning bot connected")
 
 
 @bot.event
 async def on_error(loc):
     il.cprint(f"[x] In version bot thread {loc}: {""}", 32)
+    logger.exception("Error in version bot thread %s", loc)

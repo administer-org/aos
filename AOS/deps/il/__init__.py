@@ -27,7 +27,11 @@ def set_log_file(file: Path) -> None:
 
 
 def create_log(line: str) -> None:
+    import logging
+    logger = logging.getLogger(__name__)
+
     print(line)
+    logger.info(line)
     if LOG_FILE is not None:
         LOG_FILE.write(line + "\n")
         LOG_FILE.flush()

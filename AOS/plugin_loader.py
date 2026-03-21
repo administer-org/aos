@@ -44,7 +44,11 @@ def load_plugin(plugin, command):
             f"Plugin AOS/plugins/{plugin} does not have a valid meta.json file."
         )
 
+    import logging
+    logger = logging.getLogger(__name__)
+
     il.cprint(f"[-] Loading plugin {plugin} ({config['name']})", 33)
+    logger.info("Loading plugin %s (%s)", plugin, config.get("name"))
 
     # normalize
     cmd = command.strip().lower() if command else ""
@@ -71,6 +75,7 @@ def load_plugin(plugin, command):
             return
 
         il.cprint(f"[x] Invalid command for plugin {plugin}", 31)
+        logger.warning("Invalid command for plugin %s", plugin)
     except Exception as e:
         raise AOSError(f"Failed to load plugin: {e}", False)
 

@@ -45,7 +45,11 @@ if importlib.util.find_spec("bcrypt"):
     app.include_router(admin_frontend.router, prefix="/a")
     app.include_router(admin_api.router, prefix="/admin")
 else:
+    import logging
+    logger = logging.getLogger(__name__)
+
     il.cprint("[!] You did not install with `uv pip install .[server], we can't serve the admin interface!", 31)
+    logger.error("Missing server install; cannot serve admin interface")
 
 
 

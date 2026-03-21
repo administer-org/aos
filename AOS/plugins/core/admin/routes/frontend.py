@@ -46,8 +46,12 @@ class AdminFrontend:
             try:
                 css_file.write_text(sass.compile(filename=str(scss)))
                 il.cprint(f"[✓] Compiled {scss.name} → {css_file.name}", 32)
+                import logging
+                logger = logging.getLogger(__name__)
+                logger.info("Compiled %s -> %s", scss.name, css_file.name)
             except Exception as e:
                 il.cprint(f"[x] Failed to compile {scss.name}: {e}", 32)
+                logger.exception("Failed to compile %s: %s", scss.name, e)
 
         @self.router.get("/")
         def root(req: Request):

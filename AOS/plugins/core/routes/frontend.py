@@ -15,7 +15,11 @@ if globals.is_dev:
 else:
 
     def daily_report(db):
-        print("[x] Request to spawn daily report ignored due to missing modules")
+                import logging
+                logger = logging.getLogger(__name__)
+
+                print("[x] Request to spawn daily report ignored due to missing modules")
+                logger.info("Request to spawn daily report ignored due to missing modules")
 
 
 root = Path(__file__).parents[1]
@@ -36,6 +40,7 @@ class Frontend:
                 day = round(time() / 86400)
                 if globals.is_dev:
                     print("Ignoring reporting request, this will go through on prod")
+                    logger.debug("Ignoring reporting request in dev mode")
                 else:
                     daily_report(db)
 

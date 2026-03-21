@@ -21,7 +21,11 @@ def daily_report(
     state = globals.state
     st = time()
 
+    import logging
+    logger = logging.getLogger(__name__)
+
     print(dumps(database.get(day + 1, database.REPORTED_VERSIONS)))
+    logger.info("Reported versions: %s", dumps(database.get(day + 1, database.REPORTED_VERSIONS)))
 
     if not yesterday_report:
         yesterday_report = {

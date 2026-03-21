@@ -99,7 +99,11 @@ def combined():
     }.items():
         sort(x, y_vals, marker="o", label=version)
 
+    import logging
+    logger = logging.getLogger(__name__)
+
     print(data)
+    logger.debug("Reporting data: %s", data)
 
     x2, y2 = [], []
     for day in data:
@@ -119,6 +123,7 @@ def home_nodes():
     places = db.get_all(db.PLACES)
 
     print(places)
+    logger.info("Home nodes places: %s", places)
 
     nodes = [
         place["data"].get("HomeNode")

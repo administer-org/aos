@@ -246,7 +246,11 @@ class Logger(BaseHTTPMiddleware):
 
 class Middleware:
     def __init__(self):
+        import logging
+        logger = logging.getLogger(__name__)
+
         il.cprint("[-] Loading HttpMiddleware modules", 31)
+        logger.info("Loading HttpMiddleware modules")
 
     def init(self):
         app.add_middleware(AuthMiddleware)

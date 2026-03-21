@@ -27,7 +27,11 @@ class AdminRoutes:
     def mount_api(self):
         @self.router.get("/test")
         def test_admin():
+            import logging
+            logger = logging.getLogger(__name__)
+
             print("OK")
+            logger.info("Admin API returned OK")
 
         @self.router.post("/login")
         async def generate_keys(req: Request, resp: Response):

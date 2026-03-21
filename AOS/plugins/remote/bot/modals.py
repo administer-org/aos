@@ -43,7 +43,11 @@ class RegisterModal(ui.Modal):
         token = self.token.value
         response = {}
 
+        import logging
+        logger = logging.getLogger(__name__)
+
         print(f"register: {place_id} {token} on {api_url}")
+        logger.info("register: %s %s on %s", place_id, token, api_url)
 
         try:
             r = get(
@@ -74,6 +78,7 @@ class RegisterModal(ui.Modal):
         await interaction.response.send_message(
             ":white_check_mark: Saved! You can now make moderation actions with commands."
         )
+        logger.info("Saved remote settings for guild %s", interaction.guild_id)
 
 
 class BanModal(ui.Modal):
