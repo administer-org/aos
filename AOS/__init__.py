@@ -3,19 +3,18 @@
 import AOS
 import AOS.deps.il as il
 import logging
-logger = logging.getLogger(__name__)
 
 from AOS.models.AOSConfig import AOSConfig
 from AOS.models.CoreConfig import CoreConfig
 
 
 import re
-import logging
-logging.basicConfig(level=logging.INFO)
 import sys
 import orjson
-import logging
 import asyncio
+
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 from sys import argv
 from pathlib import Path
@@ -66,11 +65,11 @@ class AOSVars:
             )
         except Exception as c_exception:
             # try again with legacy .json
-                    il.cprint(
-                    f"[!] Failed to read ._config.json, please migrate ASAP. Falling back to legacy file. {c_exception}", 
-                    33
-                )
-                logger.warning("Failed to read ._config.json, falling back to legacy: %s", c_exception)
+            il.cprint(
+                f"[!] Failed to read ._config.json, please migrate ASAP. Falling back to legacy file. {c_exception}",
+                33
+            )
+            logger.warning("Failed to read ._config.json, falling back to legacy: %s", c_exception)
 
             try:
                 config, aos_config, version_data = (
