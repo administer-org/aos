@@ -5,21 +5,19 @@ import AOS.deps.il as il
 import AOS.plugin_loader as Plugin
 
 from AOS import AOSError, globals as var
-from AOS.utils import logging as logging
 
 from time import time
 from pathlib import Path
 from sys import argv, version
 from rich.console import Console
 
-import logging as Pythonlogging
+import logging
 
+logger = logging.getLogger(__name__)
 console = Console()
 
 if var.logging_location is None:
     var.logging_location = "/etc/adm/log"
-    import logging
-    logger = logging.getLogger(__name__)
 
     il.cprint("config.logging_location is unset, defaulting to `/etc/adm/log`", 33)
     logger.warning("config.logging_location is unset, defaulting to /etc/adm/log")
@@ -34,7 +32,7 @@ if Path(var.logging_location).is_file() is not True:
 if not var.is_dev:
     try:
         il.set_log_file(Path(var.logging_location))
-        Pythonlogging.getLogger("uvicorn.error").disabled = True
+        logging.getLogger("uvicorn.error").disabled = True
     except Exception as e:
         il.cprint(
             f"Failed to write to the logfile! Please make sure you have properly initialized AOS ({e}).",
@@ -88,8 +86,8 @@ def help_command():
 
 
     if "--nobox" not in argv:
-    il.box(85, "Administer AOS", f"v{var.version}")
-    logger.info("Starting AOS CLI with version %s", var.version)
+        il.box(85, "Administer AOS", f"v{var.version}")
+        logger.info("Starting AOS CLI with version %s", var.version)
 
 try:
     _ = argv[1]
